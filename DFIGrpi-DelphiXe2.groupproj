@@ -1,0 +1,60 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{634C0C5A-68F7-42FD-9CFB-99B79C33A437}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="packages\3rdparty\FastMM\FastMM.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="..\..\RAD Studio\Projects\DFICrypto.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="packages\DFICommon.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="FastMM">
+			<MSBuild Projects="packages\3rdparty\FastMM\FastMM.dproj"/>
+		</Target>
+		<Target Name="FastMM:Clean">
+			<MSBuild Projects="packages\3rdparty\FastMM\FastMM.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="FastMM:Make">
+			<MSBuild Projects="packages\3rdparty\FastMM\FastMM.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="DFICrypto">
+			<MSBuild Projects="..\..\RAD Studio\Projects\DFICrypto.dproj"/>
+		</Target>
+		<Target Name="DFICrypto:Clean">
+			<MSBuild Projects="..\..\RAD Studio\Projects\DFICrypto.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="DFICrypto:Make">
+			<MSBuild Projects="..\..\RAD Studio\Projects\DFICrypto.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="DFICommon">
+			<MSBuild Projects="packages\DFICommon.dproj"/>
+		</Target>
+		<Target Name="DFICommon:Clean">
+			<MSBuild Projects="packages\DFICommon.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="DFICommon:Make">
+			<MSBuild Projects="packages\DFICommon.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="FastMM;DFICrypto;DFICommon"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="FastMM:Clean;DFICrypto:Clean;DFICommon:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="FastMM:Make;DFICrypto:Make;DFICommon:Make"/>
+		</Target>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
+	</Project>
