@@ -1,0 +1,205 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 528
+  ClientWidth = 736
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 120
+  TextHeight = 16
+  inline fraListView1: TfraListView
+    Left = 0
+    Top = 180
+    Width = 736
+    Height = 348
+    Align = alClient
+    TabOrder = 0
+    ExplicitLeft = -243
+    ExplicitTop = -112
+    inherited ListView: TJvListView
+      Width = 736
+      Height = 348
+      ExplicitTop = 29
+    end
+  end
+  object Ribbon1: TRibbon
+    Left = 0
+    Top = 0
+    Width = 736
+    Height = 180
+    ActionManager = ActionManager
+    Caption = 'Ribbon1'
+    Tabs = <
+      item
+        Caption = 'Items'
+        Page = RibbonPage1
+      end
+      item
+        Caption = 'Options'
+        Page = RibbonPage2
+      end>
+    ExplicitLeft = 272
+    ExplicitTop = 160
+    ExplicitWidth = 0
+    ExplicitHeight = 144
+    DesignSize = (
+      736
+      180)
+    StyleName = 'Ribbon - Luna'
+    object RibbonPage2: TRibbonPage
+      Left = 0
+      Top = 64
+      Width = 735
+      Height = 116
+      Caption = 'Options'
+      Index = 1
+      object rgViewStyle: TRibbonGroup
+        Left = 235
+        Top = 3
+        Width = 193
+        Height = 108
+        ActionManager = ActionManager
+        Caption = 'View Style'
+        GroupIndex = 2
+      end
+      object rgBehavour: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 229
+        Height = 108
+        ActionManager = ActionManager
+        Caption = 'Behavour'
+        GroupIndex = 1
+      end
+    end
+    object RibbonPage1: TRibbonPage
+      Left = 0
+      Top = 64
+      Width = 735
+      Height = 116
+      Caption = 'Items'
+      Index = 0
+      ExplicitWidth = 526
+      object rgNavigate: TRibbonGroup
+        Left = 112
+        Top = 3
+        Width = 97
+        Height = 108
+        ActionManager = ActionManager
+        Caption = 'Navigate'
+        GroupIndex = 2
+        Rows = 2
+      end
+      object rgSelect: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 106
+        Height = 108
+        ActionManager = ActionManager
+        Caption = 'Select'
+        GroupIndex = 1
+      end
+    end
+  end
+  object ActionManager: TActionManager
+    ActionBars = <
+      item
+        Items = <
+          item
+            Action = fraListView1.actListViewGrouped
+            CommandStyle = csCheckBox
+            CommandProperties.Width = -1
+          end
+          item
+            Action = fraListView1.actListViewIcon
+            CommandStyle = csRadioButton
+            CommandProperties.Width = -1
+          end
+          item
+            Action = fraListView1.actListViewList
+            CommandStyle = csRadioButton
+            CommandProperties.Width = -1
+          end
+          item
+            Action = fraListView1.actListViewReport
+            CommandStyle = csRadioButton
+            CommandProperties.Width = -1
+          end
+          item
+            Action = fraListView1.actListViewSmallIcon
+            CommandStyle = csRadioButton
+            CommandProperties.Width = -1
+          end
+          item
+            Action = fraListView1.actListViewTiled
+            CommandStyle = csRadioButton
+            CommandProperties.Width = -1
+          end>
+        ActionBar = rgViewStyle
+      end
+      item
+        Items = <
+          item
+            Action = fraListView1.actHotTrack
+            CommandStyle = csCheckBox
+            CommandProperties.Width = -1
+          end
+          item
+            Action = fraListView1.actDotNetHighlight
+            Caption = '.&NET Highlighting'
+            CommandStyle = csCheckBox
+            CommandProperties.Width = -1
+          end
+          item
+            Action = fraListView1.actFulldrag
+            CommandStyle = csCheckBox
+            CommandProperties.Width = -1
+          end
+          item
+            Action = fraListView1.actRowSelect
+            CommandStyle = csCheckBox
+            CommandProperties.Width = -1
+          end>
+        ActionBar = rgBehavour
+      end
+      item
+        Items = <
+          item
+            Action = fraListView1.actSelectFirst
+          end
+          item
+            Action = fraListView1.actSelectNext
+          end
+          item
+            Action = fraListView1.actSelectPrevious
+          end
+          item
+            Action = fraListView1.actSelectLast
+          end>
+        ActionBar = rgNavigate
+      end
+      item
+        Items = <
+          item
+            Action = fraListView1.actSelectAll
+          end
+          item
+            Action = fraListView1.actSelectNone
+          end
+          item
+            Action = fraListView1.actSelectInvert
+          end>
+        ActionBar = rgSelect
+      end>
+    Left = 40
+    Top = 320
+    StyleName = 'Ribbon - Luna'
+  end
+end

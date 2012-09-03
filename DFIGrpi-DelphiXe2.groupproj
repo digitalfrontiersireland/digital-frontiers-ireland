@@ -12,6 +12,12 @@
 			<Projects Include="packages\DFICommon.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="packages\FrameTemplates.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="source\test\packages\PackageTest.dproj">
+				<Dependencies/>
+			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +53,32 @@
 		<Target Name="DFICommon:Make">
 			<MSBuild Projects="packages\DFICommon.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="FrameTemplates">
+			<MSBuild Projects="packages\FrameTemplates.dproj"/>
+		</Target>
+		<Target Name="FrameTemplates:Clean">
+			<MSBuild Projects="packages\FrameTemplates.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="FrameTemplates:Make">
+			<MSBuild Projects="packages\FrameTemplates.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="PackageTest">
+			<MSBuild Projects="source\test\packages\PackageTest.dproj"/>
+		</Target>
+		<Target Name="PackageTest:Clean">
+			<MSBuild Projects="source\test\packages\PackageTest.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="PackageTest:Make">
+			<MSBuild Projects="source\test\packages\PackageTest.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="FastMM;DFICrypto;DFICommon"/>
+			<CallTarget Targets="FastMM;DFICrypto;DFICommon;FrameTemplates;PackageTest"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="FastMM:Clean;DFICrypto:Clean;DFICommon:Clean"/>
+			<CallTarget Targets="FastMM:Clean;DFICrypto:Clean;DFICommon:Clean;FrameTemplates:Clean;PackageTest:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="FastMM:Make;DFICrypto:Make;DFICommon:Make"/>
+			<CallTarget Targets="FastMM:Make;DFICrypto:Make;DFICommon:Make;FrameTemplates:Make;PackageTest:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

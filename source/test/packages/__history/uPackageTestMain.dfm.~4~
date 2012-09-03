@@ -1,0 +1,193 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 528
+  ClientWidth = 736
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 120
+  TextHeight = 16
+  inline fraListView1: TfraListView
+    Left = 0
+    Top = 180
+    Width = 736
+    Height = 348
+    Align = alClient
+    TabOrder = 0
+    ExplicitLeft = -243
+    ExplicitTop = -112
+    inherited ListView: TJvListView
+      Width = 736
+      Height = 348
+      ExplicitTop = 29
+    end
+  end
+  object Ribbon1: TRibbon
+    Left = 0
+    Top = 0
+    Width = 736
+    Height = 180
+    ActionManager = ActionManager
+    Caption = 'Ribbon1'
+    Tabs = <
+      item
+        Caption = 'View'
+        Page = RibbonPage1
+      end>
+    ExplicitLeft = 272
+    ExplicitTop = 160
+    ExplicitWidth = 0
+    ExplicitHeight = 144
+    DesignSize = (
+      736
+      180)
+    StyleName = 'Ribbon - Luna'
+    object RibbonPage1: TRibbonPage
+      Left = 0
+      Top = 64
+      Width = 735
+      Height = 116
+      Caption = 'View'
+      Index = 0
+      ExplicitWidth = 526
+      object RibbonGroup1: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 211
+        Height = 108
+        ActionManager = ActionManager
+        Caption = 'Items'
+        GroupIndex = 0
+      end
+      object RibbonGroup2: TRibbonGroup
+        Left = 217
+        Top = 3
+        Width = 119
+        Height = 108
+        ActionManager = ActionManager
+        Caption = 'RibbonGroup2'
+        GroupIndex = 1
+        Rows = 2
+      end
+      object RibbonGroup3: TRibbonGroup
+        Left = 338
+        Top = 3
+        Width = 188
+        Height = 108
+        ActionManager = ActionManager
+        Caption = 'RibbonGroup3'
+        GroupIndex = 2
+      end
+      object RibbonGroup4: TRibbonGroup
+        Left = 528
+        Top = 3
+        Width = 423
+        Height = 108
+        ActionManager = ActionManager
+        Caption = 'RibbonGroup4'
+        GroupIndex = 3
+      end
+    end
+  end
+  object ActionManager: TActionManager
+    ActionBars = <
+      item
+        Items = <
+          item
+            Action = fraListView1.actClearListView
+          end
+          item
+            Action = fraListView1.actRefreshListView
+          end
+          item
+            Action = fraListView1.actSelectAll
+          end
+          item
+            Action = fraListView1.actSelectNone
+          end
+          item
+            Action = fraListView1.actSelectInvert
+          end>
+        ActionBar = RibbonGroup1
+      end
+      item
+        Items = <
+          item
+            Action = fraListView1.actSelectFirst
+          end
+          item
+            Action = fraListView1.actSelectNext
+          end
+          item
+            Action = fraListView1.actSelectPrevious
+          end
+          item
+            Action = fraListView1.actSelectLast
+          end>
+        ActionBar = RibbonGroup2
+      end
+      item
+        Items = <
+          item
+            Action = fraListView1.actListViewGrouped
+          end
+          item
+            Action = fraListView1.actListViewIcon
+          end
+          item
+            Action = fraListView1.actListViewList
+          end
+          item
+            Action = fraListView1.actListViewReport
+          end
+          item
+            Action = fraListView1.actListViewSmallIcon
+          end
+          item
+            Action = fraListView1.actListViewTiled
+          end>
+        ActionBar = RibbonGroup3
+      end
+      item
+        Items = <
+          item
+            Action = fraListView1.actDotNetHighlight
+          end
+          item
+            Action = fraListView1.actFlatScrollBars
+          end
+          item
+            Action = fraListView1.actFulldrag
+          end
+          item
+            Action = fraListView1.actGridLines
+          end
+          item
+            Action = fraListView1.actHotTrack
+            Caption = 'H&ot Tracking'
+          end
+          item
+            Action = fraListView1.actRowSelect
+          end
+          item
+            Action = fraListView1.actShowColHeaders
+            Caption = '&Show Column Headers'
+          end
+          item
+            Action = fraListView1.actShowHint
+            Caption = 'Sho&w Hint'
+          end>
+        ActionBar = RibbonGroup4
+      end>
+    Left = 40
+    Top = 320
+    StyleName = 'Ribbon - Luna'
+  end
+end

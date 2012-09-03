@@ -1,0 +1,108 @@
+program md5;
+{
+  Ivan Malone
+  Digital Frontiers Ireland
+  Date: 29/08/2012
+
+  Email: info@digitalfrontiersireland.com
+    Web: http://www.digitalfrontiersireland.com
+
+This software and its code are offered under the
+GNU General Public License (gpl) version 3 or above.
+
+See http://www.gnu.org/copyleft/gpl.html
+}
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  System.SysUtils, Classes, IdHashMessageDigest;
+
+Var
+ i,j : integer;
+ FileList : TStringList;
+
+
+procedure ShowHelp();
+Begin
+ WriteLn('MD5 by Ivan Malone (ivanm@digitalfrontiersireland.com)');
+  WriteLn('');
+  WriteLn('This program is licensed under the terms of the GNU GPL v3');
+  WriteLn('See http://www.gnu.org/licenses/gpl-3.0.html for further details');
+  WriteLn('');
+  WriteLn('   Email: support@digitalfrontiersireland.com');
+  WriteLn('     WWW: www.digitalfrontiersireland.com');
+  WriteLn('');
+  WriteLn('Usage:');
+  WriteLn('      ' + ExtractFileName(ParamStr(0)) + ' file1 file2 file3');
+
+End;
+
+function FileMD5ToString(const fileName : string) : string;
+ var
+   idmd5 : TIdHashMessageDigest5;
+   fs : TFileStream;
+ begin
+
+   idmd5 := TIdHashMessageDigest5.Create;
+   fs := TFileStream.Create(fileName, fmOpenRead OR fmShareDenyWrite) ;
+   try
+     result := IDMD5.HashStreamAsHex(fs);
+   finally
+     fs.Free;
+     idmd5.Free;
+   end;
+ end;
+
+procedure FileSearch(const PathName, FileName : string; Var aFileList : TStringList) ;
+ var Rec : TSearchRec;
+ Path : string;
+ begin
+ Path := IncludeTrailingPathDelimiter(PathName) ;
+ if FindFirst (Path + FileName, faAnyFile - faDirectory, Rec) = 0 then
+ try
+ repeat
+ aFileList.Add(Path + Rec.Name) ;
+ until FindNext(Rec) <> 0;
+ finally
+ FindClose(Rec) ;
+ end;
+
+
+begin
+ FileList := TStringList.Create;
+  try
+    { TODO -oUser -cConsole Main : Insert code here }
+    if ParamCount = 0 then
+       Begin
+         WriteLn('No command line arguments giving!');
+         WriteLn('Type ' + ExtractFileName(ParamStr(0)) + ' file1 file2 file3 etc');
+       End;
+    for i := 1 to ParamCount do
+       Begin
+       if FileExists(ParamStr(i)) then
+          Begin
+          WriteLn(ExtractFileName(ParamStr(i)) + ': ' + FileMD5ToString(ParamStr(i)));
+          End
+       ELSE
+          Begin
+          if DirectoryExists(ParamStr(i)) then
+             Begin
+             // maybe its a folder?
+             FileSearch(ParamStr(i),'*.*', FileList);
+             End
+          else
+             Begin
+             WriteLn('File not found');
+             End;
+          End;
+       End;
+  except on E: Exception do
+    Begin
+    Writeln(E.ClassName, ': ', E.Message);
+    End;
+end;
+
+end.

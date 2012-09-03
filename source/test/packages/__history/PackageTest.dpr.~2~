@@ -1,0 +1,15 @@
+program PackageTest;
+
+uses
+  Vcl.Forms,
+  uPackageTestMain in 'uPackageTestMain.pas' {Form1},
+  ufraListView in '..\..\..\packages\ufraListView.pas' {fraListView: TFrame};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

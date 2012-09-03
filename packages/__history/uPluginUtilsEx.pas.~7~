@@ -290,7 +290,7 @@ if (Assigned(aListView) = true) AND
                    GroupItem.FooterAlign := DLLObject.GroupInfo.Footer.Align;
 
                    GroupItem.Subtitle := DLLObject.GroupInfo.Subtitle;
-                    // TODO: Were certain groupitem properties removed in Delphi XE2?
+
 //                   GroupItem.SubsetTitle := DLLObject.GroupInfo.SubsetTitle;
 
 //                   GroupItem.TopDescription := DLLObject.GroupInfo.Description.Top;
