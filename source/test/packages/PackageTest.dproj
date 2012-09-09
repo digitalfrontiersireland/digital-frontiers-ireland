@@ -70,6 +70,10 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<Icon_MainIcon>c:\program files (x86)\embarcadero\rad studio\9.0\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+			<DCC_UnitSearchPath>C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\test\packages;C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\Win32\Debug;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_RemoteDebug>false</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -88,6 +92,16 @@
 			</DCCReference>
 			<DCCReference Include="..\..\..\packages\ufraListView.pas">
 				<Form>fraListView</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\..\packages\udlgListView_AddGroup.pas">
+				<Form>dlgAddGroup</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\..\packages\udlgListView_AddItem.pas">
+				<Form>dlgAddItem</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\..\packages\ufraListView_Groups.pas">
+				<Form>fraListView_Groups</Form>
 				<DesignClass>TFrame</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
@@ -137,6 +151,10 @@
 					<Source>
 						<Source Name="MainSource">PackageTest.dpr</Source>
 					</Source>
+					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+					</Excluded_Packages>
 				</Delphi.Personality>
 				<Deployment/>
 				<Platforms>

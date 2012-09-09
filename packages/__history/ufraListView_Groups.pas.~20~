@@ -1,0 +1,44 @@
+unit ufraListView_Groups;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, ufraListView;
+
+type
+  TfraListView_Groups = class(TFrame)
+    fraListView: TfraListView;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure AddGroupsFrom(Var aListView : TListView);
+  end;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TfraListView_Groups.AddGroupsFrom(Var aListView : TListView);
+Var
+  i : integer;
+  Item : TListItem;
+Begin
+if Assigned(aListView) then
+   Begin
+   for i := 0 to aListView.Groups.Count - 1 do
+      Begin
+      with fraListView do
+         Begin
+         ListView.Items.BeginUpdate;
+
+
+         End;
+      End;
+   End;
+
+End;
+
+end.

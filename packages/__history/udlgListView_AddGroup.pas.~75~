@@ -1,0 +1,205 @@
+unit udlgListView_AddGroup;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, JvExForms,
+  JvCustomItemViewer, JvImageListViewer, Vcl.ImgList, JvImageList, Vcl.ComCtrls,
+  ufraListView, JvBaseDlg, JvImageDlg, Vcl.ExtDlgs, ufraListView_Groups;
+
+type
+  TdlgAddGroup = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    SampleBox: TGroupBox;
+    ListViewSample: TfraListView;
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    ebHeader: TLabeledEdit;
+    ebFooter: TLabeledEdit;
+    ebSubtitle: TLabeledEdit;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
+    Button7: TButton;
+    Button8: TButton;
+    cbClearGroups: TCheckBox;
+    fraListView_Groups: TfraListView_Groups;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure ebHeaderChange(Sender: TObject);
+    procedure ebSubtitleChange(Sender: TObject);
+    procedure ebFooterChange(Sender: TObject);
+    procedure ImageDialogShow(Sender: TObject);
+    procedure cbClearGroupsClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    GroupData     :       TGroupInfoRec;
+    ClearGroups   :       boolean;
+  end;
+
+var
+  dlgAddGroup: TdlgAddGroup;
+
+implementation
+
+{$R *.dfm}
+
+procedure TdlgAddGroup.Button1Click(Sender: TObject);
+begin
+ModalResult := mrOk;
+end;
+
+procedure TdlgAddGroup.Button2Click(Sender: TObject);
+begin
+ModalResult := mrCancel;
+end;
+
+procedure TdlgAddGroup.cbClearGroupsClick(Sender: TObject);
+begin
+ClearGroups := cbClearGroups.Checked;
+end;
+
+procedure TdlgAddGroup.ebFooterChange(Sender: TObject);
+Var
+  i : integer;
+begin
+GroupData.Footer := ebFooter.Text;
+ListViewSample.ListView.Items.BeginUpdate;
+for i := 0 to ListViewSample.ListView.Groups.Count -1 do
+     Begin
+       ListViewSample.ListView.Groups.Items[i].Footer := ebFooter.Text;
+     End;
+ListViewSample.ListView.Items.EndUpdate;
+end;
+
+procedure TdlgAddGroup.ebHeaderChange(Sender: TObject);
+Var
+  i       :     integer;
+begin
+GroupData.Header := ebHeader.Text;
+ListViewSample.ListView.Items.BeginUpdate;
+for i := 0 to ListViewSample.ListView.Groups.Count -1 do
+     Begin
+       ListViewSample.ListView.Groups.Items[i].Header := ebHeader.Text;
+     End;
+ListViewSample.ListView.Items.EndUpdate;
+end;
+
+procedure TdlgAddGroup.ebSubtitleChange(Sender: TObject);
+var
+  i : integer;
+begin
+GroupData.Subtitle := ebSubtitle.Text;
+ListViewSample.ListView.Items.BeginUpdate;
+for i := 0 to ListViewSample.ListView.Groups.Count -1 do
+     Begin
+       ListViewSample.ListView.Groups.Items[i].Subtitle := ebSubtitle.Text;
+     End;
+ListViewSample.ListView.Items.EndUpdate;
+end;
+
+procedure TdlgAddGroup.FormCreate(Sender: TObject);
+Const
+  SampleCols      =       2;
+  SampleItems     =       2;
+  SampleGroups    =       1;
+ var
+  i,j           : Integer;
+  ItemList      : TStringList;
+  GroupInfo     : TGroupInfoRec;
+  ItemInfo      : TListItemInfoRec;
+begin
+// add default group info data
+GroupInfo.Header := 'Sample Header';
+GroupInfo.Footer := 'Sample Footer';
+GroupInfo.Subtitle := 'Subtitle Sample';
+// TODO: finish alignments for groupinfo here
+
+
+// update components to refrect group info
+ebFooter.Text := GroupInfo.Footer;
+ebHeader.Text := GroupInfo.Header;
+ebSubtitle.Text := GrouPinfo.Subtitle;
+
+// Some default component states
+ClearGroups := False;
+
+cbClearGroups.Checked := ClearGroups;
+
+
+ItemList := TStringList.Create;
+
+
+// Create Cols
+ItemList.BeginUpdate;
+ItemList.Clear;
+for i := 0 to SampleCols - 1 do
+   Begin
+   ItemList.Add('Col ' + IntToStr(i));
+   End;
+ItemList.EndUpdate;
+self.ListViewSample.AddColumns(ItemList,true,taCenter,True,50,500,0,0);
+
+
+// Create Groups
+ItemList.BeginUpdate;
+ItemList.Clear;
+for i := 0 to SampleGroups - 1 do
+  Begin
+  ItemList.Add('Group Header (' + IntToStr(i) + ')');
+  End;
+GroupInfo.Footer := 'This is a sample footer for a group';
+GroupInfo.Subtitle := 'This is a sample Subtitle';
+// TODO: DO groupinfo.align stuff
+ItemList.EndUpdate;
+ListViewSample.AddGroups(ItemList,GroupInfo,True);
+
+// Create Items
+ItemList.BeginUpdate;
+ItemList.Clear;
+ItemList.EndUpdate;
+
+ListViewSample.ListView.Clear;
+ListViewSample.ListView.Items.BeginUpdate;
+for i := 0 to SampleItems - 1 do
+     Begin
+     ItemInfo.Checked := False;
+     ItemInfo.Caption := 'Sample Item #' + IntToStr(i);
+     ItemInfo.GroupID := Random(SampleGroups);
+     // TODO: Finish State/Overlay correctly
+     ItemInfo.StateIndex := 0;
+     ItemInfo.OverlayIndex := 0;
+     ListViewSample.AddItem(ItemInfo,False);
+     End;
+ListViewSample.ListView.Items.EndUpdate;
+
+ListViewSample.ListView.Items.BeginUpdate;
+// Create SubItems
+for i := 0 to ListViewSample.ListView.Items.Count - 1 do
+     Begin
+     for j := 0 to SampleCols - 1 do
+        Begin
+        ListViewSample.ListView.Items.Item[i].SubItems.Add(IntToStr(Random(1000)));
+        End;
+     End;
+ListViewSample.ListView.Items.EndUpdate;
+
+ItemList.Free;
+
+GroupData := GroupInfo;
+end;
+
+procedure TdlgAddGroup.ImageDialogShow(Sender: TObject);
+begin
+ShowMessagE('sj');
+self.Visible := true;
+end;
+
+end.

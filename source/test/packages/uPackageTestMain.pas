@@ -5,22 +5,30 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ufraListView, Vcl.ToolWin, Vcl.ActnMan,
-  Vcl.ActnCtrls, Vcl.Ribbon, Vcl.ActnList, Vcl.RibbonLunaStyleActnCtrls;
+  Vcl.ActnCtrls, Vcl.Ribbon, Vcl.ActnList, Vcl.RibbonLunaStyleActnCtrls,
+  Vcl.ActnMenus, Vcl.RibbonActnMenus, Data.Bind.EngExt, Vcl.Bind.DBEngExt,
+  Data.Bind.Components;
 
 type
   TfrmListView = class(TForm)
     fraListView: TfraListView;
     Ribbon: TRibbon;
-    rpOptions: TRibbonPage;
     ActionManager: TActionManager;
-    rpItems: TRibbonPage;
+    RibbonQuickAccessToolbar1: TRibbonQuickAccessToolbar;
+    RibbonApplicationMenuBar1: TRibbonApplicationMenuBar;
+    RibbonPage1: TRibbonPage;
+    rgNavSelect: TRibbonGroup;
+    rgItems: TRibbonGroup;
+    RibbonPage2: TRibbonPage;
     rgViewStyle: TRibbonGroup;
-    rgBehavour: TRibbonGroup;
-    rgNavigate: TRibbonGroup;
-    rgSelect: TRibbonGroup;
-    rgViewOptions: TRibbonGroup;
-    rgGroups: TRibbonGroup;
+    rgBehaviour: TRibbonGroup;
+    rgGroup: TRibbonGroup;
     procedure FormCreate(Sender: TObject);
+    procedure fraListViewactRowSelectExecute(Sender: TObject);
+    procedure fraListViewMenu_ListViewPopup(Sender: TObject);
+    procedure fraListViewactShowHiddenGroupItemsExecute(Sender: TObject);
+    procedure fraListViewactListViewGroupedExecute(Sender: TObject);
+    procedure fraListViewactAddGroupExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -39,7 +47,14 @@ vAR
   aGroupInfo : TGroupInfoRec;
   ListItemInfo : TListItemInfoRec;
   list : tstringlist;
+
 begin
+// Apply default
+rgGroup.Visible := fraListView.actListViewGrouped.Checked;
+
+
+
+
 Ribbon.Caption := Caption;
 
 
@@ -105,17 +120,17 @@ Self.fraListView.AddItem(ListItemInfo,False);
 
 ListItemInfo.Caption := 'Item 7';
 ListItemInfo.Checked := false;
-ListItemInfo.GroupID := 2;
+ListItemInfo.GroupID := 10;
 Self.fraListView.AddItem(ListItemInfo,False);
 
 ListItemInfo.Caption := 'Item 8';
 ListItemInfo.Checked := false;
-ListItemInfo.GroupID := 3;
+ListItemInfo.GroupID := 10;
 Self.fraListView.AddItem(ListItemInfo,False);
 
 ListItemInfo.Caption := 'Item 9';
 ListItemInfo.Checked := false;
-ListItemInfo.GroupID := 3;
+ListItemInfo.GroupID := 10;
 Self.fraListView.AddItem(ListItemInfo,False);
 
 
@@ -131,6 +146,39 @@ self.fraListView.ListView.Items.Item[0].SubItems.add('9');
 
 
 Self.fraListView.UpdateActionStates;
+
+
+end;
+
+procedure TfrmListView.fraListViewactAddGroupExecute(Sender: TObject);
+begin
+  fraListView.actAddGroupExecute(Sender);
+
+end;
+
+procedure TfrmListView.fraListViewactListViewGroupedExecute(Sender: TObject);
+begin
+  fraListView.actListViewGroupedExecute(Sender);
+  rgGroup.Visible := fraListView.actListViewGrouped.Checked;
+end;
+
+procedure TfrmListView.fraListViewactRowSelectExecute(Sender: TObject);
+begin
+  fraListView.actRowSelectExecute(Sender);
+
+end;
+
+procedure TfrmListView.fraListViewactShowHiddenGroupItemsExecute(
+  Sender: TObject);
+begin
+  fraListView.actShowHiddenGroupItemsExecute(Sender);
+
+
+end;
+
+procedure TfrmListView.fraListViewMenu_ListViewPopup(Sender: TObject);
+begin
+  fraListView.Menu_ListViewPopup(Sender);
 
 
 end;

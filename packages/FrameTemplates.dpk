@@ -35,9 +35,14 @@ requires
   JclVcl,
   JvCore,
   JvSystem,
-  JvStdCtrls;
+  JvStdCtrls,
+  JvCustom,
+  JvDlgs;
 
 contains
-  ufraListView in 'ufraListView.pas' {fraListView: TFrame};
+  ufraListView in 'ufraListView.pas' {fraListView: TFrame},
+  udlgListView_AddGroup in 'udlgListView_AddGroup.pas' {dlgAddGroup},
+  udlgListView_AddItem in 'udlgListView_AddItem.pas' {dlgAddItem},
+  ufraListView_Groups in 'ufraListView_Groups.pas' {fraListView_Groups: TFrame};
 
 end.

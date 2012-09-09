@@ -83,8 +83,23 @@
 			<DCCReference Include="JvCore.dcp"/>
 			<DCCReference Include="JvSystem.dcp"/>
 			<DCCReference Include="JvStdCtrls.dcp"/>
+			<DCCReference Include="JvCustom.dcp"/>
+			<DCCReference Include="JvDlgs.dcp"/>
 			<DCCReference Include="ufraListView.pas">
 				<Form>fraListView</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="udlgListView_AddGroup.pas">
+				<Form>dlgAddGroup</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="udlgListView_AddItem.pas">
+				<Form>dlgAddItem</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="ufraListView_Groups.pas">
+				<Form>fraListView_Groups</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TFrame</DesignClass>
 			</DCCReference>

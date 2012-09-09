@@ -7,10 +7,13 @@ CONST
     VCL_TOOL_PAGE     =       'Digital Frontiers Ireland';
 
 
+
+
 procedure Register();
 
 implementation
 uses uDllUtilsEx, uStubDllEventHandler, uPluginUtilsEx;
+
 
 procedure Register();
 Begin

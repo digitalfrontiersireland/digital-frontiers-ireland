@@ -14,13 +14,25 @@ object fraListView: TfraListView
     Height = 538
     Align = alClient
     Columns = <>
+    Groups = <
+      item
+        GroupID = 0
+        State = [lgsNormal]
+        HeaderAlign = taLeftJustify
+        FooterAlign = taLeftJustify
+        TitleImage = -1
+      end>
+    MultiSelect = True
+    PopupMenu = Menu_ListView
     TabOrder = 0
     ViewStyle = vsReport
+    OnChange = ListViewChange
+    OnDeletion = ListViewDeletion
+    OnEdited = ListViewEdited
+    OnInsert = ListViewInsert
+    OnSelectItem = ListViewSelectItem
+    OnItemChecked = ListViewItemChecked
     ExtendedColumns = <>
-    ExplicitLeft = 264
-    ExplicitTop = 192
-    ExplicitWidth = 250
-    ExplicitHeight = 150
   end
   object ActionList_ListView: TActionList
     Left = 48
@@ -74,42 +86,42 @@ object fraListView: TfraListView
     end
     object actSelectAll: TAction
       Tag = 2
-      Category = 'ListView.Items'
+      Category = 'ListView.Select'
       Caption = 'Select &All'
       OnExecute = actSelectAllExecute
     end
     object actSelectNone: TAction
       Tag = 2
-      Category = 'ListView.Items'
+      Category = 'ListView.Select'
       Caption = 'Select &None'
       OnExecute = actSelectNoneExecute
     end
     object actSelectInvert: TAction
       Tag = 2
-      Category = 'ListView.Items'
+      Category = 'ListView.Select'
       Caption = 'In&vert Selection'
       OnExecute = actSelectInvertExecute
     end
     object actSelectFirst: TAction
-      Tag = 2
+      Tag = 5
       Category = 'ListView.Navigation'
       Caption = '&First'
       OnExecute = actSelectFirstExecute
     end
     object actSelectLast: TAction
-      Tag = 2
+      Tag = 6
       Category = 'ListView.Navigation'
       Caption = '&Last'
       OnExecute = actSelectLastExecute
     end
     object actSelectPrevious: TAction
-      Tag = 2
+      Tag = 5
       Category = 'ListView.Navigation'
       Caption = '&Previous'
       OnExecute = actSelectPreviousExecute
     end
     object actSelectNext: TAction
-      Tag = 2
+      Tag = 6
       Category = 'ListView.Navigation'
       Caption = '&Next'
       OnExecute = actSelectNextExecute
@@ -129,7 +141,7 @@ object fraListView: TfraListView
     object actGroupExpandAll: TAction
       Tag = 2
       Category = 'ListView.Groups'
-      Caption = '&UnCollapse All'
+      Caption = 'E&xpand All'
       OnExecute = actGroupExpandAllExecute
     end
     object actFlatScrollBars: TAction
@@ -146,19 +158,19 @@ object fraListView: TfraListView
     end
     object actDotNetHighlight: TAction
       Tag = 1
-      Category = 'ListView.ViewStyle'
+      Category = 'ListView.Behavour'
       Caption = '.NET &Highlighting'
       OnExecute = actDotNetHighlightExecute
     end
     object actHotTrack: TAction
       Tag = 1
-      Category = 'ListView.ViewStyle'
+      Category = 'ListView.Behavour'
       Caption = '&Hot Tracking'
       OnExecute = actHotTrackExecute
     end
     object actFulldrag: TAction
       Tag = 1
-      Category = 'ListView.ViewStyle'
+      Category = 'ListView.Behavour'
       Caption = 'Ful&ldrag'
       OnExecute = actFulldragExecute
     end
@@ -170,15 +182,45 @@ object fraListView: TfraListView
     end
     object actRowSelect: TAction
       Tag = 1
-      Category = 'ListView.ViewStyle'
+      Category = 'ListView.Behavour'
       Caption = '&Row Select'
       OnExecute = actRowSelectExecute
     end
     object actShowColHeaders: TAction
       Tag = 1
       Category = 'ListView.ViewStyle'
-      Caption = 'Show Column &Headers'
+      Caption = 'Show &Column Headers'
       OnExecute = actShowColHeadersExecute
+    end
+    object actAddGroup: TAction
+      Tag = 2
+      Category = 'ListView.Groups'
+      Caption = '&Add Group'
+      OnExecute = actAddGroupExecute
+    end
+    object actMultiselect: TAction
+      Tag = 2
+      Category = 'ListView.Behavour'
+      Caption = '&Multiselect'
+      OnExecute = actMultiselectExecute
+    end
+    object actShowHiddenGroupItems: TAction
+      Tag = 1
+      Category = 'ListView.Groups'
+      Caption = 'Show &Hidden'
+      OnExecute = actShowHiddenGroupItemsExecute
+    end
+    object actAddListviewItem: TAction
+      Tag = 1
+      Category = 'ListView.Items'
+      Caption = 'Add &Item'
+      OnExecute = actAddListviewItemExecute
+    end
+    object actDeleteItem: TAction
+      Tag = 2
+      Category = 'ListView.Items'
+      Caption = '&Delete Selected'
+      OnExecute = actDeleteItemExecute
     end
   end
   object Menu_ListView: TJvPopupMenu
@@ -189,8 +231,8 @@ object fraListView: TfraListView
     ImageMargin.Bottom = 0
     ImageSize.Height = 0
     ImageSize.Width = 0
-    Left = 152
-    Top = 40
+    Left = 144
+    Top = 152
     object Clear1: TMenuItem
       Action = actClearListView
     end
@@ -220,6 +262,18 @@ object fraListView: TfraListView
       object Last1: TMenuItem
         Action = actSelectLast
       end
+      object N15: TMenuItem
+        Caption = '-'
+      end
+      object AddItem1: TMenuItem
+        Action = actAddListviewItem
+      end
+      object Delete1: TMenuItem
+        Action = actDeleteItem
+      end
+    end
+    object N13: TMenuItem
+      Caption = '-'
     end
     object Groups1: TMenuItem
       Caption = '&Groups'
@@ -235,6 +289,21 @@ object fraListView: TfraListView
       object UnCollapseAll1: TMenuItem
         Action = actGroupExpandAll
       end
+      object N8: TMenuItem
+        Caption = '-'
+      end
+      object AddGroup1: TMenuItem
+        Action = actAddGroup
+      end
+      object N12: TMenuItem
+        Caption = '-'
+      end
+      object ShowHidden1: TMenuItem
+        Action = actShowHiddenGroupItems
+      end
+    end
+    object N14: TMenuItem
+      Caption = '-'
     end
     object Select1: TMenuItem
       Caption = '&Select'
@@ -249,6 +318,9 @@ object fraListView: TfraListView
       end
       object InvertSelection1: TMenuItem
         Action = actSelectInvert
+      end
+      object Multiselect2: TMenuItem
+        Action = actMultiselect
       end
     end
     object N6: TMenuItem
@@ -313,14 +385,26 @@ object fraListView: TfraListView
         Tag = 1
         Action = actHotTrack
       end
-      object NETHighlighting1: TMenuItem
-        Action = actDotNetHighlight
+      object N9: TMenuItem
+        Caption = '-'
       end
       object Fulldrag1: TMenuItem
         Action = actFulldrag
       end
       object RowSelect1: TMenuItem
         Action = actRowSelect
+      end
+      object N10: TMenuItem
+        Caption = '-'
+      end
+      object Multiselect1: TMenuItem
+        Action = actMultiselect
+      end
+      object N11: TMenuItem
+        Caption = '-'
+      end
+      object NETHighlighting1: TMenuItem
+        Action = actDotNetHighlight
       end
     end
   end

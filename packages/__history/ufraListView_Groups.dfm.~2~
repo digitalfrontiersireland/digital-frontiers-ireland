@@ -1,0 +1,20 @@
+object Frame1: TFrame1
+  Left = 0
+  Top = 0
+  Width = 400
+  Height = 228
+  TabOrder = 0
+  object ListView1: TListView
+    Left = 0
+    Top = 0
+    Width = 400
+    Height = 228
+    Align = alClient
+    Columns = <>
+    TabOrder = 0
+    ExplicitLeft = 72
+    ExplicitTop = 40
+    ExplicitWidth = 250
+    ExplicitHeight = 150
+  end
+end
