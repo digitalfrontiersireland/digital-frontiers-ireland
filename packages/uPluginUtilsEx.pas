@@ -1,25 +1,29 @@
 unit uPluginUtilsEx;
 
 interface
-uses uDLLUtilsEx, uStubCommon, Windows, Dialogs, SysUtils, Classes, ComCtrls;
+uses uDLLUtilsEx, uStubCommon, Windows, Dialogs, SysUtils, Classes, ComCtrls,
+    Cromis.IPC, Cromis.Threading;
+
 // =============================================================================
 // Responsible for implementing basic plugin functionality on top of a DLL Object
-
-
-
-
+// =============================================================================
 Type    TPluginObject         =       class(TDLLObject)
         private
         FInitData             :       TStub_InitObject;
         FGroupInfo            :       TGroupInfoRec;
         FListItemCaption      :       String;
+        FIPCServerName        :       String;
         RFUNC_Initialize      :       TFUNC_Initialize;
         RFUNC_Deinitialize    :       TFUNC_Deinitalize;
         RFUNC_SendMessage     :       TFUNC_Message;
         RFUNC_SendMessageWithData :   TFUNC_MessageWithData;
         RFUNC_GetExportedFunctionNames :       TGetExportedFunctionNames;
         RFUNC_GetGroupDetails :       TFUNC_GetGroupDetails;
-        RFUNC_GetListItemCaption :    TFUNC_GetListItemCaption;
+        RFUNC_GetListItemCaption :    TFUNC_GetStr;
+        RFUNC_GetIPCServerName :      TFUNC_GetStr;
+        FTaskPool: TTaskPool;
+        procedure OnMessageComplete(const Msg: ITaskMessage);
+        procedure OnAsynchronousIPCTask(const ATask: ITask);
         public
         // ---------------------------------------------------------------------
           procedure Load(); override;
@@ -29,6 +33,7 @@ Type    TPluginObject         =       class(TDLLObject)
         // ---------------------------------------------------------------------
           // Events
         // ---------------------------------------------------------------------
+        PROPERTY TaskPool : TTaskPool read FTaskPool;
         PROPERTY OwnerInitData : TStub_InitObject read FInitData;
         PROPERTY GroupInfo : TGroupInfoRec read FGroupInfo;
         PROPERTY ListItemCaption : String read FListItemCaption;
@@ -131,6 +136,7 @@ if IsLoaded then
                    FuncList.Free;
 
                  // its assumed that all functions required below are correctly exported
+                 // and no further checking is really done except to check for non nil
 
                  // Get Group Info for ListView
                  @RFUNC_GetGroupDetails := GetProcAddresS(Handle, FUNC_PREFIX_STUB + FUNC_AskForGroupDetails);
@@ -149,7 +155,21 @@ if IsLoaded then
                       Self.FListItemCaption := 'Unknown or Invalid Plugin';
                     end;
 
+                 @RFUNC_GetIPCServerName := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_AskForIPCServerName);
+                 if @RFUNC_GetIPCServerName <> nil then
+                    Begin
+                    FIPCServerName := RFUNC_GetIPCServerName(Self);
+                    // Our plugin at this stage should have created an IPC Server for us to connect to
 
+                    FTaskPool := TTaskPool.Create(5);
+                    FTaskPool.OnTaskMessage := OnMessageComplete;
+                    FTaskPool.Initialize;
+
+                    End
+                 else
+                    Begin
+                      FIPCServerName := '';
+                    End;
 
                  End;
             End;
@@ -164,11 +184,17 @@ procedure TPluginObject.Unload();
 Begin
 if IsLoaded then
    Begin
+
+   // Destroy IPC Stuff
+  FTaskPool.Finalize;
+  FTaskPool.Free;
+
      // Call deinit if possible
    if @RFUNC_deinitialize <> nil then
       Begin
       RFUNC_Deinitialize;
       End;
+
    End;
 
 Inherited Unload;
@@ -181,7 +207,19 @@ Inherited Unload;
 @RFUNC_GetExportedFunctionNames := nil;
 @RFUNC_GetGroupDetails := nil;
 @RFUNC_GetListItemCaption := nil;
+@RFUNC_GetIPCServerName := nil;
 End;
+
+
+procedure TPluginObject.OnMessageComplete(const Msg: ITaskMessage);
+begin
+  ListBox1.Items.Add(Format('ASynchronous Response with ID: %s', [Msg.Values.Get('ID').AsString]));
+  ListBox1.Items.Add(Format('Response: TDateTime [%s]', [Msg.Values.Get('TDateTime').AsString]));
+  ListBox1.Items.Add(Format('Response: Integer [%d]', [Msg.Values.Get('Integer').AsInteger]));
+  ListBox1.Items.Add(Format('Response: Real [%f]', [Msg.Values.Get('Real').AsFloat]));
+  ListBox1.Items.Add(Format('Response: String [%s]', [Msg.Values.Get('String').AsString]));
+  ListBox1.Items.Add('-----------------------------------------------------------');
+end;
 
 
 FUNCTION TPluginManager.GetInfo(aIndex : integer) : TPluginObject;

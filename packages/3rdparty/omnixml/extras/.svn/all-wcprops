@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/svn/!svn/ver/3/trunk/extras
+END
+GpSecurity.pas
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/extras/GpSecurity.pas
+END
+DSiWin32.pas
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/extras/DSiWin32.pas
+END
+GpSync.pas
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/extras/GpSync.pas
+END
+GpSharedMemory.pas
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/extras/GpSharedMemory.pas
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/extras/readme.txt
+END
+OmniXMLShared.pas
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/3/trunk/extras/OmniXMLShared.pas
+END

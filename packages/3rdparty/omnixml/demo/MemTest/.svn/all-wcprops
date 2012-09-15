@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/demo/MemTest
+END
+MemTest.bdsproj
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2/trunk/demo/MemTest/MemTest.bdsproj
+END
+MemTest.dpr
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/demo/MemTest/MemTest.dpr
+END
+main.pas
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/demo/MemTest/main.pas
+END
+MemTest.res
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/demo/MemTest/MemTest.res
+END
+main.dfm
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/demo/MemTest/main.dfm
+END
+main.xfm
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/demo/MemTest/main.xfm
+END

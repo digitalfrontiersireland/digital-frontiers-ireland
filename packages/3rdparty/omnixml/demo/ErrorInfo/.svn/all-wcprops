@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/2/trunk/demo/ErrorInfo
+END
+main.pas
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2/trunk/demo/ErrorInfo/main.pas
+END
+ErrorInfo.bdsproj
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/2/trunk/demo/ErrorInfo/ErrorInfo.bdsproj
+END
+ErrorInfo.dpr
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2/trunk/demo/ErrorInfo/ErrorInfo.dpr
+END
+main.dfm
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2/trunk/demo/ErrorInfo/main.dfm
+END
+ErrorInfo.res
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2/trunk/demo/ErrorInfo/ErrorInfo.res
+END

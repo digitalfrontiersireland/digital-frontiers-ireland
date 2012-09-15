@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/demo/BioLife
+END
+BioLife.res
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/demo/BioLife/BioLife.res
+END
+blMain.pas
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2/trunk/demo/BioLife/blMain.pas
+END
+blMain.dfm
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2/trunk/demo/BioLife/blMain.dfm
+END
+BioLife.bdsproj
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2/trunk/demo/BioLife/BioLife.bdsproj
+END
+BioLife.dpr
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/demo/BioLife/BioLife.dpr
+END

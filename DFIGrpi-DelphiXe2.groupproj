@@ -3,6 +3,12 @@
 			<ProjectGuid>{634C0C5A-68F7-42FD-9CFB-99B79C33A437}</ProjectGuid>
 		</PropertyGroup>
 		<ItemGroup>
+			<Projects Include="packages\Cromis.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="packages\OmniXML_xe2.dproj">
+				<Dependencies/>
+			</Projects>
 			<Projects Include="packages\3rdparty\FastMM\FastMM.dproj">
 				<Dependencies/>
 			</Projects>
@@ -15,7 +21,7 @@
 			<Projects Include="packages\FrameTemplates.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="source\test\packages\PackageTest.dproj">
+			<Projects Include="packages\3rdparty\Cromis\Demos\Cromis.IPC\IPCClient.dproj">
 				<Dependencies/>
 			</Projects>
 		</ItemGroup>
@@ -26,6 +32,24 @@
 				<Default.Personality/>
 			</BorlandProject>
 		</ProjectExtensions>
+		<Target Name="Cromis">
+			<MSBuild Projects="packages\Cromis.dproj"/>
+		</Target>
+		<Target Name="Cromis:Clean">
+			<MSBuild Projects="packages\Cromis.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="Cromis:Make">
+			<MSBuild Projects="packages\Cromis.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="OmniXML_xe2">
+			<MSBuild Projects="packages\OmniXML_xe2.dproj"/>
+		</Target>
+		<Target Name="OmniXML_xe2:Clean">
+			<MSBuild Projects="packages\OmniXML_xe2.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="OmniXML_xe2:Make">
+			<MSBuild Projects="packages\OmniXML_xe2.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="FastMM">
 			<MSBuild Projects="packages\3rdparty\FastMM\FastMM.dproj"/>
 		</Target>
@@ -62,23 +86,23 @@
 		<Target Name="FrameTemplates:Make">
 			<MSBuild Projects="packages\FrameTemplates.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="PackageTest">
-			<MSBuild Projects="source\test\packages\PackageTest.dproj"/>
+		<Target Name="IPCClient">
+			<MSBuild Projects="packages\3rdparty\Cromis\Demos\Cromis.IPC\IPCClient.dproj"/>
 		</Target>
-		<Target Name="PackageTest:Clean">
-			<MSBuild Projects="source\test\packages\PackageTest.dproj" Targets="Clean"/>
+		<Target Name="IPCClient:Clean">
+			<MSBuild Projects="packages\3rdparty\Cromis\Demos\Cromis.IPC\IPCClient.dproj" Targets="Clean"/>
 		</Target>
-		<Target Name="PackageTest:Make">
-			<MSBuild Projects="source\test\packages\PackageTest.dproj" Targets="Make"/>
+		<Target Name="IPCClient:Make">
+			<MSBuild Projects="packages\3rdparty\Cromis\Demos\Cromis.IPC\IPCClient.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="FastMM;DFICrypto;DFICommon;FrameTemplates;PackageTest"/>
+			<CallTarget Targets="Cromis;OmniXML_xe2;FastMM;DFICrypto;DFICommon;FrameTemplates;IPCClient"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="FastMM:Clean;DFICrypto:Clean;DFICommon:Clean;FrameTemplates:Clean;PackageTest:Clean"/>
+			<CallTarget Targets="Cromis:Clean;OmniXML_xe2:Clean;FastMM:Clean;DFICrypto:Clean;DFICommon:Clean;FrameTemplates:Clean;IPCClient:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="FastMM:Make;DFICrypto:Make;DFICommon:Make;FrameTemplates:Make;PackageTest:Make"/>
+			<CallTarget Targets="Cromis:Make;OmniXML_xe2:Make;FastMM:Make;DFICrypto:Make;DFICommon:Make;FrameTemplates:Make;IPCClient:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

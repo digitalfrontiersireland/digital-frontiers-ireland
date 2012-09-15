@@ -1,7 +1,7 @@
 unit uStubCommon;
 
 interface
-uses   SysUtils, IniFiles, StrUtils, Classes, ComCtrls;
+uses   SysUtils, IniFiles, StrUtils, Classes, ComCtrls, Windows;
 
 Const
           ERROR_INCORRECT_DLL       =       'A Plugin has been corrupted or is not of the correct format';
@@ -22,6 +22,7 @@ Const
           FUNC_GetExportedFunctionNames=    'GetExportedFunctionNames';
           FUNC_AskForGroupDetails   =       'AskForGroupDetails';
           FUNC_AskForListItemCaption=       'AskForListItemCaption';
+          FUNC_AskForIPCServerName  =       'AskForIPCServerName';
 
           DEFAULT_INI_EXT           =       '.ini';
 
@@ -84,12 +85,19 @@ Type      TStub_InitObject          =       class
           // Events
 end;
 
+
+Type      TMessageParamRec          =       record
+          L_Param                   :       lParam;
+          W_Param                   :       wParam;
+          end;
+
 Type      TFUNC_Initialize          =       FUNCTION(Var InitData : TStub_InitObject) : boolean;
 Type      TFUNC_Deinitalize         =       FUNCTION() : boolean;
 Type      TFUNC_Message             =       FUNCTION(aMessage : String; Var Handled : Boolean) : boolean;
-Type      TFUNC_MessageWithData     =       FUNCTION(aMessage : String; aData : TObject;  Var Handled : Boolean) : boolean;
+Type      TFUNC_MessageWithData     =       FUNCTION(aMessage : String; aData : TMessageParamRec;  Var Handled : Boolean) : boolean;
 Type      TFUNC_GetGroupDetails     =       FUNCTION(Sender : TOBject) : TGroupInfoRec;
-Type      TFUNC_GetListItemCaption  =       FUNCTION(Sender : TObject) : string;
+//Type      TFUNC_GetListItemCaption  =       FUNCTION(Sender : TObject) : string;
+Type      TFUNC_GetStr              =       FUNCTION(Sender : TObject) : string;
 Type      TGetExportedFunctionNames =       PROCEDURE(Sender : TObject; Var aStringList : TStringlist);
 
 
@@ -132,7 +140,6 @@ FAdditionalInfo.CompanyName := aInfo.CompanyName;
 FAdditionalInfo.CompanyURL := aInfo.CompanyURL;
 FAdditionalInfo.CompanyEmail := aInfo.CompanyEmail;
 FAdditionalInfo.CompanyComment := aInfo.CompanyComment;
-//FAdditionalInfo.PluginName := aInfo.PluginName;
 End;
 
 end.

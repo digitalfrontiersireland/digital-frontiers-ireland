@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/3/trunk/demo/Storage
+END
+Storage.dproj
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/3/trunk/demo/Storage/Storage.dproj
+END
+main.pas
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/demo/Storage/main.pas
+END
+Storage.bdsproj
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2/trunk/demo/Storage/Storage.bdsproj
+END
+Storage.dpr
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/demo/Storage/Storage.dpr
+END
+main.dfm
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/demo/Storage/main.dfm
+END
+Storage.res
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/demo/Storage/Storage.res
+END

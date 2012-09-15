@@ -5,7 +5,7 @@ uses Classes, uStubCommon, ComCtrls;
 
 Type    TOnInitMessageRecieved      =       PROCEDURE(Sender : TObject; Var InitData : TStub_InitObject) of object;
 Type    TOnMessageRecieved          =       PROCEDURE(Sender : TObject; aMessage : String; Var Handled : Boolean) of object;
-Type    TOnMessageDataRecieved      =       PROCEDURE(sender : TObject; aMessage : String; Data : TObject; Var Handled : Boolean) of object;
+Type    TOnMessageDataRecieved      =       PROCEDURE(sender : TObject; aMessage : String; Data : TMessageParamRec; Var Handled : Boolean) of object;
 Type    TOnGetExportedFunctions     =       PROCEDURE(sender : Tobject; aStringList : TStringList) of object;
 Type    TOnAskForGroupDetails       =       FUNCTION(sender : TObject) : TGroupInfoRec of object;
 Type    TOnAskForListItemCaption    =       FUNCTION(Sender : TObject) : String of object;
@@ -20,6 +20,7 @@ type    TStubDllEventHandler        =       class(TComponent)
           FOnMessageRecieved        :       TOnMessageRecieved;
           FOnMessageDataRecieved    :       TOnMessageDataRecieved;
           FOnGetExportedFunctions   :       TOnGetExportedFunctions;
+          FIPCServerName            :       String;
           Public
           Published
           CONSTRUCTOR Create(AOwner : TComponent); override;
@@ -27,6 +28,7 @@ type    TStubDllEventHandler        =       class(TComponent)
           Protected
           Published
           PROPERTY OwnerInitData : TStub_InitObject read FOwnerInitData write  FOwnerInitData;
+          PROPERTY IPCServerName : String read FIPCServerName write FIPCServerName;
           PROPERTY OnDllInit : TOnInitMessageRecieved read FOnStubInit write FOnStubInit;
           PROPERTY OnDllDeInit : TNotifyEvent read FOnStubDeInit write FOnStubDeInit;
           PROPERTY OnMessageRecieved :  TOnMessageRecieved read FOnMessageRecieved write FOnMessageRecieved;
@@ -34,8 +36,6 @@ type    TStubDllEventHandler        =       class(TComponent)
           PROPERTY OnGetExportedFunctions : TOnGetExportedFunctions read FOnGetExportedFunctions write FOnGetExportedFunctions;
           PROPERTY OnAskForGroupDetails : TOnAskForGroupDetails read FOnAskForGroupDetails write FOnAskForGroupDetails;
           PROPERTY OnAskForListItemCaption : TOnAskForListItemCaption read FOnAskForListItemCaption write FOnAskForListItemCaption;
-
-
 end;
 
 
@@ -46,6 +46,7 @@ implementation
 CONSTRUCTOR TStubDLlEventHandler.Create(AOwner: TComponent);
 begin
   Inherited Create(AOwner);
+  if IPCServerName = '' then IPCServerName := Self.ClassName;
 end;
 
 DESTRUCTOR TStubDllEventHandler.Destroy;
