@@ -1,26 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Transactions>
-    <Transaction>2012/09/15 00:53:02.684,=rtl.dcp</Transaction>
-    <Transaction>2012/09/15 00:53:38.220,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\Cromis.dproj=C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Package1.dproj</Transaction>
-    <Transaction>2012/09/15 00:55:39.245,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.AnyValue.pas</Transaction>
-    <Transaction>2012/09/15 00:55:39.264,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.IMC.pas</Transaction>
-    <Transaction>2012/09/15 00:55:39.283,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.IPC.pas</Transaction>
-    <Transaction>2012/09/15 00:55:39.303,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleLog.pas</Transaction>
-    <Transaction>2012/09/15 00:55:39.322,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleStorage.Builder.pas</Transaction>
-    <Transaction>2012/09/15 00:55:39.344,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleStorage.Collection.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.330,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleStorage.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.350,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSA.DataSet.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.370,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSF.XTEA.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.390,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSF.Zlib.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.414,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Streams.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.436,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.StringUtils.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.465,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Threading.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.485,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Unicode.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.509,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.XTEA.pas</Transaction>
-    <Transaction>2012/09/15 01:10:32.895,=vcl.dcp</Transaction>
-    <Transaction>2012/09/15 01:10:32.904,=dbrtl.dcp</Transaction>
-    <Transaction>2012/09/15 01:10:32.913,=IndyCore.dcp</Transaction>
-    <Transaction>2012/09/15 01:10:32.922,=IndySystem.dcp</Transaction>
+	<Transactions>
+    <Transaction>2012/09/15 00:53:02.000.684,=rtl.dcp</Transaction>
+    <Transaction>2012/09/15 00:53:38.000.220,C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Package1.dproj=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\Cromis.dproj</Transaction>
+    <Transaction>2012/09/15 00:55:39.000.283,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.IPC.pas</Transaction>
+    <Transaction>2012/09/15 00:55:39.000.303,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleLog.pas</Transaction>
+    <Transaction>2012/09/15 00:55:39.000.322,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleStorage.Builder.pas</Transaction>
+    <Transaction>2012/09/15 00:55:39.000.264,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.IMC.pas</Transaction>
+    <Transaction>2012/09/15 00:55:39.000.344,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleStorage.Collection.pas</Transaction>
+    <Transaction>2012/09/15 00:55:39.000.245,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.AnyValue.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.465,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Threading.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.370,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSF.XTEA.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.390,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSF.Zlib.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.485,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Unicode.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.330,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleStorage.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.509,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.XTEA.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.350,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSA.DataSet.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.414,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Streams.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.436,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.StringUtils.pas</Transaction>
+    <Transaction>2012/09/15 01:10:32.000.895,=vcl.dcp</Transaction>
+    <Transaction>2012/09/15 01:10:32.000.904,=dbrtl.dcp</Transaction>
+    <Transaction>2012/09/15 01:10:32.000.913,=IndyCore.dcp</Transaction>
+    <Transaction>2012/09/15 01:10:32.000.922,=IndySystem.dcp</Transaction>
   </Transactions>
 </BorlandProject>
