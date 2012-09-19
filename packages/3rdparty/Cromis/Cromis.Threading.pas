@@ -437,20 +437,27 @@ end;
 procedure TTaskPool.Finalize;
 var
   Task: ITask;
+
 begin
-  Task := FTaskList.AcquireFirstTask;
-
-  while Task <> nil do
-  begin
-    Task.Terminate;
-    Task.WaitFor(FShutdownTimeout);
-    // acquire next task in the list
+// Added Check that there are tasks before aquiring first task
+// Ivan: 19/09/2012
+if FTaskList.Count > 0 then
+   Begin
     Task := FTaskList.AcquireFirstTask;
-  end;
 
-  // clean free task
-  FFreeTasks.Clear;
-  // set the flag
+    while Task <> nil do
+    begin
+      Task.Terminate;
+      Task.WaitFor(FShutdownTimeout);
+      // acquire next task in the list
+      Task := FTaskList.AcquireFirstTask;
+    end;
+
+   // clean free task
+   FFreeTasks.Clear;
+   // set the flag
+   End;
+
   FRunning := False;
 end;
 

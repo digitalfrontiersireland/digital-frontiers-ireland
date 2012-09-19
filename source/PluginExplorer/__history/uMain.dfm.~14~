@@ -1,0 +1,40 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 452
+  ClientWidth = 551
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 120
+  TextHeight = 16
+  object Ribbon: TRibbon
+    Left = 0
+    Top = 0
+    Width = 551
+    Height = 180
+    Caption = 'Ribbon'
+    Tabs = <
+      item
+        Caption = 'Plugins'
+        Page = rpHome
+      end>
+    DesignSize = (
+      551
+      180)
+    StyleName = 'Ribbon - Luna'
+    object rpHome: TRibbonPage
+      Left = 0
+      Top = 64
+      Width = 550
+      Height = 116
+      Caption = 'Plugins'
+      Index = 0
+    end
+  end
+end

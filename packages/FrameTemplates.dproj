@@ -86,6 +86,7 @@
 			<DCCReference Include="JvStdCtrls.dcp"/>
 			<DCCReference Include="JvCustom.dcp"/>
 			<DCCReference Include="JvDlgs.dcp"/>
+			<DCCReference Include="DFICommon.dcp"/>
 			<DCCReference Include="ufraListView.pas">
 				<Form>fraListView</Form>
 				<FormType>dfm</FormType>
@@ -101,6 +102,11 @@
 			</DCCReference>
 			<DCCReference Include="ufraListView_Groups.pas">
 				<Form>fraListView_Groups</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="ufraPluginListView.pas">
+				<Form>fraPluginListView</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TFrame</DesignClass>
 			</DCCReference>

@@ -193,14 +193,17 @@ End;
 // -----------------------------------------------------------------------------
 FUNCTION TDLLObject.HasExportedFunction(aFunctionOrProcedureName : String) : boolean;
 Begin
-if GetProcAddress(FHandle,PChar(aFunctionOrProcedureName)) <> nil then
+if IsLoaded then
    Begin
-     Result := True
-   End
-ELSE
-  Begin
-    Result := False;
-  End;
+   if GetProcAddress(FHandle,PChar(aFunctionOrProcedureName)) <> nil then
+      Begin
+        Result := True
+      End
+   ELSE
+     Begin
+       Result := False;
+     End;
+   End;
 End;
 
 // =============================================================================
@@ -298,7 +301,10 @@ if FDLLList.Count > 0 then
 
 FDLLList.Add(DLLObject);
 if Assigned(FOnListChangeEvent) then OnListChangeEvent(Self);
-if AutoLoadDll then DLLObject.Load;
+if AutoLoadDll then
+   Begin
+   DLLObject.Load;
+   End;
 //DLLObject := nil;
 End;
 // -----------------------------------------------------------------------------

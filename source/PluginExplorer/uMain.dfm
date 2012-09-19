@@ -1,0 +1,86 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 533
+  ClientWidth = 674
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 120
+  TextHeight = 16
+  object Ribbon: TRibbon
+    Left = 0
+    Top = 0
+    Width = 674
+    Height = 180
+    Caption = 'Ribbon'
+    Tabs = <
+      item
+        Caption = 'Plugins'
+        Page = rpHome
+      end>
+    DesignSize = (
+      674
+      180)
+    StyleName = 'Ribbon - Luna'
+    object rpHome: TRibbonPage
+      Left = 0
+      Top = 64
+      Width = 673
+      Height = 116
+      Caption = 'Plugins'
+      Index = 0
+    end
+  end
+  inline fraPluginListView1: TfraPluginListView
+    Left = 0
+    Top = 180
+    Width = 674
+    Height = 353
+    Align = alClient
+    TabOrder = 1
+    ExplicitTop = 180
+    ExplicitWidth = 674
+    ExplicitHeight = 353
+    inherited fraListView: TfraListView
+      Width = 674
+      Height = 353
+      ExplicitWidth = 674
+      ExplicitHeight = 353
+      inherited ListView: TJvListView
+        Width = 674
+        Height = 334
+        ExplicitWidth = 674
+        ExplicitHeight = 334
+      end
+      inherited StatusBar: TJvStatusBar
+        Top = 334
+        Width = 674
+        ExplicitTop = 334
+        ExplicitWidth = 674
+      end
+      inherited Menu_ListView: TJvPopupMenu
+        object Add1: TMenuItem
+          Action = fraPluginListView1.actAddPlugin
+        end
+        object Load1: TMenuItem
+          Action = fraPluginListView1.actLoadPlugin
+        end
+        object UnloadPlugin1: TMenuItem
+          Action = fraPluginListView1.actUnloadPlugin
+        end
+        object LoadAll1: TMenuItem
+          Action = fraPluginListView1.actLoadAll
+        end
+        object UnloadAll1: TMenuItem
+          Action = fraPluginListView1.actUnloadAll
+        end
+      end
+    end
+  end
+end

@@ -208,11 +208,14 @@ procedure TdmStubDll.DataModuleCreate(Sender: TObject);
 begin
 FIPCLog := TStringList.Create;
 FIPCServer := TIPCServer.Create;
+// TODO: TIPCServer: Servername needs sorting
+FIPCServer.ServerName := 'IPCTEST';
 FIPCServer.OnExecuteRequest := OnExecuteRequest;
 end;
 
 procedure TdmStubDll.DataModuleDestroy(Sender: TObject);
 begin
+// TODO: TIPCServer: Right way to destroy these?
   FreeAndNil(FIPCLog);
   FreeAndNil(FIPCServer);
 end;

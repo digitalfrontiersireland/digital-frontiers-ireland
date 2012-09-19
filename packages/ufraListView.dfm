@@ -11,7 +11,7 @@ object fraListView: TfraListView
     Left = 0
     Top = 0
     Width = 770
-    Height = 538
+    Height = 519
     Align = alClient
     Columns = <>
     Groups = <
@@ -27,12 +27,19 @@ object fraListView: TfraListView
     TabOrder = 0
     ViewStyle = vsReport
     OnChange = ListViewChange
-    OnDeletion = ListViewDeletion
     OnEdited = ListViewEdited
-    OnInsert = ListViewInsert
     OnSelectItem = ListViewSelectItem
     OnItemChecked = ListViewItemChecked
+    OnLoadProgress = ListViewLoadProgress
+    OnSaveProgress = ListViewSaveProgress
     ExtendedColumns = <>
+  end
+  object StatusBar: TJvStatusBar
+    Left = 0
+    Top = 519
+    Width = 770
+    Height = 19
+    Panels = <>
   end
   object ActionList_ListView: TActionList
     Left = 48
@@ -231,181 +238,200 @@ object fraListView: TfraListView
     ImageMargin.Bottom = 0
     ImageSize.Height = 0
     ImageSize.Width = 0
-    Left = 144
-    Top = 152
-    object Clear1: TMenuItem
-      Action = actClearListView
-    end
-    object Refresh1: TMenuItem
-      Action = actRefreshListView
-    end
-    object N1: TMenuItem
-      Caption = '-'
-    end
-    object Items1: TMenuItem
-      Caption = '&Items'
-      object First1: TMenuItem
-        Action = actSelectFirst
+    Left = 48
+    Top = 176
+    object List2: TMenuItem
+      Caption = '&List'
+      object Clear1: TMenuItem
+        Action = actClearListView
       end
-      object N2: TMenuItem
+      object Refresh1: TMenuItem
+        Action = actRefreshListView
+      end
+      object N1: TMenuItem
         Caption = '-'
       end
-      object Previous1: TMenuItem
-        Action = actSelectPrevious
-      end
-      object Next1: TMenuItem
-        Action = actSelectNext
-      end
-      object N3: TMenuItem
-        Caption = '-'
-      end
-      object Last1: TMenuItem
-        Action = actSelectLast
-      end
-      object N15: TMenuItem
-        Caption = '-'
-      end
-      object AddItem1: TMenuItem
-        Action = actAddListviewItem
-      end
-      object Delete1: TMenuItem
-        Action = actDeleteItem
-      end
-    end
-    object N13: TMenuItem
-      Caption = '-'
-    end
-    object Groups1: TMenuItem
-      Caption = '&Groups'
-      object GroupView1: TMenuItem
-        Action = actListViewGrouped
-      end
-      object N7: TMenuItem
-        Caption = '-'
-      end
-      object CollapseAll1: TMenuItem
-        Action = actGroupCollapseAll
-      end
-      object UnCollapseAll1: TMenuItem
-        Action = actGroupExpandAll
-      end
-      object N8: TMenuItem
-        Caption = '-'
-      end
-      object AddGroup1: TMenuItem
-        Action = actAddGroup
-      end
-      object N12: TMenuItem
-        Caption = '-'
-      end
-      object ShowHidden1: TMenuItem
-        Action = actShowHiddenGroupItems
-      end
-    end
-    object N14: TMenuItem
-      Caption = '-'
-    end
-    object Select1: TMenuItem
-      Caption = '&Select'
-      object SelectAll1: TMenuItem
-        Action = actSelectAll
-      end
-      object SelectNone1: TMenuItem
-        Action = actSelectNone
-      end
-      object N4: TMenuItem
-        Caption = '-'
-      end
-      object InvertSelection1: TMenuItem
-        Action = actSelectInvert
-      end
-      object Multiselect2: TMenuItem
-        Action = actMultiselect
-      end
-    end
-    object N6: TMenuItem
-      Caption = '-'
-    end
-    object ViewStyle1: TMenuItem
-      Caption = '&View Style'
-      object Icon1: TMenuItem
-        Tag = 1
-        Action = actListViewIcon
-        GroupIndex = 1
-        RadioItem = True
-      end
-      object List1: TMenuItem
-        Tag = 1
-        Action = actListViewList
-        GroupIndex = 1
-        RadioItem = True
-      end
-      object Report1: TMenuItem
-        Tag = 1
-        Action = actListViewReport
-        GroupIndex = 1
-        RadioItem = True
-      end
-      object SmallIcon1: TMenuItem
-        Tag = 1
-        Action = actListViewSmallIcon
-        GroupIndex = 1
-        RadioItem = True
-      end
-      object ile1: TMenuItem
-        Tag = 1
-        Action = actListViewTiled
-        GroupIndex = 1
-        RadioItem = True
+      object Items1: TMenuItem
+        Caption = '&Items'
+        object First1: TMenuItem
+          Action = actSelectFirst
+        end
+        object N4: TMenuItem
+          Caption = '-'
+        end
+        object Previous1: TMenuItem
+          Action = actSelectPrevious
+        end
+        object Next1: TMenuItem
+          Action = actSelectNext
+        end
+        object N3: TMenuItem
+          Caption = '-'
+        end
+        object Last1: TMenuItem
+          Action = actSelectLast
+        end
+        object N2: TMenuItem
+          Caption = '-'
+        end
+        object AddItem1: TMenuItem
+          Action = actAddListviewItem
+        end
+        object DeleteSelected1: TMenuItem
+          Action = actDeleteItem
+        end
       end
       object N5: TMenuItem
         Caption = '-'
-        GroupIndex = 1
       end
-      object GridLines1: TMenuItem
-        Action = actGridLines
-        GroupIndex = 1
-      end
-      object FlatScrollbars1: TMenuItem
-        Action = actFlatScrollBars
-        GroupIndex = 1
-      end
-      object ShowColumnHeaders1: TMenuItem
-        Action = actShowColHeaders
-        GroupIndex = 1
-      end
-      object ShowHint1: TMenuItem
-        Action = actShowHint
-        GroupIndex = 1
-      end
-    end
-    object Behaviour1: TMenuItem
-      Caption = '&Behavour'
-      object HotTracking1: TMenuItem
-        Tag = 1
-        Action = actHotTrack
+      object Groups1: TMenuItem
+        Caption = '&Groups'
+        object GroupView1: TMenuItem
+          Action = actListViewGrouped
+        end
+        object N8: TMenuItem
+          Caption = '-'
+        end
+        object CollapseAll1: TMenuItem
+          Action = actGroupCollapseAll
+        end
+        object ExpandAll1: TMenuItem
+          Action = actGroupExpandAll
+        end
+        object N7: TMenuItem
+          Caption = '-'
+        end
+        object AddGroup1: TMenuItem
+          Action = actAddGroup
+        end
+        object N6: TMenuItem
+          Caption = '-'
+        end
+        object ShowHidden1: TMenuItem
+          Action = actShowHiddenGroupItems
+        end
       end
       object N9: TMenuItem
         Caption = '-'
       end
-      object Fulldrag1: TMenuItem
-        Action = actFulldrag
-      end
-      object RowSelect1: TMenuItem
-        Action = actRowSelect
-      end
-      object N10: TMenuItem
-        Caption = '-'
-      end
-      object Multiselect1: TMenuItem
-        Action = actMultiselect
+      object Select1: TMenuItem
+        Caption = '&Select'
+        object SelectAll1: TMenuItem
+          Action = actSelectAll
+        end
+        object SelectNone1: TMenuItem
+          Action = actSelectNone
+        end
+        object N10: TMenuItem
+          Caption = '-'
+        end
+        object InvertSelection1: TMenuItem
+          Action = actSelectInvert
+        end
+        object Multiselect1: TMenuItem
+          Action = actMultiselect
+        end
       end
       object N11: TMenuItem
         Caption = '-'
       end
-      object NETHighlighting1: TMenuItem
-        Action = actDotNetHighlight
+      object Behavour1: TMenuItem
+        Caption = '&Behavour'
+        object HotTracking1: TMenuItem
+          Tag = 1
+          Action = actHotTrack
+        end
+        object N14: TMenuItem
+          Caption = '-'
+        end
+        object Fulldrag1: TMenuItem
+          Action = actFulldrag
+        end
+        object RowSelect1: TMenuItem
+          Action = actRowSelect
+        end
+        object N13: TMenuItem
+          Caption = '-'
+        end
+        object Multiselect2: TMenuItem
+          Action = actMultiselect
+        end
+        object N12: TMenuItem
+          Caption = '-'
+        end
+        object NETHighlighting1: TMenuItem
+          Action = actDotNetHighlight
+        end
       end
+      object ViewStyle1: TMenuItem
+        Caption = '&View Style'
+        object Icon1: TMenuItem
+          Tag = 1
+          Action = actListViewIcon
+          GroupIndex = 1
+          RadioItem = True
+        end
+        object List1: TMenuItem
+          Tag = 1
+          Action = actListViewList
+          GroupIndex = 1
+          RadioItem = True
+        end
+        object Report1: TMenuItem
+          Tag = 1
+          Action = actListViewReport
+          GroupIndex = 1
+          RadioItem = True
+        end
+        object SmallIcon1: TMenuItem
+          Tag = 1
+          Action = actListViewSmallIcon
+          GroupIndex = 1
+          RadioItem = True
+        end
+        object ile1: TMenuItem
+          Tag = 1
+          Action = actListViewTiled
+          GroupIndex = 1
+          RadioItem = True
+        end
+        object N15: TMenuItem
+          Caption = '-'
+          GroupIndex = 1
+        end
+        object GridLines1: TMenuItem
+          Action = actGridLines
+          GroupIndex = 1
+        end
+        object FlatScrollbars1: TMenuItem
+          Action = actFlatScrollBars
+          GroupIndex = 1
+        end
+        object ShowColumnHeaders1: TMenuItem
+          Action = actShowColHeaders
+          GroupIndex = 1
+        end
+        object ShowHint1: TMenuItem
+          Action = actShowHint
+          GroupIndex = 1
+        end
+      end
+    end
+    object Statusbar1: TMenuItem
+      Caption = '&Statusbar'
+      object Visible1: TMenuItem
+        Action = actStatusBarVisible
+      end
+    end
+  end
+  object ActionList_StatusBar: TActionList
+    Left = 48
+    Top = 104
+    object actStatusBarVisible: TAction
+      Tag = 1
+      Caption = '&Visible'
+      Checked = True
+      OnExecute = actStatusBarVisibleExecute
     end
   end
 end

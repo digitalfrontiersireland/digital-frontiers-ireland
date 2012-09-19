@@ -5,7 +5,7 @@ interface
 uses
   JvExComCtrls, JvToolBar, JvMenus,Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.ActnList, Vcl.Menus, Vcl.ToolWin, Vcl.Controls,VCL.Forms, Vcl.ComCtrls,
-  JvListView;
+  JvListView, JvStatusBar;
 
 type TListItemInfoRec         =       packed record
         Caption               :       string;
@@ -45,73 +45,79 @@ type
     actSelectNext: TAction;
     actListViewGrouped: TAction;
     Menu_ListView: TJvPopupMenu;
-    Clear1: TMenuItem;
-    Refresh1: TMenuItem;
-    N1: TMenuItem;
-    Items1: TMenuItem;
-    First1: TMenuItem;
-    Last1: TMenuItem;
-    Next1: TMenuItem;
-    Previous1: TMenuItem;
-    N2: TMenuItem;
-    N3: TMenuItem;
-    Select1: TMenuItem;
-    SelectAll1: TMenuItem;
-    SelectNone1: TMenuItem;
-    N4: TMenuItem;
-    InvertSelection1: TMenuItem;
-    ViewStyle1: TMenuItem;
-    GroupView1: TMenuItem;
-    Icon1: TMenuItem;
-    List1: TMenuItem;
-    Report1: TMenuItem;
-    SmallIcon1: TMenuItem;
-    ile1: TMenuItem;
-    N5: TMenuItem;
-    N6: TMenuItem;
     actGroupCollapseAll: TAction;
     actGroupExpandAll: TAction;
-    Groups1: TMenuItem;
-    N7: TMenuItem;
-    UnCollapseAll1: TMenuItem;
-    CollapseAll1: TMenuItem;
     actFlatScrollBars: TAction;
     actGridLines: TAction;
     actDotNetHighlight: TAction;
     actHotTrack: TAction;
-    FlatScrollbars1: TMenuItem;
-    HotTracking1: TMenuItem;
-    NETHighlighting1: TMenuItem;
-    GridLines1: TMenuItem;
     actFulldrag: TAction;
-    Fulldrag1: TMenuItem;
-    Behaviour1: TMenuItem;
     actShowHint: TAction;
     actRowSelect: TAction;
     actShowColHeaders: TAction;
-    ShowColumnHeaders1: TMenuItem;
-    RowSelect1: TMenuItem;
-    ShowHint1: TMenuItem;
     ListView: TJvListView;
     actAddGroup: TAction;
-    N8: TMenuItem;
-    AddGroup1: TMenuItem;
     actMultiselect: TAction;
-    N9: TMenuItem;
-    N10: TMenuItem;
-    Multiselect1: TMenuItem;
-    N11: TMenuItem;
     actShowHiddenGroupItems: TAction;
-    ShowHidden1: TMenuItem;
-    N12: TMenuItem;
-    N13: TMenuItem;
-    N14: TMenuItem;
     actAddListviewItem: TAction;
-    N15: TMenuItem;
-    AddItem1: TMenuItem;
     actDeleteItem: TAction;
-    Delete1: TMenuItem;
+    StatusBar: TJvStatusBar;
+    ActionList_StatusBar: TActionList;
+    List2: TMenuItem;
+    Clear1: TMenuItem;
+    Refresh1: TMenuItem;
+    N1: TMenuItem;
+    Items1: TMenuItem;
+    DeleteSelected1: TMenuItem;
+    AddItem1: TMenuItem;
+    N2: TMenuItem;
+    Last1: TMenuItem;
+    N3: TMenuItem;
+    Next1: TMenuItem;
+    Previous1: TMenuItem;
+    N4: TMenuItem;
+    First1: TMenuItem;
+    N5: TMenuItem;
+    Groups1: TMenuItem;
+    ShowHidden1: TMenuItem;
+    N6: TMenuItem;
+    AddGroup1: TMenuItem;
+    N7: TMenuItem;
+    ExpandAll1: TMenuItem;
+    CollapseAll1: TMenuItem;
+    N8: TMenuItem;
+    GroupView1: TMenuItem;
+    N9: TMenuItem;
+    Select1: TMenuItem;
+    Multiselect1: TMenuItem;
+    InvertSelection1: TMenuItem;
+    N10: TMenuItem;
+    SelectNone1: TMenuItem;
+    SelectAll1: TMenuItem;
+    N11: TMenuItem;
+    Behavour1: TMenuItem;
+    NETHighlighting1: TMenuItem;
+    N12: TMenuItem;
     Multiselect2: TMenuItem;
+    N13: TMenuItem;
+    RowSelect1: TMenuItem;
+    Fulldrag1: TMenuItem;
+    N14: TMenuItem;
+    HotTracking1: TMenuItem;
+    ViewStyle1: TMenuItem;
+    ShowHint1: TMenuItem;
+    ShowColumnHeaders1: TMenuItem;
+    FlatScrollbars1: TMenuItem;
+    GridLines1: TMenuItem;
+    N15: TMenuItem;
+    ile1: TMenuItem;
+    SmallIcon1: TMenuItem;
+    Report1: TMenuItem;
+    List1: TMenuItem;
+    Icon1: TMenuItem;
+    Statusbar1: TMenuItem;
+    actStatusBarVisible: TAction;
+    Visible1: TMenuItem;
     procedure actClearListViewExecute(Sender: TObject);
     procedure actRefreshListViewExecute(Sender: TObject);
     procedure actListViewListExecute(Sender: TObject);
@@ -154,6 +160,11 @@ type
     procedure actDeleteItemExecute(Sender: TObject);
     procedure ListViewSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
+    procedure actStatusBarVisibleExecute(Sender: TObject);
+    procedure ListViewLoadProgress(Sender: TObject; Progression,
+      Total: Integer);
+    procedure ListViewSaveProgress(Sender: TObject; Progression,
+      Total: Integer);
   private
     { Private declarations }
     GrpIndex : integer;
@@ -162,6 +173,7 @@ type
     { Public declarations }
 
   procedure UpdateActionStates();
+  procedure UpdateStatusBarText(aText : String; aPanel : integer);
   procedure AddItem(ItemInfo : TListItemInfoRec; ClearList : Boolean);
   procedure AddItems(var ItemNames : TStringList; ClearList : boolean; DefaultData : TListItemInfoRec);
   FUNCTION AddGroup(aGroupInfo: TGroupInfoRec; ClearGroups: Boolean) : integer;
@@ -192,6 +204,11 @@ implementation
 uses udlgListView_AddGroup, udlgListView_AddItem, uDFICommon;
 
 {$R *.dfm}
+
+PROCEDURE TfraListView.UpdateStatusBarText(aText : String; aPanel : integer);
+Begin
+
+End;
 
 procedure TfraListView.UpdateActionStates();
 Var
@@ -379,7 +396,8 @@ end;
 procedure TfraListView.ListViewChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 begin
-self.actRefreshListView.Execute;
+//self.actRefreshListView.Execute;
+
 end;
 
 procedure TfraListView.ListViewDeletion(Sender: TObject; Item: TListItem);
@@ -403,6 +421,20 @@ begin
 self.actRefreshListView.Execute;
 end;
 
+procedure TfraListView.ListViewLoadProgress(Sender: TObject; Progression,
+  Total: Integer);
+begin
+UpdateStatusBarText('Loading, please wait...',0);
+UpdateStatusBarText('Item: ' + IntToStr(Progression) + ' of ' + IntToStr(Total),1);
+end;
+
+procedure TfraListView.ListViewSaveProgress(Sender: TObject; Progression,
+  Total: Integer);
+begin
+UpdateStatusBarText('Saving, please wait...',0);
+UpdateStatusBarText('Item: ' + IntToStr(Progression) + ' of ' + IntToStr(Total),1);
+end;
+
 procedure TfraListView.ListViewSelectItem(Sender: TObject; Item: TListItem;
   Selected: Boolean);
 begin
@@ -423,8 +455,9 @@ if ClearGroups then ListView.Groups.Clear;
 aGroup := ListView.Groups.Add;
 aGroup.Header := aGroupInfo.Header;
 aGroup.Footer := aGroupInfo.Footer;
-aGroup.FooterAlign := aGroupInfo.FooterAlign;
-aGroup.HeaderAlign := aGroupInfo.HeaderAlign;
+//TODO: Might be a problem here with HeaderAlign, investigate
+//aGroup.FooterAlign := aGroupInfo.FooterAlign;
+//aGroup.HeaderAlign := aGroupInfo.HeaderAlign;
 aGroup.Subtitle := aGroupInfo.Subtitle;
 aGroup.TitleImage := aGroupInfo.TitleImage;
 aGroup.State := [lgsNormal,lgsCollapsible];
@@ -493,6 +526,7 @@ end;
 procedure TfraListView.actClearListViewExecute(Sender: TObject);
 begin
 ListView.Items.Clear;
+UpdateStatusBarText('Cleared Listview',-1);
 end;
 
 procedure TfraListView.actDeleteItemExecute(Sender: TObject);
@@ -502,6 +536,7 @@ if ListView.Items.Count > 0 then
    if ListView.SelCount > 0 then
       Begin
       ListView.DeleteSelected;
+
       End;
    End;
 end;
@@ -594,6 +629,7 @@ Var
   Found   : integer;
 begin
 Found := 0;
+UpdateStatusBarText('Refreshing...',-1);
 // check that Items Group Assignment is within range of actual group
 // count otherwise items will not be displayed in group mode.
 //
@@ -601,7 +637,6 @@ Found := 0;
 // on and off
 if Self.ShowHiddenGroupItems then
    Begin
-
    // Find items that will be hidden in group mode (has a groupid higher than groupcount - 1 or = -1)
    for i := 0 to ListView.Items.Count - 1 do
     Begin
@@ -649,7 +684,6 @@ else
    // having no group assigned and staying invisible
    end;
 
-
 ListView.Refresh;
 end;
 
@@ -669,6 +703,7 @@ for i := 0 to ListView.Items.Count -1 do
      ListView.Items[i].Selected := True;
    End;
 ListView.Items.EndUpdate;
+UpdateStatusBarText('Selected: ' + IntToStr(ListView.SelCount),-1);
 end;
 
 procedure TfraListView.actSelectFirstExecute(Sender: TObject);
@@ -692,6 +727,7 @@ for i := 0 to ListView.Items.Count -1 do
      ListView.Items[i].Selected := NOT ListView.Items[i].Selected;
    End;
 ListView.Items.EndUpdate;
+UpdateStatusBarText('Inverted Selection: ' + IntToStr(ListView.SelCount),-1);
 end;
 
 
@@ -736,6 +772,7 @@ for i := 0 to ListView.Items.Count -1 do
      ListView.Items[i].Selected := False;
    End;
 ListView.Items.EndUpdate;
+UpdateStatusBarText('Selected: ' + IntToStr(ListView.SelCount),-1);
 end;
 
 procedure TfraListView.actSelectPreviousExecute(Sender: TObject);
@@ -773,6 +810,12 @@ procedure TfraListView.actShowHintExecute(Sender: TObject);
 begin
 ListView.ShowHint := NOT ListView.ShowHint;
 Self.UpdateActionStates;
+end;
+
+procedure TfraListView.actStatusBarVisibleExecute(Sender: TObject);
+begin
+StatusBar.Visible := not StatusBar.Visible;
+actStatusbarvisible.Checked := StatusBar.Visible;
 end;
 
 procedure TfraListView.actListViewTiledExecute(Sender: TObject);

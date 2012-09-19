@@ -13,6 +13,7 @@ Type    TPluginObject         =       class(TDLLObject)
         FGroupInfo            :       TGroupInfoRec;
         FListItemCaption      :       String;
         FIPCServerName        :       String;
+        FIPCLog               :       TStringList;
         RFUNC_Initialize      :       TFUNC_Initialize;
         RFUNC_Deinitialize    :       TFUNC_Deinitalize;
         RFUNC_SendMessage     :       TFUNC_Message;
@@ -28,6 +29,8 @@ Type    TPluginObject         =       class(TDLLObject)
         // ---------------------------------------------------------------------
           procedure Load(); override;
           procedure Unload(); override;
+          procedure SendSynchronous(Sender: TObject); virtual;
+          procedure SendASynchronous(Sender: TObject); virtual;
         // ---------------------------------------------------------------------
           // Properties to read these data values
         // ---------------------------------------------------------------------
@@ -76,6 +79,7 @@ Begin
 // Temporarly disable event here, we want to delay its loading
 TempHook := Self.OnAfterLoadEvent;
 Self.OnAfterLoadEvent := nil;
+
 // Call inherited load to actually load DLL
 Inherited Load;
 // put our event back in place
@@ -84,6 +88,8 @@ Self.OnAfterLoadEvent := TempHook;
 // if is loaded
 if IsLoaded then
    Begin
+   if NOT Assigned(Self.FIPCLog) then FIPCLog := TStringList.Create else FIPCLog.Free;
+
    // Check plugin has required exported functions
    if (HasExportedFunction(FUNC_PREFIX_STUB + FUNC_Init) = true) AND
       (HasExportedFunction(FUNC_PREFIX_STUB + FUNC_DeInit) = true) AND
@@ -186,8 +192,11 @@ if IsLoaded then
    Begin
 
    // Destroy IPC Stuff
-  FTaskPool.Finalize;
-  FTaskPool.Free;
+   if assigned(FTaskPool) then
+      Begin
+      FTaskPool.Finalize;
+      FTaskPool.Free;
+      End;
 
      // Call deinit if possible
    if @RFUNC_deinitialize <> nil then
@@ -196,7 +205,7 @@ if IsLoaded then
       End;
 
    End;
-
+FreeAndNil(FIPCLog);
 Inherited Unload;
 
 // make sure functions are deattached
@@ -213,14 +222,99 @@ End;
 
 procedure TPluginObject.OnMessageComplete(const Msg: ITaskMessage);
 begin
-  ListBox1.Items.Add(Format('ASynchronous Response with ID: %s', [Msg.Values.Get('ID').AsString]));
-  ListBox1.Items.Add(Format('Response: TDateTime [%s]', [Msg.Values.Get('TDateTime').AsString]));
-  ListBox1.Items.Add(Format('Response: Integer [%d]', [Msg.Values.Get('Integer').AsInteger]));
-  ListBox1.Items.Add(Format('Response: Real [%f]', [Msg.Values.Get('Real').AsFloat]));
-  ListBox1.Items.Add(Format('Response: String [%s]', [Msg.Values.Get('String').AsString]));
-  ListBox1.Items.Add('-----------------------------------------------------------');
+  FIPCLog.Add(Format('ASynchronous Response with ID: %s', [Msg.Values.Get('ID').AsString]));
+  FIPCLog.Add(Format('Response: TDateTime [%s]', [Msg.Values.Get('TDateTime').AsString]));
+  FIPCLog.Add(Format('Response: Integer [%d]', [Msg.Values.Get('Integer').AsInteger]));
+  FIPCLog.Add(Format('Response: Real [%f]', [Msg.Values.Get('Real').AsFloat]));
+  FIPCLog.Add(Format('Response: String [%s]', [Msg.Values.Get('String').AsString]));
+  FIPCLog.Add('-----------------------------------------------------------');
 end;
 
+
+procedure TPluginObject.OnAsynchronousIPCTask(const ATask: ITask);
+var
+  Result: IIPCData;
+  Request: IIPCData;
+  IPCClient: TIPCClient;
+  TimeStamp: TDateTime;
+begin
+  IPCClient := TIPCClient.Create;
+  try
+    IPCClient.ComputerName := ATask.Values.Get('ComputerName').AsString;
+    IPCClient.ServerName := ATask.Values.Get('ServerName').AsString;
+
+    Request := AcquireIPCData;
+    Request.ID := DateTimeToStr(Now);
+    Request.Data.WriteUTF8String('Command', 'ASynchronous');
+    Result := IPCClient.ExecuteRequest(Request);
+
+    if IPCClient.AnswerValid then
+    begin
+      ATask.Message.Ensure('ID').AsString := Result.ID;
+      TimeStamp := Result.Data.ReadDateTime('TDateTime');
+      ATask.Message.Ensure('TDateTime').AsString := DateTimeToStr(TimeStamp);
+      ATask.Message.Ensure('Integer').AsInteger := Result.Data.ReadInteger('Integer');
+      ATask.Message.Ensure('Real').AsFloat := Result.Data.ReadReal('Real');
+      ATask.Message.Ensure('String').AsString := string(Result.Data.ReadUTF8String('String'));
+      ATask.SendMessageAsync;
+    end;
+  finally
+    IPCClient.Free;
+  end;
+end;
+
+procedure TPluginObject.SendSynchronous(Sender: TObject);
+var
+  Result: IIPCData;
+  Request: IIPCData;
+  IPCClient: TIPCClient;
+  TimeStamp: TDateTime;
+begin
+  IPCClient := TIPCClient.Create;
+  try
+    //TODO: TIPCClient needs sorting here
+    IPCClient.ComputerName := 'TESTCOMPUTERNAME';
+    IPCClient.ServerName := 'IPCTEST';
+    IPCClient.ConnectClient(cDefaultTimeout);
+    try
+      if IPCClient.IsConnected then
+      begin
+        Request := AcquireIPCData;
+        Request.ID := DateTimeToStr(Now);
+        Request.Data.WriteUTF8String('Command', 'Synchronous');
+        Result := IPCClient.ExecuteConnectedRequest(Request);
+
+        if IPCClient.AnswerValid then
+        begin
+          TimeStamp := Result.Data.ReadDateTime('TDateTime');
+          FIPCLog.Add(Format('Synchronous Response with ID: %s', [Result.ID]));
+          FIPCLog.Add(Format('Response: TDateTime [%s]', [DateTimeToStr(TimeStamp)]));
+          FIPCLog.Add(Format('Response: Integer [%d]', [Result.Data.ReadInteger('Integer')]));
+          FIPCLog.Add(Format('Response: Real [%f]', [Result.Data.ReadReal('Real')]));
+          FIPCLog.Add(Format('Response: String [%s]', [Result.Data.ReadUTF8String('String')]));
+          FIPCLog.Add('-----------------------------------------------------------');
+        end
+      end;
+
+      if IPCClient.LastError <> 0 then
+        FIPCLog.Add(Format('Error: Code %d', [IPCClient.LastError]));
+    finally
+      IPCClient.DisconnectClient;
+    end;
+  finally
+    IPCClient.Free;
+  end;
+end;
+
+procedure TPluginObject.SendASynchronous(Sender: TObject);
+var
+  AsyncTask: ITask;
+begin
+  AsyncTask := FTaskPool.AcquireTask(OnAsynchronousIPCTask, 'AsyncTask');
+  AsyncTask.Values.Ensure('ComputerName').AsString := 'IPCTESTCOMPUTER';
+  AsyncTask.Values.Ensure('ServerName').AsString := 'IPCTEST';
+  AsyncTask.Run;
+end;
 
 FUNCTION TPluginManager.GetInfo(aIndex : integer) : TPluginObject;
 Begin
