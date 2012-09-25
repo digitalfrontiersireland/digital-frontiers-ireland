@@ -1,7 +1,8 @@
 unit uStubDllEventHandler;
 
 interface
-uses Classes, uStubCommon, ComCtrls;
+uses Classes, uStubCommon;
+
 
 Type    TOnInitMessageRecieved      =       PROCEDURE(Sender : TObject; Var InitData : TStub_InitObject) of object;
 Type    TOnMessageRecieved          =       PROCEDURE(Sender : TObject; aMessage : String; Var Handled : Boolean) of object;

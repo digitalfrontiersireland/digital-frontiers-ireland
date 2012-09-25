@@ -4,21 +4,12 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.PlatformDefaultStyleActnCtrls,
-  Vcl.ActnList, Vcl.ActnMan, Vcl.ToolWin, Vcl.ActnCtrls, Vcl.Ribbon,
-  ufraListView, Vcl.RibbonLunaStyleActnCtrls, ufraPluginListView, Vcl.Menus,
-  uDLLUtilsEx, uPluginUtilsEx;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ufraVisualPluginLoader, Vcl.StdCtrls;
 
 type
   TForm1 = class(TForm)
-    Ribbon: TRibbon;
-    rpHome: TRibbonPage;
-    fraPluginListView1: TfraPluginListView;
-    Add1: TMenuItem;
-    Load1: TMenuItem;
-    UnloadPlugin1: TMenuItem;
-    LoadAll1: TMenuItem;
-    UnloadAll1: TMenuItem;
+    Frame11: TFrame1;
+    procedure Frame11btnLoadClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -31,5 +22,11 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TForm1.Frame11btnLoadClick(Sender: TObject);
+begin
+  Frame11.btnLoadClick(Sender);
+
+end;
 
 end.

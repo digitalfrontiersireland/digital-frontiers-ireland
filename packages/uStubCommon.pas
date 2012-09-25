@@ -1,7 +1,7 @@
 unit uStubCommon;
 
 interface
-uses   SysUtils, IniFiles, StrUtils, Classes, ComCtrls, Windows;
+uses   SysUtils, IniFiles, StrUtils, Classes, Windows;
 
 Const
           ERROR_INCORRECT_DLL       =       'A Plugin has been corrupted or is not of the correct format';

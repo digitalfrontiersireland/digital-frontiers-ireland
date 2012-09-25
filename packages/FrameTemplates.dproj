@@ -61,7 +61,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<DCC_UnitSearchPath>C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<DCC_UnitSearchPath>C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis;C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages;C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\FastMM;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -107,6 +107,11 @@
 			</DCCReference>
 			<DCCReference Include="ufraPluginListView.pas">
 				<Form>fraPluginListView</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="ufraVisualPluginLoader.pas">
+				<Form>Frame1</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TFrame</DesignClass>
 			</DCCReference>

@@ -1,0 +1,82 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 354
+  ClientWidth = 622
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  DesignSize = (
+    622
+    354)
+  PixelsPerInch = 120
+  TextHeight = 16
+  inline Frame11: TFrame1
+    Left = 0
+    Top = 0
+    Width = 622
+    Height = 354
+    Align = alClient
+    TabOrder = 0
+    ExplicitLeft = -96
+    inherited PageControl: TPageControl
+      Width = 622
+      Height = 354
+      inherited TabSheet1: TTabSheet
+        inherited ebPath: TEdit
+          Width = 522
+        end
+        inherited ebFilename: TEdit
+          Width = 495
+        end
+        inherited btnLoad: TButton
+          Left = 507
+          Top = 295
+          OnClick = Frame11btnLoadClick
+        end
+        inherited btnUnload: TButton
+          Left = 426
+          Top = 295
+        end
+        inherited btnSelect: TButton
+          Top = 295
+        end
+        inherited ebHandle: TEdit
+          Width = 383
+        end
+        inherited cbIsLoaded: TCheckBox
+          Left = 476
+        end
+      end
+      inherited TabSheet2: TTabSheet
+        inherited ebCaption: TEdit
+          Width = 522
+        end
+        inherited lbExports: TListBox
+          Height = 139
+          ExplicitHeight = 139
+        end
+        inherited ebIPC: TEdit
+          Width = 330
+        end
+      end
+    end
+  end
+  object GroupBox1: TGroupBox
+    Left = 226
+    Top = 100
+    Width = 360
+    Height = 109
+    Anchors = [akLeft, akTop, akRight]
+    Caption = 'Group Info:'
+    Color = clWhite
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 1
+  end
+end

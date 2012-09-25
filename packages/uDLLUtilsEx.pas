@@ -73,6 +73,7 @@ Type    TDLLManager         =       class(TComponent)
         FDLLList            :       TList;
         FAutoLoad           :       boolean;
         FAutoUnload         :       boolean;
+        FIsChanged          :       boolean;
         FOnBeforeLoadDllEvent:      TOnDllNotifyEvent;
         FOnAfterLoadDllEvent:       TOnDllNotifyEvent;
         FOnBeforeUnloadDllEvent :   TOnDllNotifyEvent;
@@ -203,7 +204,11 @@ if IsLoaded then
      Begin
        Result := False;
      End;
-   End;
+   End
+else
+   begin
+     result := false;
+   end;
 End;
 
 // =============================================================================
@@ -269,6 +274,7 @@ Begin
 Inherited Create(AOwner);
 FDLLList := TList.Create;
 Self.FAutoUnload := True;
+FIsChanged := True;
 End;
 // -----------------------------------------------------------------------------
 destructor TDLLManager.Destroy();
@@ -305,6 +311,8 @@ if AutoLoadDll then
    Begin
    DLLObject.Load;
    End;
+
+FIsChanged := True;
 //DLLObject := nil;
 End;
 // -----------------------------------------------------------------------------
@@ -365,6 +373,7 @@ if (Assigned(aListView) = true) AND
             RefreshListView(aListView,True);
              End;
         aListView.Items.EndUpdate;
+        FIsChanged := False;
       End;
 //DLLObject := nil;
 End;
@@ -380,6 +389,8 @@ if (aIndex >= 0) and (aIndex < FDLLList.Count) and (FDLLList.Count > 0) then
 
    DLLObject := FDLLList.Items[aIndex];
    DLLObject.Load;
+
+   FIsChanged := True;
 
    if (assigned(FOnAfterLoadDllEvent)) AND (DLLObject.IsLoaded) then
       Begin
@@ -399,6 +410,7 @@ if (aIndex >= 0) and (aIndex < FDLLList.Count) and (FDLLList.Count > 0) then
    aObject := FDLLList.Items[aIndex];
    if Assigned(FOnBeforeUnloadDllEvent) then OnBeforeUnloadDllEvent(Self,aIndex);
    aObject.Unload;
+   FIsChanged := True;
    if Assigned(Self.FOnAfterUnloadDllEvent) then OnAfterUnloadDllEvent(Self,aIndex);
    End;
 //aObject := nil;
@@ -455,6 +467,7 @@ while FDLLList.Count > 0 do
         FreeAndNil(aDLL);
         End;
    FDLLList.Clear;
+   FIsChanged := True;
    End;
 aDLL := nil;
 End;
@@ -466,6 +479,7 @@ begin
 if (aIndex >= 0) and (aIndex < FDLLList.Count) and (FDLLList.Count > 0) then
    Begin
    FDLLList.Delete(aIndex);
+   FIsChanged := True;
    End;
 end;
 // =============================================================================

@@ -3,7 +3,7 @@ unit udmStubDll;
 interface
 
 uses
-  System.SysUtils, System.Classes, uStubCommon, Cromis.IPC, uStubDllEventHandler;
+  FastMM4,System.SysUtils, System.Classes, uStubCommon, Cromis.IPC, uStubDllEventHandler, vcl.dialogs;
 
         function stub_Initialize(Var InitData : TStub_InitObject) : boolean; export;
         function stub_Deinitalize() : boolean; export; stdcall
@@ -19,6 +19,18 @@ type
     StubDllEventHandler: TStubDllEventHandler;
     procedure DataModuleDestroy(Sender: TObject);
     procedure DataModuleCreate(Sender: TObject);
+    procedure StubDllEventHandlerDllInit(Sender: TObject;
+      var InitData: TStub_InitObject);
+    procedure StubDllEventHandlerDllDeInit(Sender: TObject);
+    function StubDllEventHandlerAskForListItemCaption(Sender: TObject): string;
+    procedure StubDllEventHandlerMessageDataRecieved(sender: TObject;
+      aMessage: string; Data: TMessageParamRec; var Handled: Boolean);
+    procedure StubDllEventHandlerMessageRecieved(Sender: TObject;
+      aMessage: string; var Handled: Boolean);
+    function StubDllEventHandlerAskForGroupDetails(
+      sender: TObject): TGroupInfoRec;
+    procedure StubDllEventHandlerGetExportedFunctions(sender: TObject;
+      aStringList: TStringList);
   private
     { Private declarations }
     FRequestCount : Int64;
@@ -64,6 +76,10 @@ Begin
 if assigned(dmStubDll) then
    Begin
      Result := dmStubDLL.FIPCServer.ServerName;
+   End
+ELSE
+   Begin
+     Result := 'error';
    End;
 
 End;
@@ -105,23 +121,31 @@ if (Assigned(aStringList) = true) AND (IsInitOk = true) then
 
    if assigned(dmStubDll) AND
       assigned(dmStubDll.StubDllEventHandler.OnGetExportedFunctions) then
-      dmStubDll.StubDllEventHandler.OnGetExportedFunctions(Sender,aStringList);
+         Begin
+         dmStubDll.StubDllEventHandler.OnGetExportedFunctions(Sender,aStringList);
+         End;
    End;
 End;
 
 
 function stub_Initialize(Var InitData : TStub_InitObject) : boolean; export;
 Begin
-   IsInitOk := True;
-   Result := True;
+   IsInitOk := false;
+   Result := false;
 
    if assigned(dmStubDll) AND
       assigned(dmStubDll.StubDllEventHandler.OnDllInit) then
           Begin
           dmStubDll.StubDllEventHandler.OnDllInit(dmStubDll,InitData);
           dmStubDLL.FIPCServer.Start;
-          End;
-
+          result := true;
+          isinitok := true;
+          End
+      else
+         Begin
+           dmStubDll := TdmStubDll.Create(nil);
+           result := stub_Initialize(InitData)
+         End;
 End;
 
 function stub_Deinitalize() : boolean; export;
@@ -133,7 +157,10 @@ if IsInitOk then
          Begin
          dmStubDll.StubDllEventHandler.OnDllDeInit(dmStubDll);
          IsInitOk := False; // set to false so init can be called again
-         if dmStubDLL.FIPCServer.Listening then dmStubDLL.FIPCServer.Stop;
+         if dmStubDLL.FIPCServer.Listening then
+            begin
+            dmStubDLL.FIPCServer.Stop;
+            end;
          Result := True;
          End;
    End
@@ -204,31 +231,82 @@ begin
 end;
 
 
+function TdmStubDll.StubDllEventHandlerAskForGroupDetails(
+  sender: TObject): TGroupInfoRec;
+begin
+result.Header.Text := 'Test Plugin Header';
+result.Footer.Text := 'Test Plugin Footer';
+result.Description.Top := 'Test Plugin Top Description';
+result.Description.Bottom := 'Test Plugin Bottom Description';
+result.ExtendedImage := 0;
+result.TitleImage := 0;
+result.SubsetTitle := 'Test plugin Subsettitle';
+result.Subtitle := 'Subtitle';
+end;
+
+function TdmStubDll.StubDllEventHandlerAskForListItemCaption(
+  Sender: TObject): string;
+begin
+result := 'test plugin';
+end;
+
+procedure TdmStubDll.StubDllEventHandlerDllDeInit(Sender: TObject);
+begin
+ShowMessage('Deinit');
+end;
+
+procedure TdmStubDll.StubDllEventHandlerDllInit(Sender: TObject;
+  var InitData: TStub_InitObject);
+begin
+//InitData.IniFile.WriteString('test','test','test');
+self.FIPCLog.Clear;
+end;
+
+procedure TdmStubDll.StubDllEventHandlerGetExportedFunctions(sender: TObject;
+  aStringList: TStringList);
+begin
+//aStringList.Add('WKAKAKAKAKA');
+end;
+
+procedure TdmStubDll.StubDllEventHandlerMessageDataRecieved(sender: TObject;
+  aMessage: string; Data: TMessageParamRec; var Handled: Boolean);
+begin
+Handled := True;
+end;
+
+procedure TdmStubDll.StubDllEventHandlerMessageRecieved(Sender: TObject;
+  aMessage: string; var Handled: Boolean);
+begin
+Handled := True;
+end;
+
 procedure TdmStubDll.DataModuleCreate(Sender: TObject);
 begin
 FIPCLog := TStringList.Create;
 FIPCServer := TIPCServer.Create;
 // TODO: TIPCServer: Servername needs sorting
-FIPCServer.ServerName := 'IPCTEST';
+FIPCServer.ServerName := self.StubDllEventHandler.IPCServerName;
 FIPCServer.OnExecuteRequest := OnExecuteRequest;
 end;
 
 procedure TdmStubDll.DataModuleDestroy(Sender: TObject);
 begin
 // TODO: TIPCServer: Right way to destroy these?
-  FreeAndNil(FIPCLog);
-  FreeAndNil(FIPCServer);
+fipclog.free;
+FIPCServer.Free;
+//  FreeAndNil(FIPCLog);
+//  FreeAndNil(FIPCServer);
 end;
 
 initialization
   Begin
   IsInitOk := false;
-
+ // dmStubDll := TdmStubDll.Create(nil);
 
   End;
 finalization
   Begin
-  //
+  FreeAndNil(dmStubDll);
   End;
 
 end.

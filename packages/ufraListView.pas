@@ -1,11 +1,13 @@
 unit ufraListView;
-
+// todo: need to make it so that Item data poitns to Plugin Data
+// todo: need to vastly improve listview refreshing
+// todo: need to tidy up code
 interface
 
 uses
   JvExComCtrls, JvToolBar, JvMenus,Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.ActnList, Vcl.Menus, Vcl.ToolWin, Vcl.Controls,VCL.Forms, Vcl.ComCtrls,
-  JvListView, JvStatusBar;
+  JvListView, JvStatusBar, JvProgressBar;
 
 type TListItemInfoRec         =       packed record
         Caption               :       string;
@@ -118,6 +120,7 @@ type
     Statusbar1: TMenuItem;
     actStatusBarVisible: TAction;
     Visible1: TMenuItem;
+    ProgressBar: TJvProgressBar;
     procedure actClearListViewExecute(Sender: TObject);
     procedure actRefreshListViewExecute(Sender: TObject);
     procedure actListViewListExecute(Sender: TObject);
@@ -169,6 +172,7 @@ type
     { Private declarations }
     GrpIndex : integer;
   FShowHiddenGroupItems           :       boolean;
+  FIsChanged                      :       boolean;
   public
     { Public declarations }
 
@@ -331,6 +335,7 @@ actFlatScrollBars.Checked := ListView.FlatScrollBars;
 actGridLines.Checked := ListView.GridLines;
 actDotNetHighlight.Checked := ListView.DotNetHighlighting;
 actHotTrack.Checked := ListView.HotTrack;
+self.actStatusBarVisible.Checked := StatusBar.Visible;
 // TODO: Add Hot track styles
 
 actFullDrag.Checked := ListView.FullDrag;
@@ -396,29 +401,28 @@ end;
 procedure TfraListView.ListViewChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 begin
-//self.actRefreshListView.Execute;
-
+FIsChanged := True;
 end;
 
 procedure TfraListView.ListViewDeletion(Sender: TObject; Item: TListItem);
 begin
-self.actRefreshListView.Execute;
+FIsChanged := True;
 end;
 
 procedure TfraListView.ListViewEdited(Sender: TObject; Item: TListItem;
   var S: string);
 begin
-self.actRefreshListView.Execute;
+FIsChanged := True;
 end;
 
 procedure TfraListView.ListViewInsert(Sender: TObject; Item: TListItem);
 begin
-self.actRefreshListView.Execute;
+FIsChanged := True;
 end;
 
 procedure TfraListView.ListViewItemChecked(Sender: TObject; Item: TListItem);
 begin
-self.actRefreshListView.Execute;
+FIsChanged := True;
 end;
 
 procedure TfraListView.ListViewLoadProgress(Sender: TObject; Progression,
@@ -426,6 +430,14 @@ procedure TfraListView.ListViewLoadProgress(Sender: TObject; Progression,
 begin
 UpdateStatusBarText('Loading, please wait...',0);
 UpdateStatusBarText('Item: ' + IntToStr(Progression) + ' of ' + IntToStr(Total),1);
+ProgressBar.Max := Total;
+ProgressBar.Position := Progression;
+
+if Progression >= (Total -1) then
+   Begin
+   FIsChanged := True;
+   self.actRefreshListView.Execute;
+   End;
 end;
 
 procedure TfraListView.ListViewSaveProgress(Sender: TObject; Progression,
@@ -433,6 +445,14 @@ procedure TfraListView.ListViewSaveProgress(Sender: TObject; Progression,
 begin
 UpdateStatusBarText('Saving, please wait...',0);
 UpdateStatusBarText('Item: ' + IntToStr(Progression) + ' of ' + IntToStr(Total),1);
+ProgressBar.Max := Total;
+ProgressBar.Position := Progression;
+
+if Progression >= (Total -1) then
+   Begin
+   FIsChanged := True;
+   self.actRefreshListView.Execute;
+   End;
 end;
 
 procedure TfraListView.ListViewSelectItem(Sender: TObject; Item: TListItem;
@@ -461,6 +481,8 @@ aGroup.Footer := aGroupInfo.Footer;
 aGroup.Subtitle := aGroupInfo.Subtitle;
 aGroup.TitleImage := aGroupInfo.TitleImage;
 aGroup.State := [lgsNormal,lgsCollapsible];
+
+FIsChanged := True;
 
 Result := aGroup.Index;
 end;
@@ -518,7 +540,7 @@ if dlgAddItem.ShowModal = mrOk then
    aItem.Caption := dlgAddItem.ItemCaption;
    aItem.SubItems.Text := dlgAddItem.ebSubitems.Lines.Text;
 
-
+   FIsChanged := True;
    End;
 dlgAddItem.Free;
 end;
@@ -536,7 +558,6 @@ if ListView.Items.Count > 0 then
    if ListView.SelCount > 0 then
       Begin
       ListView.DeleteSelected;
-
       End;
    End;
 end;
@@ -629,17 +650,18 @@ Var
   Found   : integer;
 begin
 Found := 0;
-UpdateStatusBarText('Refreshing...',-1);
 // check that Items Group Assignment is within range of actual group
 // count otherwise items will not be displayed in group mode.
 //
 // Added Property for 'ShowHiddenGroupItems' to turn this function
 // on and off
-if Self.ShowHiddenGroupItems then
+if (Self.ShowHiddenGroupItems) AND (FIsChanged) then
    Begin
    // Find items that will be hidden in group mode (has a groupid higher than groupcount - 1 or = -1)
+   ProgressBar.Max := ListView.Items.Count -1;
    for i := 0 to ListView.Items.Count - 1 do
     Begin
+    ProgressBar.Position := i;
     if (ListView.Items.Item[i].GroupID > (ListView.Groups.Count - 1)) or
        (ListView.Items.Item[i].GroupID = -1) then
        Begin
@@ -662,8 +684,10 @@ if Self.ShowHiddenGroupItems then
 
       // iterate one last time over ListView.Items and set their groupid
       // to Hidden group index
+      ProgressBar.Max := ListView.Items.Count - 1;
       for i := 0 to ListView.Items.Count - 1 do
            Begin
+           ProgressBar.Position := i;
            if (ListView.Items.Item[i].GroupID > (ListView.Groups.Count - 1)) or
               (ListView.Items.Item[i].GroupID = -1)  then
               Begin
@@ -684,7 +708,8 @@ else
    // having no group assigned and staying invisible
    end;
 
-ListView.Refresh;
+//ListView.Refresh;
+FIsChanged := False;
 end;
 
 procedure TfraListView.actRowSelectExecute(Sender: TObject);
@@ -727,7 +752,7 @@ for i := 0 to ListView.Items.Count -1 do
      ListView.Items[i].Selected := NOT ListView.Items[i].Selected;
    End;
 ListView.Items.EndUpdate;
-UpdateStatusBarText('Inverted Selection: ' + IntToStr(ListView.SelCount),-1);
+UpdateStatusBarText('Inverted Selection: ' + IntToStr(ListView.SelCount),0);
 end;
 
 
@@ -804,6 +829,7 @@ actShowHiddenGroupItems.Checked := not actShowHiddenGroupItems.Checked;
 Self.FShowHiddenGroupItems := actShowHiddenGroupItems.Checked;
 sELF.UpdateActionStates;
 self.actRefreshListView.Execute;
+FIsChanged := True;
 end;
 
 procedure TfraListView.actShowHintExecute(Sender: TObject);

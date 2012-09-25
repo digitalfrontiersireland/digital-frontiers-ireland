@@ -45,6 +45,9 @@ Type    TPluginObject         =       class(TDLLObject)
         PROPERTY SendMessage : TFUNC_Message read RFUNC_SendMessage;
         PROPERTY SendMessageWithData : TFUNC_MessageWithData read RFUNC_SendMessageWithData;
         PROPERTY GetExportedFunctionNames : TGetExportedFunctionNames read RFUNC_GetExportedFunctionNames;
+        PROPERTY GetGroupDetails : TFUNC_GetGroupDetails read RFUNC_GetGroupDetails write RFUNC_GetGroupDetails;
+        PROPERTY GetListItemCaption : TFUNC_GetStr read RFUNC_GetListItemCaption write RFUNC_GetListItemCaption;
+        PROPERTY GetIPCServerName : TFUNC_getStr read RFUNC_GetIPCServerName write RFUNC_GetIPCServerName;
         end;
 
 // =============================================================================
@@ -127,12 +130,14 @@ if IsLoaded then
                    FuncList := TStringList.Create;
                    if (@RFUNC_GetExportedFunctionNames <> nil) then
                       Begin
+                      // Call function to get exported names
                       RFUNC_GetExportedFunctionNames(Self,FuncList);
                       for i := 0 to FuncList.Count - 1 do
                         Begin
+                        // loop through the list and see if the function is exported
                         if HasExportedFunction(FuncList.Strings[i]) = False then
                            Begin
-                           // DONE: Trigger an event / Unload
+                           // Not found, so show error and unload
                              ShowMessage(ERROR_MISSINGEXPORTEDFUNC + FuncList.Strings[i]);
                              if Assigned(OnErrorEvent) then OnErrorEvent(self);
                              Self.Unload;
@@ -151,6 +156,7 @@ if IsLoaded then
                     FGroupInfo := RFUNC_getGroupDetails(Self);
                     end;
 
+                 // Get the Caption for ListItems
                  @RFUNC_GetListItemCaption := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_AskForListItemCaption);
                  if @RFUNC_GetListItemCaption <> nil then
                     begin
@@ -158,7 +164,7 @@ if IsLoaded then
                     end
                  else
                     begin
-                      Self.FListItemCaption := 'Unknown or Invalid Plugin';
+                      Self.FListItemCaption := 'No Caption';
                     end;
 
                  @RFUNC_GetIPCServerName := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_AskForIPCServerName);
@@ -174,7 +180,7 @@ if IsLoaded then
                     End
                  else
                     Begin
-                      FIPCServerName := '';
+                      FIPCServerName := 'error';
                     End;
 
                  End;
@@ -196,6 +202,7 @@ if IsLoaded then
       Begin
       FTaskPool.Finalize;
       FTaskPool.Free;
+
       End;
 
      // Call deinit if possible
@@ -205,18 +212,11 @@ if IsLoaded then
       End;
 
    End;
-FreeAndNil(FIPCLog);
+FIPCLog.Free;
+
 Inherited Unload;
 
 // make sure functions are deattached
-@RFUNC_Initialize          := nil;
-@RFUNC_DeInitialize        := nil;
-@RFUNC_SendMessage         := nil;
-@RFUNC_SendMessageWithData := nil;
-@RFUNC_GetExportedFunctionNames := nil;
-@RFUNC_GetGroupDetails := nil;
-@RFUNC_GetListItemCaption := nil;
-@RFUNC_GetIPCServerName := nil;
 End;
 
 
@@ -399,7 +399,8 @@ Begin
 // EDIT: ListItem.Data now gets TPluginObject, so this can be achieved through Item.Data in one
 // of the listviews event handlers
 if (Assigned(aListView) = true) AND
-   (aListView <> nil) then
+   (aListView <> nil) AND
+   (FIsChanged = true) then
       Begin
         aListView.Items.BeginUpdate;
         if ClearlistViewFirst then

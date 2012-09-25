@@ -1,6 +1,6 @@
 ﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 		<PropertyGroup>
-			<ProjectGuid>{F19CFA87-0DB0-48D1-9A2C-FDF356394447}</ProjectGuid>
+			<ProjectGuid>{EDB8C0A5-6457-4FBA-BFC1-5050DDE892AF}</ProjectGuid>
 			<ProjectVersion>13.4</ProjectVersion>
 			<FrameworkType>VCL</FrameworkType>
 			<MainSource>PluginExplorer.dpr</MainSource>
@@ -52,7 +52,7 @@
 			<DCC_K>false</DCC_K>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<DCC_UsePackage>DBXSybaseASEDriver;vclimg;vcldb;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;webdsnap;adortl;DBXOdbcDriver;vclactnband;bindcompvcl;vclie;vcltouch;websnap;VclSmp;dsnapcon;vclx;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>DBXSybaseASEDriver;vclimg;vcldb;vcldsnap;DBXDb2Driver;vclribbon;vcl;DBXMSSQLDriver;webdsnap;adortl;DBXOdbcDriver;vclactnband;bindcompvcl;vclie;vcltouch;websnap;VclSmp;dsnapcon;vclx;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
 			<DCC_UsePackage>JvGlobus;JvMM;JvManagedThreads;JvDlgs;JvCrypt;TeeDB;Rave100VCL;vclib;inetdbbde;JvNet;JvDotNetCtrls;DBXSybaseASEDriver;vclimg;fmi;JvXPCtrls;vcldb;vcldsnap;DFICommon;DBXDb2Driver;Intraweb_120_160;JvCore;vclribbon;frxe16;vcl;CloudService;DBXMSSQLDriver;CodeSiteExpressPkg;FmxTeeUI;JvAppFrm;JvDB;JvRuntimeDesign;webdsnap;JclDeveloperTools;JvDocking;adortl;JvWizards;JvHMI;JvBands;vcldbx;frx16;JvPluginSystem;Tee;JclContainers;DBXOdbcDriver;JvCmp;JvSystem;svnui;ibxpress;JvTimeFramework;JvControls;frxDB16;intrawebdb_120_160;fs16;FMXTee;TeeUI;vclactnband;JvJans;bindcompvcl;JvStdCtrls;JvCustom;Jcl;vclie;JvPageComps;JvPrintPreview;vcltouch;websnap;VclSmp;fsDB16;DataSnapConnectors;dsnapcon;JclVcl;JvPascalInterpreter;vclx;svn;bdertl;JvBDE;$(DCC_UsePackage)</DCC_UsePackage>
@@ -90,22 +90,8 @@
 				<Form>Form1</Form>
 				<FormType>dfm</FormType>
 			</DCCReference>
-			<DCCReference Include="..\..\packages\ufraListView.pas">
-				<Form>fraListView</Form>
-				<DesignClass>TFrame</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\packages\udlgListView_AddGroup.pas">
-				<Form>dlgAddGroup</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\packages\udlgListView_AddItem.pas">
-				<Form>dlgAddItem</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\packages\ufraListView_Groups.pas">
-				<Form>fraListView_Groups</Form>
-				<DesignClass>TFrame</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\packages\ufraPluginListView.pas">
-				<Form>fraPluginListView</Form>
+			<DCCReference Include="..\..\packages\ufraVisualPluginLoader.pas">
+				<Form>Frame1</Form>
 				<DesignClass>TFrame</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

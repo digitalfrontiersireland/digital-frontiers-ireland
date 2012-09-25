@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 533
-  ClientWidth = 674
+  ClientHeight = 354
+  ClientWidth = 622
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,72 +13,73 @@ object Form1: TForm1
   OldCreateOrder = False
   PixelsPerInch = 120
   TextHeight = 16
-  object Ribbon: TRibbon
+  inline Frame11: TFrame1
     Left = 0
     Top = 0
-    Width = 674
-    Height = 180
-    Caption = 'Ribbon'
-    Tabs = <
-      item
-        Caption = 'Plugins'
-        Page = rpHome
-      end>
-    DesignSize = (
-      674
-      180)
-    StyleName = 'Ribbon - Luna'
-    object rpHome: TRibbonPage
-      Left = 0
-      Top = 64
-      Width = 673
-      Height = 116
-      Caption = 'Plugins'
-      Index = 0
-    end
-  end
-  inline fraPluginListView1: TfraPluginListView
-    Left = 0
-    Top = 180
-    Width = 674
-    Height = 353
+    Width = 622
+    Height = 354
     Align = alClient
-    TabOrder = 1
-    ExplicitTop = 180
-    ExplicitWidth = 674
-    ExplicitHeight = 353
-    inherited fraListView: TfraListView
-      Width = 674
-      Height = 353
-      ExplicitWidth = 674
-      ExplicitHeight = 353
-      inherited ListView: TJvListView
-        Width = 674
-        Height = 334
-        ExplicitWidth = 674
-        ExplicitHeight = 334
+    TabOrder = 0
+    ExplicitWidth = 622
+    ExplicitHeight = 354
+    inherited PageControl: TPageControl
+      Width = 622
+      Height = 354
+      ExplicitWidth = 622
+      ExplicitHeight = 354
+      inherited TabSheet1: TTabSheet
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
+        inherited ebPath: TEdit
+          Width = 522
+          ExplicitWidth = 522
+        end
+        inherited ebFilename: TEdit
+          Width = 495
+          ExplicitWidth = 495
+        end
+        inherited btnLoad: TButton
+          Left = 507
+          Top = 295
+          OnClick = Frame11btnLoadClick
+          ExplicitLeft = 507
+          ExplicitTop = 295
+        end
+        inherited btnUnload: TButton
+          Left = 426
+          Top = 295
+          ExplicitLeft = 426
+          ExplicitTop = 295
+        end
+        inherited btnSelect: TButton
+          Top = 295
+          ExplicitTop = 295
+        end
+        inherited ebHandle: TEdit
+          Width = 383
+          ExplicitWidth = 383
+        end
+        inherited cbIsLoaded: TCheckBox
+          Left = 476
+          ExplicitLeft = 476
+        end
       end
-      inherited StatusBar: TJvStatusBar
-        Top = 334
-        Width = 674
-        ExplicitTop = 334
-        ExplicitWidth = 674
-      end
-      inherited Menu_ListView: TJvPopupMenu
-        object Add1: TMenuItem
-          Action = fraPluginListView1.actAddPlugin
+      inherited TabSheet2: TTabSheet
+        ExplicitWidth = 614
+        ExplicitHeight = 323
+        inherited ebCaption: TEdit
+          Width = 522
+          ExplicitWidth = 522
         end
-        object Load1: TMenuItem
-          Action = fraPluginListView1.actLoadPlugin
+        inherited lbExports: TListBox
+          Height = 139
+          ExplicitHeight = 139
         end
-        object UnloadPlugin1: TMenuItem
-          Action = fraPluginListView1.actUnloadPlugin
-        end
-        object LoadAll1: TMenuItem
-          Action = fraPluginListView1.actLoadAll
-        end
-        object UnloadAll1: TMenuItem
-          Action = fraPluginListView1.actUnloadAll
+        inherited ebIPC: TEdit
+          Width = 330
+          ExplicitWidth = 330
         end
       end
     end
