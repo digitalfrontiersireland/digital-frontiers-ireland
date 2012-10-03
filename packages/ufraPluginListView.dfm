@@ -35,6 +35,12 @@ object fraPluginListView: TfraPluginListView
         end>
       ExplicitTop = 331
       ExplicitWidth = 450
+      inherited ProgressBar: TJvProgressBar
+        Left = 255
+        Top = -2
+        ExplicitLeft = 255
+        ExplicitTop = -2
+      end
     end
     inherited ActionList_ListView: TActionList
       inherited actClearListView: TAction
@@ -95,7 +101,6 @@ object fraPluginListView: TfraPluginListView
     object actLoadPlugin: TAction
       Category = 'Plugins'
       Caption = '&Load'
-      OnExecute = actLoadPluginExecute
     end
     object actUnloadPlugin: TAction
       Category = 'Plugins'

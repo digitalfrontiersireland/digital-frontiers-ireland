@@ -28,7 +28,6 @@ type
     procedure fraListViewactSelectAllExecute(Sender: TObject);
     procedure fraListViewactSelectNoneExecute(Sender: TObject);
     procedure fraListViewactSelectInvertExecute(Sender: TObject);
-    procedure actLoadPluginExecute(Sender: TObject);
     procedure actLoadAllExecute(Sender: TObject);
     procedure actUnloadAllExecute(Sender: TObject);
     procedure fraListViewactSelectFirstExecute(Sender: TObject);
@@ -48,12 +47,6 @@ implementation
 procedure TfraPluginListView.actLoadAllExecute(Sender: TObject);
 begin
 PluginManager.LoadAll;
-end;
-
-procedure TfraPluginListView.actLoadPluginExecute(Sender: TObject);
-Var
-  aPluginObject : TPluginObject;
-begin
 end;
 
 procedure TfraPluginListView.actUnloadAllExecute(Sender: TObject);
@@ -84,11 +77,11 @@ end;
 procedure TfraPluginListView.fraListViewactRefreshListViewExecute(
   Sender: TObject);
 Var
-  aPluginObject : TPluginObject;
-  i             : integer;
-  aListItem     : TListItem;
+  i               : integer;
+  aListItem       : TListItem;
+  aListItemInfo   : TListItemInfoRec;
+  aPlugin         : TPluginObject;
 begin
-
 fraListView.actRefreshListViewExecute(Sender);
 
 if (PluginManager.DLLList.Count > 0) AND
@@ -98,7 +91,21 @@ if (PluginManager.DLLList.Count > 0) AND
 
       for i := 0 to fraListView.ListView.Items.Count - 1 do
            Begin
-//             fraListView.ListView.Items.Item[i].Data;
+           aPlugin := fraListView.ListView.Items.Item[i].Data;
+
+           if aPlugin <> nil then
+           if aPlugin.IsLoaded then
+              Begin
+                fraListView.ListView.Items.Item[i].Caption := aPlugin.GetListItemCaption(Self);
+                fraListView.ListView.Items.Item[i].SubItems.Clear;
+                fraListView.ListView.Items.Item[i].SubItems.Add('Yes');
+              End
+           else
+              begin
+                fraListView.ListView.Items.Item[i].SubItems.Clear;
+                fraListView.ListView.Items.Item[i].SubItems.Add('No');
+              end;
+           aPlugin := nil;
            End;
 
       fraListView.ListView.Items.EndUpdate;
@@ -115,7 +122,6 @@ end;
 procedure TfraPluginListView.fraListViewactSelectFirstExecute(Sender: TObject);
 begin
   fraListView.actSelectFirstExecute(Sender);
-
 
 end;
 
@@ -138,18 +144,45 @@ end;
 
 procedure TfraPluginListView.actAddPluginExecute(Sender: TObject);
 Var
-  DefaultData : TListItemInfoRec;
-  Files : TStringList;
-  i     : integer;
+  aItemInfo : TListItemInfoRec;
+  aPlugin   : TPluginObject;
+  Files     : TStringList;
+  i         : integer;
 begin
 Files := TStringList.Create;
 
 if OpenDialog.Execute(Self.Handle) then
    Begin
+   Files.Text := OpenDialog.Files.Text;
    PluginManager.AddDlls(Files);
-   End;
 
+
+   for i := 0 to PluginManager.Count -1 do
+        Begin
+        aPlugin := PluginManager.GetInfo(I);
+
+        if aPlugin.IsLoaded then
+           Begin
+           aItemInfo.Caption := aPlugin.GetListItemCaption(Self);
+           aItemInfo.Data := PluginManager.DLLList.Items[i];
+           End
+        else
+           Begin
+           aItemInfo.Caption := 'Unknown Plugin';
+           aItemInfo.Data := PluginManager.DLLList.Items[i];
+           End;
+        if i = 0 then
+          Begin
+          fraListView.AddItem(aItemInfo,True);
+          End
+        ELSE
+          Begin
+            fraListView.AddItem(aItemInfo,False);
+          End;
+        End;
+   End;
 Files.Free;
+fraListView.actRefreshListView.Execute;
 end;
 
 end.

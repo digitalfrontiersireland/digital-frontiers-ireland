@@ -21,7 +21,6 @@ type    TStubDllEventHandler        =       class(TComponent)
           FOnMessageRecieved        :       TOnMessageRecieved;
           FOnMessageDataRecieved    :       TOnMessageDataRecieved;
           FOnGetExportedFunctions   :       TOnGetExportedFunctions;
-          FIPCServerName            :       String;
           Public
           Published
           CONSTRUCTOR Create(AOwner : TComponent); override;
@@ -29,7 +28,6 @@ type    TStubDllEventHandler        =       class(TComponent)
           Protected
           Published
           PROPERTY OwnerInitData : TStub_InitObject read FOwnerInitData write  FOwnerInitData;
-          PROPERTY IPCServerName : String read FIPCServerName write FIPCServerName;
           PROPERTY OnDllInit : TOnInitMessageRecieved read FOnStubInit write FOnStubInit;
           PROPERTY OnDllDeInit : TNotifyEvent read FOnStubDeInit write FOnStubDeInit;
           PROPERTY OnMessageRecieved :  TOnMessageRecieved read FOnMessageRecieved write FOnMessageRecieved;
@@ -47,7 +45,6 @@ implementation
 CONSTRUCTOR TStubDLlEventHandler.Create(AOwner: TComponent);
 begin
   Inherited Create(AOwner);
-  if IPCServerName = '' then IPCServerName := Self.ClassName;
 end;
 
 DESTRUCTOR TStubDllEventHandler.Destroy;

@@ -240,8 +240,8 @@ begin
     // set and close event
     SetEvent(FAbortEvent);
     CloseHandle(FAbortEvent);
-
     // wait and block until thread is finished
+
     AResult := WaitForSingleObject(FListeningThread.Handle, cShutdownTimeout);
 
     // check if we timed out

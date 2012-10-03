@@ -80,6 +80,7 @@ Type    TDLLManager         =       class(TComponent)
         FOnAfterUnloadDllEvent  :   TOnDllNotifyEvent;
         FOnDllProgressEvent :       TOnDllProgressEvent;
         FOnListChangeEvent  :       TNotifyEvent;
+        FUNCTION FGetCount() : integer;
         private
         public
         // ---------------------------------------------------------------------
@@ -100,6 +101,7 @@ Type    TDLLManager         =       class(TComponent)
         published
         // ---------------------------------------------------------------------
         PROPERTY DLLList        : TList   read FDLLList         write FDLLList;
+        PROPERTY Count          : integer read FGetCount;
         PROPERTY AutoLoadDll    : boolean read FAutoLoad        write FAutoLoad
                                           default False;
         PROPERTY AutoUnloadDll  : boolean read FAutoUnload      write FAutoUnload
@@ -285,6 +287,11 @@ FreeAndNil(FDLLLIst);
 Inherited Destroy();
 End;
 // -----------------------------------------------------------------------------
+FUNCTION TDLLManager.FGetCount() : integer;
+begin
+result := self.FDLLList.Count;
+end;
+// -----------------------------------------------------------------------------
 PROCEDURE TDLLManager.AddDll(aFileName : TFileName);
 Var
   DLLObject : TDLLObject;
@@ -455,21 +462,13 @@ if (aIndex >= 0) and (aIndex < FDLLList.Count) and (FDLLList.Count > 0) then
 End;
 // -----------------------------------------------------------------------------
 PROCEDURE TDLLManager.ClearDlls();
-Var
-  aDLL : ^TDLLObject;
-  i : integer;
 Begin
-while FDLLList.Count > 0 do
+if FDLLList.Count > 0 then
    Begin
-   for i  := 0 to FDLLList.Count - 1 do
-        Begin
-        aDLL := FDLLList.Items[i];
-        FreeAndNil(aDLL);
-        End;
-   FDLLList.Clear;
-   FIsChanged := True;
+   UnloadAll;
    End;
-aDLL := nil;
+FDLLList.Clear;
+FIsChanged := True;
 End;
 
 

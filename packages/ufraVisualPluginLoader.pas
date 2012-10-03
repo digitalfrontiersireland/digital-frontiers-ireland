@@ -55,13 +55,32 @@ if Assigned(aPlugin) then
    Begin
    if aPlugin.IsLoaded then
      Begin
-     ebCaption.Text := aPlugin.ListItemCaption;
+     btnLoad.Enabled := false;
+     btnUnload.Enabled := true;
 
-     ebIPC.Text := aPlugin.GetIPCServerName(self);
+     self.ebHandle.Text := IntToStr(aPlugin.Handle);
+     ebCaption.Text := aPlugin.ListItemCaption;
      aPlugin.GetExportedFunctionNames(Self,ExportList);
      lbExports.Items.Text := ExportList.Text;
-     End;
-   End;
+     End
+   else
+     begin
+     btnLoad.Enabled := true;
+     btnUnload.Enabled := False;
+     self.ebHandle.TEXT := IntToStr(aPlugin.Handle);
+     ebCaption.Text := '';
+     lbExports.Clear;
+     end;
+   End
+ELSE
+   BEGIN
+     btnLoad.Enabled := true;
+     btnUnload.Enabled := False;
+     self.ebHandle.TEXT := '0';
+     ebCaption.Text := '';
+     lbExports.Clear;
+
+   END;
 ExportList.Free;
 End;
 
@@ -72,17 +91,9 @@ if assigned(aPlugin) then
    if NOT aPlugin.IsLoaded then
       begin
       aPlugin.Load;
-      btnLoad.Enabled := false;
-      btnUnload.Enabled := true;
-      cbIsLoaded.Checked := aPlugin.IsLoaded;
-      ebHandle.Text := intToStr(aPlugin.Handle);
-
-      if aPlugin.Initialize(aPluginData) then
-         Begin
-         RefreshData;
-         End;
       end;
    End;
+RefreshData;
 end;
 
 procedure TFrame1.btnSelectClick(Sender: TObject);
@@ -124,15 +135,10 @@ if assigned(aPlugin) then
    Begin
    if aPlugin.IsLoaded then
       begin
-      btnLoad.Enabled := true;
-      btnUnload.Enabled := false;
-      cbIsLoaded.Checked := aPlugin.IsLoaded;
-      ebHandle.Text := intToStr(aPlugin.Handle);
-
       aPlugin.Unload;
-      RefreshData;
       end;
    End;
+RefreshData;
 end;
 
 end.

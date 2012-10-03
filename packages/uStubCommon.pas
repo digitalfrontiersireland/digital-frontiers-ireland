@@ -22,7 +22,6 @@ Const
           FUNC_GetExportedFunctionNames=    'GetExportedFunctionNames';
           FUNC_AskForGroupDetails   =       'AskForGroupDetails';
           FUNC_AskForListItemCaption=       'AskForListItemCaption';
-          FUNC_AskForIPCServerName  =       'AskForIPCServerName';
 
           DEFAULT_INI_EXT           =       '.ini';
 

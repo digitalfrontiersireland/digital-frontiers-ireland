@@ -28,10 +28,8 @@ object Form1: TForm1
       ExplicitWidth = 622
       ExplicitHeight = 354
       inherited TabSheet1: TTabSheet
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitWidth = 614
+        ExplicitHeight = 323
         inherited ebPath: TEdit
           Width = 522
           ExplicitWidth = 522
@@ -70,16 +68,20 @@ object Form1: TForm1
         ExplicitWidth = 614
         ExplicitHeight = 323
         inherited ebCaption: TEdit
-          Width = 522
-          ExplicitWidth = 522
+          Width = 496
+          ExplicitWidth = 496
         end
         inherited lbExports: TListBox
           Height = 139
           ExplicitHeight = 139
         end
         inherited ebIPC: TEdit
-          Width = 330
-          ExplicitWidth = 330
+          Width = 304
+          ExplicitWidth = 304
+        end
+        inherited GroupBox1: TGroupBox
+          Width = 360
+          ExplicitWidth = 360
         end
       end
     end

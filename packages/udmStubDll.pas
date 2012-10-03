@@ -12,13 +12,10 @@ uses
         PROCEDURE stub_GetExportedFunctionNames(Sender : TObject; Var aStringList : TStringlist); export;
         FUNCTION stub_AskForListItemCaption(Sender : TObject) : string; export;
         FUNCTION stub_AskForGroupDetails(Sender : TObject) : TGroupInfoRec; export;
-        FUNCTION stub_AskForIPCServerName(Sender : TObject) : string; export;
 
 type
   TdmStubDll = class(TDataModule)
     StubDllEventHandler: TStubDllEventHandler;
-    procedure DataModuleDestroy(Sender: TObject);
-    procedure DataModuleCreate(Sender: TObject);
     procedure StubDllEventHandlerDllInit(Sender: TObject;
       var InitData: TStub_InitObject);
     procedure StubDllEventHandlerDllDeInit(Sender: TObject);
@@ -27,16 +24,12 @@ type
       aMessage: string; Data: TMessageParamRec; var Handled: Boolean);
     procedure StubDllEventHandlerMessageRecieved(Sender: TObject;
       aMessage: string; var Handled: Boolean);
-    function StubDllEventHandlerAskForGroupDetails(
-      sender: TObject): TGroupInfoRec;
     procedure StubDllEventHandlerGetExportedFunctions(sender: TObject;
       aStringList: TStringList);
+    function StubDllEventHandlerAskForGroupDetails(
+      sender: TObject): TGroupInfoRec;
   private
     { Private declarations }
-    FRequestCount : Int64;
-    FIPCServer    : TIPCServer;
-    FIPCLog       : TStringList;
-    procedure OnExecuteRequest(const Request, Response: IIPCData);
   public
     { Public declarations }
   end;
@@ -57,8 +50,7 @@ exports stub_Initialize,
         stub_MessageInWithData,
         stub_GetExportedFunctionNames,
         stub_AskForGroupDetails,
-        stub_AskForListItemCaption,
-        stub_AskForIPCServerName;
+        stub_AskForListItemCaption;
 
 implementation
 Var
@@ -71,18 +63,6 @@ Var
 
 
 
-function stub_AskForIPCServerName(Sender : TObject) : string; export;
-Begin
-if assigned(dmStubDll) then
-   Begin
-     Result := dmStubDLL.FIPCServer.ServerName;
-   End
-ELSE
-   Begin
-     Result := 'error';
-   End;
-
-End;
 
 function stub_AskForListItemCaption(Sender : TObject) : string; export;
 Begin
@@ -117,7 +97,6 @@ if (Assigned(aStringList) = true) AND (IsInitOk = true) then
    aStringList.Add(FUNC_PREFIX_STUB + FUNC_GetExportedFunctionNames);
    aStringList.Add(FUNC_PREFIX_STUB + FUNC_AskForGroupDetails);
    aStringList.Add(FUNC_PREFIX_STUB + FUNC_AskForListItemCaption);
-   aStringList.Add(FUNC_PREFIX_STUB + FUNC_AskForIPCServerName);
 
    if assigned(dmStubDll) AND
       assigned(dmStubDll.StubDllEventHandler.OnGetExportedFunctions) then
@@ -131,13 +110,11 @@ End;
 function stub_Initialize(Var InitData : TStub_InitObject) : boolean; export;
 Begin
    IsInitOk := false;
-   Result := false;
 
    if assigned(dmStubDll) AND
       assigned(dmStubDll.StubDllEventHandler.OnDllInit) then
           Begin
           dmStubDll.StubDllEventHandler.OnDllInit(dmStubDll,InitData);
-          dmStubDLL.FIPCServer.Start;
           result := true;
           isinitok := true;
           End
@@ -150,6 +127,7 @@ End;
 
 function stub_Deinitalize() : boolean; export;
 Begin
+Result := False;
 if IsInitOk then
    Begin
    if assigned(dmStubDll) AND
@@ -157,17 +135,11 @@ if IsInitOk then
          Begin
          dmStubDll.StubDllEventHandler.OnDllDeInit(dmStubDll);
          IsInitOk := False; // set to false so init can be called again
-         if dmStubDLL.FIPCServer.Listening then
-            begin
-            dmStubDLL.FIPCServer.Stop;
-            end;
+
+
          Result := True;
          End;
    End
-else
-   Begin
-     Result := False;
-   End;
 End;
 
 
@@ -177,13 +149,13 @@ if IsInitOk then
    Begin
    Handled := False;
    Result := Handled;
+
    if assigned(dmStubDll) AND
       assigned(dmStubDll.StubDllEventHandler.OnMessageRecieved) then
          Begin
          dmStubDll.StubDllEventHandler.OnMessageRecieved(dmStubDll,aMessage,Handled);
          Result := True;
          End;
-
    End
 ELSE
    Begin
@@ -197,7 +169,6 @@ Begin
 if IsInitOk then
    Begin
    Handled := False;
-   Result := Handled;
    if assigned(dmStubDll) AND
       assigned(dmStubDll.StubDllEventHandler.OnMessageDataRecieved) then
         Begin
@@ -214,34 +185,19 @@ End;
 
 
 
-procedure TdmStubDll.OnExecuteRequest(const Request, Response: IIPCData);
-var
-  Command: AnsiString;
-begin
-  Command := Request.Data.ReadUTF8String('Command');
-  FIPCLog.Add(Format('%s Request Recieved (Sent at: %s)', [Command, Request.ID]));
-  Inc(FRequestCount);
-
-  Response.ID := Format('Response nr. %d', [FRequestCount]);
-  Response.Data.WriteDateTime('TDateTime', Now);
-  Response.Data.WriteInteger('Integer', 5);
-  Response.Data.WriteReal('Real', 5.33);
-  Response.Data.WriteUTF8String('String', 'to je testni string');
- // Caption := Format('%d requests processed', [FRequestCount]);
-end;
-
 
 function TdmStubDll.StubDllEventHandlerAskForGroupDetails(
   sender: TObject): TGroupInfoRec;
 begin
-result.Header.Text := 'Test Plugin Header';
-result.Footer.Text := 'Test Plugin Footer';
-result.Description.Top := 'Test Plugin Top Description';
-result.Description.Bottom := 'Test Plugin Bottom Description';
-result.ExtendedImage := 0;
-result.TitleImage := 0;
-result.SubsetTitle := 'Test plugin Subsettitle';
-result.Subtitle := 'Subtitle';
+//
+Result.Header.Text := 'Test Header';
+Result.Footer.Text := 'Footer';
+Result.Description.Top := 'Top';
+Result.Description.Bottom := 'Bottom';
+Result.ExtendedImage := -1;
+Result.TitleImage := -1;
+Result.SubsetTitle := 'subset';
+Result.Subtitle := 'subtitle';
 end;
 
 function TdmStubDll.StubDllEventHandlerAskForListItemCaption(
@@ -255,11 +211,11 @@ begin
 ShowMessage('Deinit');
 end;
 
+
 procedure TdmStubDll.StubDllEventHandlerDllInit(Sender: TObject;
   var InitData: TStub_InitObject);
 begin
 //InitData.IniFile.WriteString('test','test','test');
-self.FIPCLog.Clear;
 end;
 
 procedure TdmStubDll.StubDllEventHandlerGetExportedFunctions(sender: TObject;
@@ -278,24 +234,6 @@ procedure TdmStubDll.StubDllEventHandlerMessageRecieved(Sender: TObject;
   aMessage: string; var Handled: Boolean);
 begin
 Handled := True;
-end;
-
-procedure TdmStubDll.DataModuleCreate(Sender: TObject);
-begin
-FIPCLog := TStringList.Create;
-FIPCServer := TIPCServer.Create;
-// TODO: TIPCServer: Servername needs sorting
-FIPCServer.ServerName := self.StubDllEventHandler.IPCServerName;
-FIPCServer.OnExecuteRequest := OnExecuteRequest;
-end;
-
-procedure TdmStubDll.DataModuleDestroy(Sender: TObject);
-begin
-// TODO: TIPCServer: Right way to destroy these?
-fipclog.free;
-FIPCServer.Free;
-//  FreeAndNil(FIPCLog);
-//  FreeAndNil(FIPCServer);
 end;
 
 initialization
