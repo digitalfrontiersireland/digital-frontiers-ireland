@@ -2,7 +2,7 @@ unit uDLLUtilsEx;
 
 interface
 uses
-  Windows, SysUtils, Classes, Forms,  Dialogs,ComCtrls;
+  Windows, SysUtils, Classes, Forms,  Dialogs,JvListView, ComCtrls;
 
 const
           STATUS_REFRESHINGLISTVIEW =       'Refreshing';
@@ -45,7 +45,7 @@ Type    TDLLObject            =       class
           // Constructor
           constructor Create(const aFileName   : String;
                              const aFilePath   : String;
-                             const aHandle     : THandle);
+                             const aHandle     : THandle); overload;virtual;
           // Events
         // ---------------------------------------------------------------------
           PROPERTY OnBeforeLoadEvent : TNotifyEvent read FOnBeforeLoadEvent write FOnBeforeLoadEvent;
@@ -54,7 +54,7 @@ Type    TDLLObject            =       class
           PROPERTY OnAfterUnloadEvent : TNotifyEvent read FOnAfterUnloadEvent write FOnAfterUnloadEvent;
           PROPERTY OnErrorEvent : TNotifyEvent read FOnErrorEvent write FOnErrorEvent;
         end;
-
+Type    PDLLObject            =      ^TDLLObject;
 // =============================================================================
 
 // =============================================================================
@@ -65,7 +65,9 @@ Type    TOnDllProgressEvent =       PROCEDURE(Sender : TObject; Min, Max, Positi
 
 
 
-
+Type    TOnUpdateListItemEvent  =     PROCEDURE(sender : TObject;
+                                                var ListItem : TListItem;
+                                                atIndex : integer) of object;
 
 // =============================================================================
 Type    TDLLManager         =       class(TComponent)
@@ -80,6 +82,7 @@ Type    TDLLManager         =       class(TComponent)
         FOnAfterUnloadDllEvent  :   TOnDllNotifyEvent;
         FOnDllProgressEvent :       TOnDllProgressEvent;
         FOnListChangeEvent  :       TNotifyEvent;
+        FOnUpdateListItemEvent :    TOnUpdateListItemEvent;
         FUNCTION FGetCount() : integer;
         private
         public
@@ -93,10 +96,9 @@ Type    TDLLManager         =       class(TComponent)
         PROCEDURE Unload          (aIndex : Integer); virtual;
         PROCEDURE LoadAll         (); virtual;
         PROCEDURE UnloadAll       (); virtual;
-        FUNCTION GetInfo          (aIndex : integer) : TDLLObject; virtual;
         PROCEDURE RemoveDll(aIndex : integer);
         PROCEDURE ClearDlls       (); virtual;
-        PROCEDURE RefreshListView (Var aListView : TListView; ClearListViewFirst : Boolean); virtual;
+        PROCEDURE RefreshListView (Var aListView : TjvListView; ClearListViewFirst : Boolean); virtual;
         // ---------------------------------------------------------------------
         published
         // ---------------------------------------------------------------------
@@ -124,6 +126,7 @@ Type    TDLLManager         =       class(TComponent)
 
         PROPERTY OnDllProgressEvent : TOnDllProgressEvent read FOnDllProgressEvent write FOnDllProgressEvent;
         PROPERTY OnListChangeEvent : TNotifyEvent read FOnListChangeEvent write FOnListChangeEvent;
+        PROPERTY OnUpdatingListItem : TOnUpdateListItemEvent read FOnUpdateListItemEvent write FOnUpdateListItemEvent;
         // ---------------------------------------------------------------------
         end;
 // =============================================================================
@@ -145,7 +148,6 @@ begin
   Self.FFileName  := aFileName;
   Self.FFilePath  := aFilePath;
   Self.FHandle    := aHandle;
-
 end;
 // -----------------------------------------------------------------------------
 procedure TDLLObject.Load();
@@ -273,17 +275,17 @@ end;
 // =============================================================================
 constructor TDLLManager.Create(AOwner : TComponent);
 Begin
-Inherited Create(AOwner);
+Inherited Create(AOWNER);
 FDLLList := TList.Create;
-Self.FAutoUnload := True;
 FIsChanged := True;
+
 End;
 // -----------------------------------------------------------------------------
 destructor TDLLManager.Destroy();
 Begin
-Self.UnloadAll;
-Self.ClearDlls;
-FreeAndNil(FDLLLIst);
+if self.FAutoUnload then UnloadAll;
+FDLLList.Clear;
+FreeAndNil(FDLLList);
 Inherited Destroy();
 End;
 // -----------------------------------------------------------------------------
@@ -293,34 +295,17 @@ result := self.FDLLList.Count;
 end;
 // -----------------------------------------------------------------------------
 PROCEDURE TDLLManager.AddDll(aFileName : TFileName);
-Var
-  DLLObject : TDLLObject;
-  i         : integer;
 Begin
-DLLObject := TDLLObject.Create(ExtractFileName(aFileName),ExtractFilePath(aFileName),0);
-
-if FDLLList.Count > 0 then
-   Begin
-   // See if this object exists already
-   for i := 0 to FDLLList.Count - 1 do
-     Begin
-     if CompareByFilename(DLLObject,FDLLList.Items[i]) = 0 then
-        Begin
-        // Filename already exists
-        Exit;
-        End
-     End;
-   End;
-
-FDLLList.Add(DLLObject);
-if Assigned(FOnListChangeEvent) then OnListChangeEvent(Self);
-if AutoLoadDll then
-   Begin
-   DLLObject.Load;
-   End;
+FDLLList.Add(TDLLObject.Create(ExtractFileName(aFileName),ExtractFilePath(aFileName),0));
 
 FIsChanged := True;
-//DLLObject := nil;
+
+if Assigned(FOnListChangeEvent) then OnListChangeEvent(Self);
+
+if AutoLoadDll then
+   begin
+   TDLLObject(FDLLList[FDLLList.Count - 1]).Load;
+   end;
 End;
 // -----------------------------------------------------------------------------
 PROCEDURE TDLLManager.AddDlls(var aFileNameList : TStringList);
@@ -337,18 +322,14 @@ if Assigned(aFileNameList) then
    End;
 End;
 // -----------------------------------------------------------------------------
-PROCEDURE TDLLManager.RefreshListView(Var aListView : TListView; ClearListViewFirst : Boolean);
+PROCEDURE TDLLManager.RefreshListView(Var aListView : TjvListView; ClearListViewFirst : Boolean);
 Var
     i         :     integer;
     ListItem  :     TListItem;
-    DLLObject :     TDLLObject;
+//    DLLObject :     TDLLObject;
 Begin
-// TODO: Performance: Make it possible to update a single item in the listview, or items that have
-// changed as opposed to update the entire listview with a full refresh
-// EDIT: ListItem.Data now gets TPluginObject, so this can be achieved through Item.Data in one
-// of the listviews event handlers
 if (Assigned(aListView) = true) AND
-   (aListView <> nil) then
+   (aListView <> nil) and (FDLLList <> nil) then
       Begin
         aListView.Items.BeginUpdate;
         if ClearlistViewFirst then
@@ -357,19 +338,23 @@ if (Assigned(aListView) = true) AND
             aListView.Items.Clear;
             for i := 0 to FDLLList.Count - 1 do
                 Begin
-                DLLObject := FDLLList.Items[i];
+//                DLLObject := FDLLList.Items[i];
                 ListItem := aListView.Items.Add;
-                if assigned(DLLObject) then
-                   Begin
-                   ListItem.GroupID := 0; // assign default group ID
+
+                ListItem.GroupID := 0; // assign default group ID
+
+                // DLL Filename to Caption
+                ListItem.Caption := TDLLObject(FDLLList.Items[i]).FileName;
+                // Path as first subitem
+                ListItem.SubItems.Add(TDLLObject(FDLLList.Items[i]).Path);
+                // DLL Handle as 2nd sub item
+                ListItem.SubItems.Add(IntToStr(TDLLObject(FDLLList.Items[i]).Handle));
+                // ListItems Data gets pointer to DLLObject
+                ListItem.Data := TDLLObject(FDLLList.Items[i]);
 
 
-                   ListItem.Caption := DLLObject.FileName;
-                   ListItem.SubItems.Add(DLLObject.Path);
-                   ListItem.SubItems.Add(IntToStr(DLLObject.Handle));
-                   ListItem.Data := DLLObject;
-                   End;
-                // DONE: Replace this event with some sort of status event instead
+                if assigned(OnUpdatingListItem) then self.FOnUpdateListItemEvent(Self,ListItem,i);
+
                 if Assigned(FOnDllProgressEvent) then OnDllProgressEvent(Self, 0, FDLLList.Count - 1, i, STATUS_REFRESHINGLISTVIEW + ListItem.Caption);
                 End;
              End
@@ -387,58 +372,49 @@ End;
 // -----------------------------------------------------------------------------
 
 PROCEDURE TDLLManager.Load(aIndex : Integer);
-Var
-    DLLObject : TDLLObject;
 Begin
 if (aIndex >= 0) and (aIndex < FDLLList.Count) and (FDLLList.Count > 0) then
    Begin
    if Assigned(FOnBeforeLoadDllEvent) then OnBeforeLoadDllEvent(Self, aIndex);
 
-   DLLObject := FDLLList.Items[aIndex];
-   DLLObject.Load;
+   if NOT TDLLObject(FDLLList[aIndex]).IsLoaded then
+      Begin
+        TDLLObject(FDLLList[aIndex]).Load;
+        FIsChanged := True;
+      End;
 
-   FIsChanged := True;
 
-   if (assigned(FOnAfterLoadDllEvent)) AND (DLLObject.IsLoaded) then
+   if (assigned(FOnAfterLoadDllEvent)) AND (TDLLObject(FDLLList[aIndex]).IsLoaded) then
       Begin
       OnAfterLoadDllEvent(Self, aIndex);
       End;
    End;
-//DLLObject := nil;
+
 End;
 // -----------------------------------------------------------------------------
 PROCEDURE TDLLManager.Unload(aIndex : Integer);
-Var
-  aObject : TDLLObject;
 Begin
 
 if (aIndex >= 0) and (aIndex < FDLLList.Count) and (FDLLList.Count > 0) then
    Begin
-   aObject := FDLLList.Items[aIndex];
    if Assigned(FOnBeforeUnloadDllEvent) then OnBeforeUnloadDllEvent(Self,aIndex);
-   aObject.Unload;
+
+   TDLLObject(FDLLList[aIndex]).Unload;
    FIsChanged := True;
+
    if Assigned(Self.FOnAfterUnloadDllEvent) then OnAfterUnloadDllEvent(Self,aIndex);
    End;
-//aObject := nil;
 End;
 // -----------------------------------------------------------------------------
 PROCEDURE TDLLManager.LoadAll();
 Var
   i           : integer;
-  DLLObject   : TDLLObject;
 Begin
 for i := 0 to FDLLList.Count - 1 do
   Begin
-  DLLObject := FDLLList.Items[i];
-
-  if not DLLObject.IsLoaded then
-        Begin
-        Load(i);
-        End;
-  if Assigned(FOnDllProgressEvent) then OnDllProgressEvent(Self, 0, FDLLList.Count - 1, i, STATUS_LOADING + ExtractFileName(DLLObject.FileName));
+  Load(i);
+  if Assigned(FOnDllProgressEvent) then OnDllProgressEvent(Self, 0, FDLLList.Count - 1, i, STATUS_LOADING)
   End;
-//DLLObject := nil;
 End;
 // -----------------------------------------------------------------------------
 PROCEDURE TDLLManager.UnloadAll();
@@ -452,23 +428,13 @@ for i := 0 to FDLLList.Count - 1 do
   End;
 End;
 // -----------------------------------------------------------------------------
-FUNCTION TDLLManager.GetInfo(aIndex : integer) : TDLLObject;
-Begin
-Result := nil;
-if (aIndex >= 0) and (aIndex < FDLLList.Count) and (FDLLList.Count > 0) then
-   Begin
-   Result := Self.FDLLList.Items[aIndex];
-   End;
-End;
+
 // -----------------------------------------------------------------------------
 PROCEDURE TDLLManager.ClearDlls();
 Begin
-if FDLLList.Count > 0 then
-   Begin
-   UnloadAll;
-   End;
 FDLLList.Clear;
-FIsChanged := True;
+FreeAndNil(FDLLList);
+FDLLlist := TList.Create;
 End;
 
 

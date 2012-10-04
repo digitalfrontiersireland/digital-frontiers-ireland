@@ -13,14 +13,14 @@
     <Transaction>2012/09/15 00:55:42.000.370,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSF.XTEA.pas</Transaction>
     <Transaction>2012/09/15 00:55:42.000.390,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSF.Zlib.pas</Transaction>
     <Transaction>2012/09/15 00:55:42.000.485,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Unicode.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.000.330,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleStorage.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.000.509,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.XTEA.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.000.350,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSA.DataSet.pas</Transaction>
-    <Transaction>2012/09/15 00:55:42.000.414,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Streams.pas</Transaction>
     <Transaction>2012/09/15 00:55:42.000.436,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.StringUtils.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.509,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.XTEA.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.330,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SimpleStorage.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.414,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.Streams.pas</Transaction>
+    <Transaction>2012/09/15 00:55:42.000.350,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis\Cromis.SSA.DataSet.pas</Transaction>
     <Transaction>2012/09/15 01:10:32.000.895,=vcl.dcp</Transaction>
-    <Transaction>2012/09/15 01:10:32.000.904,=dbrtl.dcp</Transaction>
     <Transaction>2012/09/15 01:10:32.000.913,=IndyCore.dcp</Transaction>
+    <Transaction>2012/09/15 01:10:32.000.904,=dbrtl.dcp</Transaction>
     <Transaction>2012/09/15 01:10:32.000.922,=IndySystem.dcp</Transaction>
   </Transactions>
 </BorlandProject>

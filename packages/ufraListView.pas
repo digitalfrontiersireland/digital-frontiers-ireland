@@ -164,10 +164,6 @@ type
     procedure ListViewSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
     procedure actStatusBarVisibleExecute(Sender: TObject);
-    procedure ListViewLoadProgress(Sender: TObject; Progression,
-      Total: Integer);
-    procedure ListViewSaveProgress(Sender: TObject; Progression,
-      Total: Integer);
   private
     { Private declarations }
     GrpIndex : integer;
@@ -423,36 +419,6 @@ end;
 procedure TfraListView.ListViewItemChecked(Sender: TObject; Item: TListItem);
 begin
 FIsChanged := True;
-end;
-
-procedure TfraListView.ListViewLoadProgress(Sender: TObject; Progression,
-  Total: Integer);
-begin
-UpdateStatusBarText('Loading, please wait...',0);
-UpdateStatusBarText('Item: ' + IntToStr(Progression) + ' of ' + IntToStr(Total),1);
-ProgressBar.Max := Total;
-ProgressBar.Position := Progression;
-
-if Progression >= (Total -1) then
-   Begin
-   FIsChanged := True;
-   self.actRefreshListView.Execute;
-   End;
-end;
-
-procedure TfraListView.ListViewSaveProgress(Sender: TObject; Progression,
-  Total: Integer);
-begin
-UpdateStatusBarText('Saving, please wait...',0);
-UpdateStatusBarText('Item: ' + IntToStr(Progression) + ' of ' + IntToStr(Total),1);
-ProgressBar.Max := Total;
-ProgressBar.Position := Progression;
-
-if Progression >= (Total -1) then
-   Begin
-   FIsChanged := True;
-   self.actRefreshListView.Execute;
-   End;
 end;
 
 procedure TfraListView.ListViewSelectItem(Sender: TObject; Item: TListItem;

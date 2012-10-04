@@ -153,7 +153,7 @@ Set the default options for FastMM here.
 
   {Deletes the error log file on startup. No effect if LogErrorsToFile is not
    also set.}
-  {$define ClearLogFileOnStartup}
+  {.$define ClearLogFileOnStartup}
 
   {Loads the FASTMM_FullDebugMode.dll dynamically. If the DLL cannot be found
    then stack traces will not be available. Note that this may cause problems
@@ -262,7 +262,7 @@ Set the default options for FastMM here.
  files are initialized before the main application, so the main application may
  well end up sharing a statically loaded DLL's memory manager and not the other
  way around. }
-{$define ShareMM}
+{.$define ShareMM}
 
   {Allow sharing of the memory manager by a DLL with other DLLs (or the main
    application if this is a statically loaded DLL) that were also compiled with
@@ -286,7 +286,7 @@ Set the default options for FastMM here.
 
 {Define this to enable backward compatibility for the memory manager sharing
  mechanism used by Delphi 2006 and 2007, as well as older FastMM versions.}
-{.$define EnableBackwardCompatibleMMSharing}
+{$define EnableBackwardCompatibleMMSharing}
 
 {-----------------------Security Options------------------------}
 

@@ -12,7 +12,6 @@ type
   TfraPluginListView = class(TFrame)
     fraListView: TfraListView;
     OpenDialog: TOpenDialog;
-    PluginManager: TPluginManager;
     ActionList_Plugins: TActionList;
     actAddPlugin: TAction;
     N1: TMenuItem;
@@ -20,19 +19,18 @@ type
     actUnloadPlugin: TAction;
     actLoadAll: TAction;
     actUnloadAll: TAction;
+    PluginManager: TPluginManager;
     procedure actAddPluginExecute(Sender: TObject);
     procedure fraListViewactClearListViewExecute(Sender: TObject);
     procedure fraListViewactRefreshListViewExecute(Sender: TObject);
-    procedure fraListViewactAddListviewItemExecute(Sender: TObject);
-    procedure fraListViewactDeleteItemExecute(Sender: TObject);
-    procedure fraListViewactSelectAllExecute(Sender: TObject);
-    procedure fraListViewactSelectNoneExecute(Sender: TObject);
-    procedure fraListViewactSelectInvertExecute(Sender: TObject);
     procedure actLoadAllExecute(Sender: TObject);
     procedure actUnloadAllExecute(Sender: TObject);
-    procedure fraListViewactSelectFirstExecute(Sender: TObject);
-    procedure PluginManagerDllProgressEvent(Sender: TObject; Min, Max,
-      Position: Integer; aMessage: string);
+    procedure PluginManagerUpdatingListItem(sender: TObject;
+      var ListItem: TListItem; atIndex : integer);
+    procedure fraListViewactStatusBarVisibleExecute(Sender: TObject);
+    procedure fraListViewactDotNetHighlightExecute(Sender: TObject);
+    procedure fraListViewactAddListviewItemExecute(Sender: TObject);
+    procedure fraListViewactDeleteItemExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -47,11 +45,13 @@ implementation
 procedure TfraPluginListView.actLoadAllExecute(Sender: TObject);
 begin
 PluginManager.LoadAll;
+fraListView.actRefreshListView.Execute;
 end;
 
 procedure TfraPluginListView.actUnloadAllExecute(Sender: TObject);
 begin
 PluginManager.UnloadAll;
+fraListView.actRefreshListView.Execute;
 end;
 
 procedure TfraPluginListView.fraListViewactAddListviewItemExecute(
@@ -68,86 +68,55 @@ begin
   PluginManager.ClearDlls;
 end;
 
+
 procedure TfraPluginListView.fraListViewactDeleteItemExecute(Sender: TObject);
 begin
   fraListView.actDeleteItemExecute(Sender);
 
 end;
 
+procedure TfraPluginListView.fraListViewactDotNetHighlightExecute(
+  Sender: TObject);
+begin
+  fraListView.actDotNetHighlightExecute(Sender);
+
+end;
+
 procedure TfraPluginListView.fraListViewactRefreshListViewExecute(
   Sender: TObject);
-Var
-  i               : integer;
-  aListItem       : TListItem;
-  aListItemInfo   : TListItemInfoRec;
-  aPlugin         : TPluginObject;
 begin
+PluginManager.RefreshListView(self.fraListView.ListView,true);
 fraListView.actRefreshListViewExecute(Sender);
+end;
 
-if (PluginManager.DLLList.Count > 0) AND
-   (fraListView.ListView.Items.Count > 0)then
+
+
+procedure TfraPluginListView.fraListViewactStatusBarVisibleExecute(
+  Sender: TObject);
+begin
+  fraListView.actStatusBarVisibleExecute(Sender);
+
+end;
+
+procedure TfraPluginListView.PluginManagerUpdatingListItem(sender: TObject;
+  var ListItem: TListItem; atIndex : integer);
+begin
+if (TPluginObject(PluginManager.DLLList[atIndex]).IsLoaded) AND
+   (TPluginObject(PluginManager.DLLList[atIndex]).IsValidPlugin) then
       Begin
-      fraListView.ListView.Items.BeginUpdate;
-
-      for i := 0 to fraListView.ListView.Items.Count - 1 do
-           Begin
-           aPlugin := fraListView.ListView.Items.Item[i].Data;
-
-           if aPlugin <> nil then
-           if aPlugin.IsLoaded then
-              Begin
-                fraListView.ListView.Items.Item[i].Caption := aPlugin.GetListItemCaption(Self);
-                fraListView.ListView.Items.Item[i].SubItems.Clear;
-                fraListView.ListView.Items.Item[i].SubItems.Add('Yes');
-              End
-           else
-              begin
-                fraListView.ListView.Items.Item[i].SubItems.Clear;
-                fraListView.ListView.Items.Item[i].SubItems.Add('No');
-              end;
-           aPlugin := nil;
-           End;
-
-      fraListView.ListView.Items.EndUpdate;
+      ListItem.Caption := TPluginObject(PluginManager.DLLList[atIndex]).GetListItemCaption(Self);
       End;
 
 
-end;
-
-procedure TfraPluginListView.fraListViewactSelectAllExecute(Sender: TObject);
-begin
-  fraListView.actSelectAllExecute(Sender);
-end;
-
-procedure TfraPluginListView.fraListViewactSelectFirstExecute(Sender: TObject);
-begin
-  fraListView.actSelectFirstExecute(Sender);
-
-end;
-
-procedure TfraPluginListView.fraListViewactSelectInvertExecute(Sender: TObject);
-begin
-  fraListView.actSelectInvertExecute(Sender);
-end;
-
-procedure TfraPluginListView.fraListViewactSelectNoneExecute(Sender: TObject);
-begin
-  fraListView.actSelectNoneExecute(Sender);
-end;
-
-
-procedure TfraPluginListView.PluginManagerDllProgressEvent(Sender: TObject; Min,
-  Max, Position: Integer; aMessage: string);
-begin
-//TODO: Reimplmenet
+{if DLLObject.IsLoaded and DLLObject.IsValidPlugin then
+   Begin
+   ListItem.Caption := TPluginObject(PluginManager.DLLList[atIndex]).ListItemCaption;
+   End;}
 end;
 
 procedure TfraPluginListView.actAddPluginExecute(Sender: TObject);
 Var
-  aItemInfo : TListItemInfoRec;
-  aPlugin   : TPluginObject;
   Files     : TStringList;
-  i         : integer;
 begin
 Files := TStringList.Create;
 
@@ -156,33 +125,15 @@ if OpenDialog.Execute(Self.Handle) then
    Files.Text := OpenDialog.Files.Text;
    PluginManager.AddDlls(Files);
 
-
-   for i := 0 to PluginManager.Count -1 do
-        Begin
-        aPlugin := PluginManager.GetInfo(I);
-
-        if aPlugin.IsLoaded then
-           Begin
-           aItemInfo.Caption := aPlugin.GetListItemCaption(Self);
-           aItemInfo.Data := PluginManager.DLLList.Items[i];
-           End
-        else
-           Begin
-           aItemInfo.Caption := 'Unknown Plugin';
-           aItemInfo.Data := PluginManager.DLLList.Items[i];
-           End;
-        if i = 0 then
-          Begin
-          fraListView.AddItem(aItemInfo,True);
-          End
-        ELSE
-          Begin
-            fraListView.AddItem(aItemInfo,False);
-          End;
-        End;
+ PluginManager.RefreshListView(self.fraListView.ListView, true);
    End;
-Files.Free;
-fraListView.actRefreshListView.Execute;
+
+FreeAndNil(Files);
+
+//fraListView.actRefreshListView.Execute;
+
+
 end;
+
 
 end.

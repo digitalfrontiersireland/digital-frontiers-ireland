@@ -71,6 +71,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_MapFile>3</DCC_MapFile>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_UnitSearchPath>C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis;C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\FastMM;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -88,6 +89,10 @@
 			</DelphiCompile>
 			<DCCReference Include="rtl.dcp"/>
 			<DCCReference Include="vcl.dcp"/>
+			<DCCReference Include="vclimg.dcp"/>
+			<DCCReference Include="Jcl.dcp"/>
+			<DCCReference Include="JvCore.dcp"/>
+			<DCCReference Include="JvStdCtrls.dcp"/>
 			<DCCReference Include="uStubDllEventHandler.pas"/>
 			<DCCReference Include="uStubCommon.pas"/>
 			<DCCReference Include="uPluginUtilsEx.pas"/>
@@ -150,7 +155,110 @@
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
-				<Deployment/>
+				<Deployment>
+					<DeployFile Class="DependencyPackage" Configuration="Debug" LocalName="$(BDS)\Redist\Win32\vcl160.bpl">
+						<Platform Name="Win32"/>
+					</DeployFile>
+					<DeployFile Class="DependencyPackage" Configuration="Debug" LocalName="$(BDS)\Redist\Win32\vclimg160.bpl">
+						<Platform Name="Win32"/>
+					</DeployFile>
+					<DeployFile Class="DependencyPackage" Configuration="Debug" LocalName="$(BDS)\Redist\Win32\rtl160.bpl">
+						<Platform Name="Win32"/>
+					</DeployFile>
+					<DeployFile Class="DependencyPackage" Configuration="Debug" LocalName="$(BDSCOMMONDIR)\Bpl\JvStdCtrls160.bpl">
+						<Platform Name="Win32"/>
+					</DeployFile>
+					<DeployFile Class="DependencyPackage" Configuration="Debug" LocalName="$(BDSCOMMONDIR)\Bpl\JvCore160.bpl">
+						<Platform Name="Win32"/>
+					</DeployFile>
+					<DeployFile Class="ProjectOutput" Configuration="Debug" LocalName="..\..\..\..\..\Public\Documents\RAD Studio\9.0\Bpl\DFICommon.bpl">
+						<Platform Name="Win32"/>
+					</DeployFile>
+					<DeployFile Class="DependencyPackage" Configuration="Debug" LocalName="$(BDSCOMMONDIR)\Bpl\Jcl160.bpl">
+						<Platform Name="Win32"/>
+					</DeployFile>
+					<DeployFile Class="DebugSymbols" Configuration="Debug" LocalName="..\..\..\..\..\Public\Documents\RAD Studio\9.0\Bpl\DFICommon.rsm">
+						<Platform Name="Win32">
+							<RemoteName>DFICommon.rsm</RemoteName>
+						</Platform>
+					</DeployFile>
+					<DeployClass Name="ProjectOutput" Required="true">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyPackage" Required="true">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+							<Extensions>.dylib</Extensions>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+							<Extensions>.bpl</Extensions>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyModule">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+							<Extensions>.dylib</Extensions>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+							<Extensions>.dll;.bpl</Extensions>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="ProjectOSXInfoPList">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="File">
+						<Platform Name="OSX32">
+							<Operation>0</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DebugSymbols">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyFramework">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+							<Extensions>.framework</Extensions>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="AdditionalDebugSymbols">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="ProjectOSXResource">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\Resources</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="OSX32"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
+				</Deployment>
 				<Platforms>
 					<Platform value="Win64">False</Platform>
 					<Platform value="OSX32">False</Platform>
@@ -161,4 +269,10 @@
 		</ProjectExtensions>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
 		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+		<Import Condition="Exists('$(MSBuildProjectName).deployproj')" Project="$(MSBuildProjectName).deployproj"/>
 	</Project>
+
+<!-- EurekaLog First Line
+[Exception Log]
+EurekaLog Version=7001
+EurekaLog Last Line -->

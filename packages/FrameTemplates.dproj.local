@@ -7,8 +7,8 @@
     <Transaction>2012/09/03 00:27:44.000.232,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\Unit1.pas</Transaction>
     <Transaction>2012/09/03 04:32:03.000.264,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\Unit1.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\ufraListView.pas</Transaction>
     <Transaction>2012/09/03 04:32:03.000.264,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\Unit1.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\ufraListView.dfm</Transaction>
-    <Transaction>2012/09/03 04:58:52.000.842,=vcl.dcp</Transaction>
     <Transaction>2012/09/03 04:58:52.000.855,=JvCore.dcp</Transaction>
+    <Transaction>2012/09/03 04:58:52.000.842,=vcl.dcp</Transaction>
     <Transaction>2012/09/03 04:58:52.000.860,=JvStdCtrls.dcp</Transaction>
     <Transaction>2012/09/03 04:58:52.000.851,=Jcl.dcp</Transaction>
     <Transaction>2012/09/03 04:58:52.000.846,=vclimg.dcp</Transaction>
@@ -16,8 +16,8 @@
     <Transaction>2012/09/03 08:55:40.000.924,=Jcl.dcp</Transaction>
     <Transaction>2012/09/03 08:55:40.000.939,=JvSystem.dcp</Transaction>
     <Transaction>2012/09/03 08:55:40.000.945,=JvStdCtrls.dcp</Transaction>
-    <Transaction>2012/09/03 08:55:40.000.933,=JvCore.dcp</Transaction>
     <Transaction>2012/09/03 08:55:40.000.909,=vcl.dcp</Transaction>
+    <Transaction>2012/09/03 08:55:40.000.933,=JvCore.dcp</Transaction>
     <Transaction>2012/09/03 08:55:40.000.914,=rtl.dcp</Transaction>
     <Transaction>2012/09/03 08:55:40.000.919,=vclimg.dcp</Transaction>
     <Transaction>2012/09/03 09:53:58.000.300,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\Unit1.pas</Transaction>

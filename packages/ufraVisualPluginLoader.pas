@@ -39,7 +39,6 @@ type
   public
     { Public declarations }
     aPlugin : TPluginObject;
-    aPluginData : TStub_InitObject;
   end;
 
 implementation

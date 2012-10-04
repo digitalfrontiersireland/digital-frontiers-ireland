@@ -11,7 +11,7 @@ library testdll;
   using PChar or ShortString parameters. }
 
 uses
-  FastMM4,
+FastMM4,
   System.SysUtils,
   System.Classes,
   udmStubDll in '..\..\..\packages\udmStubDll.pas' {dmStubDll: TDataModule};

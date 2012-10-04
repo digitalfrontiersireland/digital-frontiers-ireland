@@ -65,8 +65,6 @@ object Form1: TForm1
         end
       end
       inherited TabSheet2: TTabSheet
-        ExplicitWidth = 614
-        ExplicitHeight = 323
         inherited ebCaption: TEdit
           Width = 496
           ExplicitWidth = 496

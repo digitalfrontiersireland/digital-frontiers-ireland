@@ -39,11 +39,17 @@ object Form2: TForm2
           item
             AutoSize = True
             Caption = 'Is Active'
+          end
+          item
+            AutoSize = True
+            Caption = 'Handle'
           end>
         FlatScrollBars = True
         GridLines = True
-        ColumnsOrder = '0=50,1=50'
+        ColumnsOrder = '0=50,1=50,2=50'
         ExtendedColumns = <
+          item
+          end
           item
           end
           item
@@ -70,6 +76,11 @@ object Form2: TForm2
         object UnloadPlugin1: TMenuItem
           Action = fraPluginListView1.actUnloadPlugin
         end
+      end
+    end
+    inherited ActionList_Plugins: TActionList
+      inherited actAddPlugin: TAction
+        OnExecute = fraPluginListView1actAddPluginExecute
       end
     end
   end

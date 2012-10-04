@@ -1,16 +1,17 @@
 unit uPluginUtilsEx;
 
 interface
-uses uDLLUtilsEx, uStubCommon, Windows, Dialogs, SysUtils, Classes, ComCtrls;
+uses uDLLUtilsEx, uStubCommon, Windows, Dialogs, SysUtils, Classes, ComCtrls, JvListView;
 
 // =============================================================================
 // Responsible for implementing basic plugin functionality on top of a DLL Object
 // =============================================================================
 Type    TPluginObject         =       class(TDLLObject)
         private
-        FInitData             :       TStub_InitObject;
+        //FInitData             :       TStub_InitObject;
         FGroupInfo            :       TGroupInfoRec;
         FListItemCaption      :       String;
+        FIsValidPlugin        :       boolean;
         RFUNC_Initialize      :       TFUNC_Initialize;
         RFUNC_Deinitialize    :       TFUNC_Deinitalize;
         RFUNC_SendMessage     :       TFUNC_Message;
@@ -22,13 +23,14 @@ Type    TPluginObject         =       class(TDLLObject)
         // ---------------------------------------------------------------------
           procedure Load(); override;
           procedure Unload(); override;
-        // ---------------------------------------------------------------------
-          // Properties to read these data values
-        // ---------------------------------------------------------------------
-          // Events
-        // ---------------------------------------------------------------------
-//        PROPERTY TaskPool : TTaskPool read FTaskPool;
-        PROPERTY OwnerInitData : TStub_InitObject read FInitData;
+{          constructor Create(const aFileName   : String;
+                             const aFilePath   : String;
+                             const aHandle     : THandle;
+                             const aInitData    : TStub_InitObject); overload;virtual;
+          destructor Destroy(); override;}
+
+        PROPERTY IsValidPlugin : boolean read FIsValidPlugin;
+        //PROPERTY OwnerInitData : TStub_InitObject read FInitData;
         PROPERTY GroupInfo : TGroupInfoRec read FGroupInfo;
         PROPERTY ListItemCaption : String read FListItemCaption;
         PROPERTY Initialize : TFUNC_Initialize read RFUNC_Initialize;
@@ -36,46 +38,58 @@ Type    TPluginObject         =       class(TDLLObject)
         PROPERTY SendMessage : TFUNC_Message read RFUNC_SendMessage;
         PROPERTY SendMessageWithData : TFUNC_MessageWithData read RFUNC_SendMessageWithData;
         PROPERTY GetExportedFunctionNames : TGetExportedFunctionNames read RFUNC_GetExportedFunctionNames;
-        PROPERTY GetGroupDetails : TFUNC_GetGroupDetails read RFUNC_GetGroupDetails write RFUNC_GetGroupDetails;
-        PROPERTY GetListItemCaption : TFUNC_GetStr read RFUNC_GetListItemCaption write RFUNC_GetListItemCaption;
+        PROPERTY GetGroupDetails : TFUNC_GetGroupDetails read RFUNC_GetGroupDetails;
+        PROPERTY GetListItemCaption : TFUNC_GetStr read RFUNC_GetListItemCaption;
         end;
 
 // =============================================================================
-Type    TOnUpdateListItemEvent  =     PROCEDURE(sender : TObject;
-                                                Var ListItem : TListItem;
-                                                Var DLLObject: TPluginObject) of object;
-
+Type    PPluginObject           =     ^TPluginObject;
+// =============================================================================
 Type    TPluginManager      =       class(TDLLManager)
         Private
-        FInitData           :       TStub_InitObject;
-        FOnUpdateListItemEvent :    TOnUpdateListItemEvent;
+ //       FInitData           :       TStub_InitObject;
+//        FOnUpdateListItemEvent :    TOnUpdateListItemEvent;
         Public
-        FUNCTION GetInfo(aIndex : integer) : TPluginObject; reintroduce; virtual;
         PROCEDURE AddDll(aFileName : TFileName); override;
         PROCEDURE AddDlls(var aFileNameList : TStringList); override;
-        PROCEDURE RefreshListView(Var aListView : TListView; ClearListViewFirst : Boolean); override;
+        PROCEDURE RefreshListView(Var aListView : TjvListView; ClearListViewFirst : Boolean); override;
         Protected
         Published
-        PROPERTY InitData : TStub_InitObject read FInitData write FInitData;
-        PROPERTY OnUpdatingListItem : TOnUpdateListItemEvent read FOnUpdateListItemEvent write FOnUpdateListItemEvent;
+//        PROPERTY InitData : TStub_InitObject read FInitData write FInitData;
 end;
 
 
 implementation
 
+{constructor TPluginObject.Create(const aFileName: string; const aFilePath: string; const aHandle: NativeUInt; const aInitData: TStub_InitObject);
+begin
+Inherited Create(aFileName, aFilePath,aHandle);
+//FInitData := aInitData;
+end;
+
+destructor TPluginObject.Destroy;
+begin
+//  FreeAndNil(FInitData);
+  Inherited Destroy;
+end;
+}
 procedure TPluginObject.Load();
 Var
   i         : integer;
   TempHook  : TNotifyEvent;
   FuncList  : TStringList;
 Begin
-// Temporarly disable event here, we want to delay its loading
-TempHook := Self.OnAfterLoadEvent;
+// Temporarly disable event here, we want to delay its afterload even happening until
+// this Updated method is finished loading the plugin
+@TempHook := @OnAfterLoadEvent;
 Self.OnAfterLoadEvent := nil;
+
+// Set by default FIsValidPlugin to false, we'll set to true later if plugin is valid
 
 // Call inherited load to actually load DLL
 Inherited Load;
-// put our event back in place
+
+// put our AfterLoad event back in place so it can be triggered when needed
 Self.OnAfterLoadEvent := TempHook;
 
 // if is loaded
@@ -89,13 +103,14 @@ if IsLoaded then
       (HasExportedFunction(FUNC_PREFIX_STUB + FUNC_GetExportedFunctionNames) = true) then
         Begin
         // it does, safe to attach initialize
-        RFUNC_Initialize := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_Init);
+        @RFUNC_Initialize := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_Init);
 
          // if init is assigned
          if @RFUNC_Initialize <> nil then
             Begin
               // Call it
-              if RFUNC_Initialize(fInitData) = False then
+//              if RFUNC_Initialize(fInitData) = False then
+              if RFUNC_Initialize() = False then
                  Begin
                  // INIT Fail
                  // DONE: Rewrite for an event to get triggered
@@ -132,7 +147,7 @@ if IsLoaded then
                            End;
                         End;
                       End;
-                   FuncList.Free;
+                   FreeAndNil(FuncList);
 
                  // its assumed that all functions required below are correctly exported
                  // and no further checking is really done except to check for non nil
@@ -141,7 +156,7 @@ if IsLoaded then
                  @RFUNC_GetGroupDetails := GetProcAddresS(Handle, FUNC_PREFIX_STUB + FUNC_AskForGroupDetails);
                  if @RFUNC_GetGroupDetails <> nil then
                     begin
-                    FGroupInfo := RFUNC_getGroupDetails(Self);
+                    RFUNC_getGroupDetails(Self, FGroupInfo);
                     end;
 
                  // Get the Caption for ListItems
@@ -155,72 +170,48 @@ if IsLoaded then
                       Self.FListItemCaption := 'No Caption';
                     end;
                  End;
+            FIsValidPlugin := True;
             End;
         End;
    End;
 TempHook := nil;
+
 End;
 
 
 
 procedure TPluginObject.Unload();
 Begin
-// TODO: Change strings to consts
 if IsLoaded then
    Begin
-
      // Call deinit if possible
    if @RFUNC_deinitialize <> nil then
       Begin
       RFUNC_Deinitialize;
       End;
-
    End;
 
 Inherited Unload;
-
+FIsValidPlugin := False;
 // make sure functions are deattached
 End;
 
 
 
 
-FUNCTION TPluginManager.GetInfo(aIndex : integer) : TPluginObject;
-Begin
-// NOTE: This method hides virtual method in ancester TDLLManager
-// This is intentional
-Result := nil;
-if (aIndex >= 0) and (aIndex < FDLLList.Count) and (FDLLList.Count > 0) then
-   Begin
-   Result := Self.FDLLList.Items[aIndex];
-   End;
-End;
-
 PROCEDURE TPluginManager.AddDll(aFileName : TFileName);
-Var
-  DLLObject : TPluginObject;
-  i         : integer;
 Begin
-DLLObject := TPluginObject.Create(ExtractFileName(aFileName),ExtractFilePath(aFileName),0);
+//FDLLList.Add(TPluginObject.Create(ExtractFileName(aFileName),ExtractFilePath(aFileName),0, Self.FInitData));
+FDLLList.Add(TPluginObject.Create(ExtractFileName(aFileName),ExtractFilePath(aFileName),0));
 
-if FDLLList.Count > 0 then
-   Begin
-   // See if this object exists already
-   for i := 0 to FDLLList.Count - 1 do
-     Begin
-     if CompareByFilename(DLLObject,FDLLList.Items[i]) = 0 then
-        Begin
-        // Filename already exists
-        Exit;
-        End
-     End;
-   End;
+FIsChanged := True;
 
-DLLObject.FInitData := SELF.FInitData;
-FDLLList.Add(DLLObject);
 if Assigned(FOnListChangeEvent) then OnListChangeEvent(Self);
-if AutoLoadDll then DLLObject.Load;
-//DLLObject := nil;
+
+if AutoLoadDll then
+   begin
+   TPluginObject(FDLLList[0]).Load;
+   end;
 End;
 
 PROCEDURE TPluginManager.AddDlls(var aFileNameList : TStringList);
@@ -239,37 +230,15 @@ End;
 
 
 
-PROCEDURE TPluginManager.RefreshListView(Var aListView : TListView; ClearListViewFirst : Boolean);
-// TODO: Something up with this function causing probs when isloaded is false. consider tidying up the
-// code and make it more clear whats going on
+
+PROCEDURE TPluginManager.RefreshListView(Var aListView : TjvListView; ClearListViewFirst : Boolean);
 Var
     i         :     integer;
     ListItem  :     TListItem;
-    DLLObject :     TPluginObject;
-    GroupItem :     TListGroup;
-    FUNCTION GroupHeaderExists(aGroupHeader : String; Var inListView : TListView) : integer;
-    Var
-      i : integer;
-    Begin
-    Result := -1;
-    // Case In-sensitive search og a grouplist for a group header
-     for i := 0 to inListView.Groups.Count - 1 do
-        Begin
-        if LowerCase(inListView.Groups.Items[i].Header) = LowerCase(aGroupHeader) then
-           Begin
-             Result := i;
-             Break;
-           End
-        End;
-    End;
+//    DLLObject :     TPluginObject;
 Begin
-// DONE: Performance: Make it possible to update a single item in the listview, or items that have
-// changed as opposed to update the entire listview with a full refresh
-// EDIT: ListItem.Data now gets TPluginObject, so this can be achieved through Item.Data in one
-// of the listviews event handlers
 if (Assigned(aListView) = true) AND
-   (aListView <> nil) AND
-   (FIsChanged = true) then
+   (aListView <> nil) and (self.DLLList <> nil) then
       Begin
         aListView.Items.BeginUpdate;
         if ClearlistViewFirst then
@@ -278,77 +247,37 @@ if (Assigned(aListView) = true) AND
             aListView.Items.Clear;
             for i := 0 to FDLLList.Count - 1 do
                 Begin
-                DLLObject := FDLLList.Items[i];
-                // assign group based on DataStore
-                if GroupHeaderExists(DLLObject.GroupInfo.Header.Text, aListView) = -1 then
-                   Begin
-                   // Create a new group
-                   GroupItem := aListView.Groups.Add;
+//                DLLObject := FDLLList.Items[i];
+                ListItem := aListView.Items.Add;
 
-                   GroupItem.Header := DLLObject.GroupInfo.Header.Text;
-                   GroupItem.HeaderAlign := DLLObject.GroupInfo.Header.Align;
+                ListItem.GroupID := 0; // assign default group ID
 
-                   GroupItem.Footer := DLLObject.GroupInfo.Footer.Text;
-                   GroupItem.FooterAlign := DLLObject.GroupInfo.Footer.Align;
+                // DLL Filename to Caption
+                ListItem.Caption := TPluginObject(FDLLList[i]).FileName;
+                // Path as first subitem
+                ListItem.SubItems.Add(TPluginObject(FDLLList[i]).Path);
+                // DLL Handle as 2nd sub item
+                ListItem.SubItems.Add(IntToStr(TPluginObject(FDLLList[i]).Handle));
+                // ListItems Data gets pointer to DLLObject
+                ListItem.Data := TPluginObject(FDLLList[i]);
 
-                   GroupItem.Subtitle := DLLObject.GroupInfo.Subtitle;
-                    // TODO: Were certain groupitem properties removed in Delphi XE2?
-//                   GroupItem.SubsetTitle := DLLObject.GroupInfo.SubsetTitle;
+                if assigned(OnUpdatingListItem) then self.OnUpdatingListItem(self,ListItem,i);
 
-//                   GroupItem.TopDescription := DLLObject.GroupInfo.Description.Top;
-//                   GroupItem.BottomDescription := DLLObject.GroupInfo.Description.Bottom;
-
-                   GroupItem.TitleImage := DLLObject.GroupInfo.TitleImage;
-//                   GroupItem.ExtendedImage := DLLObject.GroupInfo.ExtendedImage;
-
-                   GroupItem.State := [lgsNormal,lgsCollapsible];
-                   End;
-                // TODO: BUG: Solve where IsLoaded is False causes an exception during the below block of code OR
-                // fails to update listviewcorrectly
-                if DLLObject.IsLoaded then
-                   Begin
-                   // assign ListItem
-                   ListItem := aListView.Items.Add;
-                   if assigned(DLLObject) then
-                      Begin
-                      // Assign this listitem to group
-                      ListItem.GroupID := GroupHeaderExists(DLLObject.GroupInfo.Header.Text, aListView);
-
-                      // ListItem.Caption is reserered for assignment in FOnUpdateListItemEvent event.
-                      ListItem.SubItems.add(DLLObject.FileName);
-                      ListItem.SubItems.Add(DLLObject.Path);
-                      ListItem.SubItems.Add(IntToStr(DLLObject.Handle));
-                      ListItem.Data := DLLObject;
-
-                      // DONE: Replace this event with some sort of status event instead
-                      if Assigned(FOnDllProgressEvent) then OnDllProgressEvent(Self, 0, FDLLList.Count - 1, i, STATUS_REFRESHINGLISTVIEW);
-
-                       // If its not assigned after the event is called, then it gets SubItems[0]
-                      ListItem.Caption := DLLObject.ListItemCaption;
-
-                      if Assigned(FOnUpdateListItemEvent) then OnUpdatingListItem(Self,ListItem,DLLObject);
-                      End;
-                   End
-                else
-                   begin
-                   // isn't loaded
-                   ListItem.Caption := 'Unknown';
-
-//                   if Assigned(FOnDllProgressEvent) then OnDllProgressEvent(Self, 0, FDLLList.Count - 1, i, STATUS_REFRESHINGLISTVIEW);
-                   end;
+                if Assigned(OnDllProgressEvent) then OnDllProgressEvent(Self, 0, FDLLList.Count - 1, i, STATUS_REFRESHINGLISTVIEW + ListItem.Caption);
                 End;
              End
             ELSE
              Begin
              // TODO: This is not done yet, recalling this method but with ClearListViewFirst set so something happens
-             // and it doesn't break out code, for now
+             // and it doesn't break our code, for now, effect is clearlistview is always true
             RefreshListView(aListView,True);
              End;
         aListView.Items.EndUpdate;
+        FIsChanged := False;
       End;
-DLLObject := nil;
+//DLLObject := nil;
 End;
-// -----------------------------------------------------------------------------
+
 
 
 end.

@@ -54,7 +54,7 @@ Type      TStub_AdditionalInfoRec   =       record
           CompanyComment            :       string;
           end;
 
-Type      TStub_InitObject          =       class
+{Type      TStub_InitObject          =       class
           Private
           FAdditionalInfo           :       TStub_AdditionalInfoRec;
           FAppFolder                :       string;
@@ -82,7 +82,7 @@ Type      TStub_InitObject          =       class
           PROPERTY IniFile : TIniFile read FIniFile write FIniFile;
           PROPERTY AdditionalInfo : TStub_AdditionalInfoRec read FAdditionalInfo write SetAddInfo;
           // Events
-end;
+end;}
 
 
 Type      TMessageParamRec          =       record
@@ -90,19 +90,19 @@ Type      TMessageParamRec          =       record
           W_Param                   :       wParam;
           end;
 
-Type      TFUNC_Initialize          =       FUNCTION(Var InitData : TStub_InitObject) : boolean;
+//Type      TFUNC_Initialize          =       FUNCTION(Var InitData : TStub_InitObject) : boolean;
+Type      TFUNC_Initialize          =       FUNCTION() : boolean;
 Type      TFUNC_Deinitalize         =       FUNCTION() : boolean;
 Type      TFUNC_Message             =       FUNCTION(aMessage : String; Var Handled : Boolean) : boolean;
 Type      TFUNC_MessageWithData     =       FUNCTION(aMessage : String; aData : TMessageParamRec;  Var Handled : Boolean) : boolean;
-Type      TFUNC_GetGroupDetails     =       FUNCTION(Sender : TOBject) : TGroupInfoRec;
-//Type      TFUNC_GetListItemCaption  =       FUNCTION(Sender : TObject) : string;
+Type      TFUNC_GetGroupDetails     =       PROCEDURE(Sender : TOBject; Var aGroupDetail : TGroupInfoRec );
 Type      TFUNC_GetStr              =       FUNCTION(Sender : TObject) : string;
 Type      TGetExportedFunctionNames =       PROCEDURE(Sender : TObject; Var aStringList : TStringlist);
 
 
 implementation
 
-constructor TStub_InitObject.Create(const aWorkingFolder   : String;
+{constructor TStub_InitObject.Create(const aWorkingFolder   : String;
                                     const aOwnerExe        : TFileName;
                                     const aOwnerHandle     : THandle;
                                     const aDataStore       : string);
@@ -140,5 +140,5 @@ FAdditionalInfo.CompanyURL := aInfo.CompanyURL;
 FAdditionalInfo.CompanyEmail := aInfo.CompanyEmail;
 FAdditionalInfo.CompanyComment := aInfo.CompanyComment;
 End;
-
+ }
 end.

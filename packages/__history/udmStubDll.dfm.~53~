@@ -1,0 +1,15 @@
+object dmStubDll: TdmStubDll
+  OldCreateOrder = False
+  Height = 150
+  Width = 215
+  object StubDllEventHandler: TStubDllEventHandler
+    OnDllInit = StubDllEventHandlerDllInit
+    OnDllDeInit = StubDllEventHandlerDllDeInit
+    OnMessageRecieved = StubDllEventHandlerMessageRecieved
+    OnMessageDataRecieved = StubDllEventHandlerMessageDataRecieved
+    OnGetExportedFunctions = StubDllEventHandlerGetExportedFunctions
+    OnAskForListItemCaption = StubDllEventHandlerAskForListItemCaption
+    Left = 56
+    Top = 24
+  end
+end

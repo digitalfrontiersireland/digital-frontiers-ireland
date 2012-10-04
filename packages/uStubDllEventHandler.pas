@@ -4,16 +4,17 @@ interface
 uses Classes, uStubCommon;
 
 
-Type    TOnInitMessageRecieved      =       PROCEDURE(Sender : TObject; Var InitData : TStub_InitObject) of object;
+//Type    TOnInitMessageRecieved      =       PROCEDURE(Sender : TObject; Var InitData : TStub_InitObject) of object;
+Type    TOnInitMessageRecieved      =       PROCEDURE(Sender : TObject) of object;
 Type    TOnMessageRecieved          =       PROCEDURE(Sender : TObject; aMessage : String; Var Handled : Boolean) of object;
 Type    TOnMessageDataRecieved      =       PROCEDURE(sender : TObject; aMessage : String; Data : TMessageParamRec; Var Handled : Boolean) of object;
 Type    TOnGetExportedFunctions     =       PROCEDURE(sender : Tobject; aStringList : TStringList) of object;
-Type    TOnAskForGroupDetails       =       FUNCTION(sender : TObject) : TGroupInfoRec of object;
+Type    TOnAskForGroupDetails       =       PROCEDURE(sender : TObject; Var aGroupDetails : TGroupInfoRec) of object;
 Type    TOnAskForListItemCaption    =       FUNCTION(Sender : TObject) : String of object;
 
 type    TStubDllEventHandler        =       class(TComponent)
           Private
-          FOwnerInitData            :       TStub_InitObject;
+//          FOwnerInitData            :       TStub_InitObject;
           FOnAskForGroupDetails     :       TOnAskForGroupDetails;
           FOnAskForListItemCaption  :       TOnAskForListItemCaption;
           FOnStubInit               :       TOnInitMessageRecieved;
@@ -27,7 +28,7 @@ type    TStubDllEventHandler        =       class(TComponent)
           DESTRUCTOR Destroy(); override;
           Protected
           Published
-          PROPERTY OwnerInitData : TStub_InitObject read FOwnerInitData write  FOwnerInitData;
+//          PROPERTY OwnerInitData : TStub_InitObject read FOwnerInitData write  FOwnerInitData;
           PROPERTY OnDllInit : TOnInitMessageRecieved read FOnStubInit write FOnStubInit;
           PROPERTY OnDllDeInit : TNotifyEvent read FOnStubDeInit write FOnStubDeInit;
           PROPERTY OnMessageRecieved :  TOnMessageRecieved read FOnMessageRecieved write FOnMessageRecieved;

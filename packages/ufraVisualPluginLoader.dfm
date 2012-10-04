@@ -14,6 +14,10 @@ object Frame1: TFrame1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Plugin Options'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         640
         337)
@@ -110,6 +114,10 @@ object Frame1: TFrame1
     object TabSheet2: TTabSheet
       Caption = 'Plugin Details'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         640
         337)

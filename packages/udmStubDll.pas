@@ -5,19 +5,20 @@ interface
 uses
   FastMM4,System.SysUtils, System.Classes, uStubCommon, Cromis.IPC, uStubDllEventHandler, vcl.dialogs;
 
-        function stub_Initialize(Var InitData : TStub_InitObject) : boolean; export;
+//        function stub_Initialize(Var InitData : TStub_InitObject) : boolean; export;
+        function stub_Initialize() : boolean; export;
         function stub_Deinitalize() : boolean; export; stdcall
         FUNCTION stub_MessageIn(aMessage : String;  Var Handled : Boolean) : boolean export;
         FUNCTION stub_MessageInWithData( aMessage : String; Data : TMessageParamRec;  Var Handled : Boolean) : boolean export;
         PROCEDURE stub_GetExportedFunctionNames(Sender : TObject; Var aStringList : TStringlist); export;
         FUNCTION stub_AskForListItemCaption(Sender : TObject) : string; export;
-        FUNCTION stub_AskForGroupDetails(Sender : TObject) : TGroupInfoRec; export;
+        PROCEDURE stub_AskForGroupDetails(Sender : TObject; Var aGroupDetail : TGroupInfoRec); export;
 
 type
   TdmStubDll = class(TDataModule)
     StubDllEventHandler: TStubDllEventHandler;
-    procedure StubDllEventHandlerDllInit(Sender: TObject;
-      var InitData: TStub_InitObject);
+//    procedure StubDllEventHandlerDllInit(Sender: TObject;
+//      var InitData: TStub_InitObject);
     procedure StubDllEventHandlerDllDeInit(Sender: TObject);
     function StubDllEventHandlerAskForListItemCaption(Sender: TObject): string;
     procedure StubDllEventHandlerMessageDataRecieved(sender: TObject;
@@ -26,8 +27,8 @@ type
       aMessage: string; var Handled: Boolean);
     procedure StubDllEventHandlerGetExportedFunctions(sender: TObject;
       aStringList: TStringList);
-    function StubDllEventHandlerAskForGroupDetails(
-      sender: TObject): TGroupInfoRec;
+    procedure StubDllEventHandlerAskForGroupDetails(sender: TObject;
+      var aGroupDetails: TGroupInfoRec);
   private
     { Private declarations }
   public
@@ -73,12 +74,12 @@ if assigned(dmStubDll) AND
    End;
 End;
 
-FUNCTION stub_AskForGroupDetails(Sender : TObject) : TGroupInfoRec; export;
+PROCEDURE stub_AskForGroupDetails(Sender : TObject; Var aGroupDetail : TGroupInfoRec); export;
 Begin
 if assigned(dmStubDll) AND
    assigned(dmStubDll.StubDllEventHandler.OnAskForGroupDetails) then
    Begin
-     dmStubDll.StubDllEventHandler.OnAskForGroupDetails(Sender);
+     dmStubDll.StubDllEventHandler.OnAskForGroupDetails(Sender, aGroupDetail);
    End;
 
 End;
@@ -107,21 +108,23 @@ if (Assigned(aStringList) = true) AND (IsInitOk = true) then
 End;
 
 
-function stub_Initialize(Var InitData : TStub_InitObject) : boolean; export;
+//function stub_Initialize(Var InitData : TStub_InitObject) : boolean; export;
+function stub_Initialize() : boolean; export;
 Begin
    IsInitOk := false;
 
    if assigned(dmStubDll) AND
       assigned(dmStubDll.StubDllEventHandler.OnDllInit) then
           Begin
-          dmStubDll.StubDllEventHandler.OnDllInit(dmStubDll,InitData);
+//          dmStubDll.StubDllEventHandler.OnDllInit(dmStubDll,InitData);
+          dmStubDll.StubDllEventHandler.OnDllInit(dmStubDll);
           result := true;
           isinitok := true;
           End
       else
          Begin
            dmStubDll := TdmStubDll.Create(nil);
-           result := stub_Initialize(InitData)
+           result := stub_Initialize()
          End;
 End;
 
@@ -186,18 +189,18 @@ End;
 
 
 
-function TdmStubDll.StubDllEventHandlerAskForGroupDetails(
-  sender: TObject): TGroupInfoRec;
+procedure TdmStubDll.StubDllEventHandlerAskForGroupDetails(sender: TObject;
+  var aGroupDetails: TGroupInfoRec);
 begin
 //
-Result.Header.Text := 'Test Header';
-Result.Footer.Text := 'Footer';
-Result.Description.Top := 'Top';
-Result.Description.Bottom := 'Bottom';
-Result.ExtendedImage := -1;
-Result.TitleImage := -1;
-Result.SubsetTitle := 'subset';
-Result.Subtitle := 'subtitle';
+aGroupDetails.Header.Text := 'Test Header';
+aGroupDetails.Footer.Text := 'Footer';
+aGroupDetails.Description.Top := 'Top';
+aGroupDetails.Description.Bottom := 'Bottom';
+aGroupDetails.ExtendedImage := -1;
+aGroupDetails.TitleImage := -1;
+aGroupDetails.SubsetTitle := 'subset';
+aGroupDetails.Subtitle := 'subtitle';
 end;
 
 function TdmStubDll.StubDllEventHandlerAskForListItemCaption(
@@ -211,12 +214,6 @@ begin
 ShowMessage('Deinit');
 end;
 
-
-procedure TdmStubDll.StubDllEventHandlerDllInit(Sender: TObject;
-  var InitData: TStub_InitObject);
-begin
-//InitData.IniFile.WriteString('test','test','test');
-end;
 
 procedure TdmStubDll.StubDllEventHandlerGetExportedFunctions(sender: TObject;
   aStringList: TStringList);

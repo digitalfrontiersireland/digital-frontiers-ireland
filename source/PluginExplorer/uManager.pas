@@ -9,11 +9,8 @@ uses
 type
   TForm2 = class(TForm)
     fraPluginListView1: TfraPluginListView;
-    Add1: TMenuItem;
-    LoadAll1: TMenuItem;
-    UnloadAll1: TMenuItem;
-    UnloadPlugin1: TMenuItem;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure fraPluginListView1actAddPluginExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -31,6 +28,12 @@ procedure TForm2.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
 FRAPLUGINLISTVIEW1.fraListView.ListView.Clear;
 SELF.fraPluginListView1.PluginManager.ClearDlls;
+end;
+
+procedure TForm2.fraPluginListView1actAddPluginExecute(Sender: TObject);
+begin
+  fraPluginListView1.actAddPluginExecute(Sender);
+
 end;
 
 end.

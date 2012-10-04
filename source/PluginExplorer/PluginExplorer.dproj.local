@@ -5,13 +5,15 @@
     <Transaction>2012/09/14 23:11:33.000.747,=C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2012/09/14 23:17:36.000.810,=C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2012/09/25 17:50:10.000.089,=C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2012/09/25 17:50:38.000.001,C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Unit1.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uMain.dfm</Transaction>
-    <Transaction>2012/09/25 17:50:38.000.001,C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Unit1.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uMain.pas</Transaction>
-    <Transaction>2012/09/25 17:50:41.000.502,C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Project1.dproj=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\PluginExplorer.dproj</Transaction>
+    <Transaction>2012/09/25 17:50:38.000.001,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uMain.pas=C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2012/09/25 17:50:38.000.001,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uMain.dfm=C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2012/09/25 17:50:41.000.502,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\PluginExplorer.dproj=C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
     <Transaction>2012/09/25 18:10:02.000.035,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\ufraVisualPluginLoader.pas</Transaction>
-    <Transaction>2012/10/03 02:31:48.698,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\Unit2.pas</Transaction>
-    <Transaction>2012/10/03 02:31:53.554,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uManager.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\Unit2.pas</Transaction>
-    <Transaction>2012/10/03 02:31:53.554,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uManager.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\Unit2.dfm</Transaction>
-    <Transaction>2012/10/03 02:32:02.135,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\ufraPluginListView.pas</Transaction>
+    <Transaction>2012/10/03 02:31:48.000.698,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\Unit2.pas</Transaction>
+    <Transaction>2012/10/03 02:31:53.000.554,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\Unit2.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uManager.pas</Transaction>
+    <Transaction>2012/10/03 02:31:53.000.554,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\Unit2.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uManager.dfm</Transaction>
+    <Transaction>2012/10/03 02:32:02.000.135,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\ufraPluginListView.pas</Transaction>
+    <Transaction>2012/10/04 04:17:55.000.848,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\source\PluginExplorer\uMain.pas=</Transaction>
+    <Transaction>2012/10/04 04:18:01.000.350,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\ufraVisualPluginLoader.pas=</Transaction>
   </Transactions>
 </BorlandProject>

@@ -55,6 +55,7 @@
 			<DCC_UsePackage>DBXSybaseASEDriver;vclimg;vcldb;vcldsnap;DBXDb2Driver;vclribbon;vcl;DBXMSSQLDriver;webdsnap;adortl;DBXOdbcDriver;vclactnband;bindcompvcl;vclie;vcltouch;websnap;VclSmp;dsnapcon;vclx;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
+			<Icon_MainIcon>c:\program files (x86)\embarcadero\rad studio\9.0\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
 			<DCC_UsePackage>JvGlobus;JvMM;JvManagedThreads;JvDlgs;JvCrypt;TeeDB;Rave100VCL;vclib;inetdbbde;JvNet;JvDotNetCtrls;DBXSybaseASEDriver;vclimg;fmi;JvXPCtrls;vcldb;vcldsnap;DFICommon;DBXDb2Driver;Intraweb_120_160;JvCore;vclribbon;frxe16;vcl;CloudService;DBXMSSQLDriver;CodeSiteExpressPkg;FmxTeeUI;JvAppFrm;JvDB;JvRuntimeDesign;webdsnap;JclDeveloperTools;JvDocking;adortl;JvWizards;JvHMI;JvBands;vcldbx;frx16;JvPluginSystem;Tee;JclContainers;DBXOdbcDriver;JvCmp;JvSystem;svnui;ibxpress;JvTimeFramework;JvControls;frxDB16;intrawebdb_120_160;fs16;FMXTee;TeeUI;vclactnband;JvJans;bindcompvcl;JvStdCtrls;JvCustom;Jcl;vclie;JvPageComps;JvPrintPreview;vcltouch;websnap;VclSmp;fsDB16;DataSnapConnectors;dsnapcon;JclVcl;JvPascalInterpreter;vclx;svn;bdertl;JvBDE;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -70,7 +71,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<DCC_UnitSearchPath>C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages;C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<DCC_MapFile>3</DCC_MapFile>
+			<DCC_DebugDCUs>true</DCC_DebugDCUs>
+			<DCC_UnitSearchPath>C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages;C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\Cromis;C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\FastMM;C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\denomo;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<Icon_MainIcon>c:\program files (x86)\embarcadero\rad studio\9.0\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -86,17 +89,8 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="uMain.pas">
-				<Form>Form1</Form>
-				<FormType>dfm</FormType>
-			</DCCReference>
-			<DCCReference Include="..\..\packages\ufraVisualPluginLoader.pas">
-				<Form>Frame1</Form>
-				<DesignClass>TFrame</DesignClass>
-			</DCCReference>
 			<DCCReference Include="uManager.pas">
 				<Form>Form2</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\packages\ufraPluginListView.pas">
 				<Form>fraPluginListView</Form>
@@ -165,3 +159,8 @@
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
 		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
 	</Project>
+
+<!-- EurekaLog First Line
+[Exception Log]
+EurekaLog Version=7001
+EurekaLog Last Line -->
