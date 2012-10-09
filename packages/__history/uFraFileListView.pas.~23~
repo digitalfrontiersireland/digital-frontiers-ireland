@@ -1,0 +1,28 @@
+unit uFraFileListView;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ufraListView,
+  Vcl.ActnList, uCustomLists;
+
+type
+  TFrame2 = class(TFrame)
+    fraListView: TfraListView;
+    FileManager: TFileManager;
+    ActionList_Files: TActionList;
+    actAddFile: TAction;
+    OpenDialog: TOpenDialog;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+implementation
+
+{$R *.dfm}
+
+
+end.

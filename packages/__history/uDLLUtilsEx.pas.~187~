@@ -1,0 +1,183 @@
+unit uDLLUtilsEx;
+
+//TODO: Rewrute TPluginManager and TDLLmanager to use method destribed here
+// http://stackoverflow.com/questions/5797368/delphi-tlist-of-records
+
+interface
+uses
+  Windows, SysUtils, Classes, uCustomLists;
+
+// =============================================================================
+// Responsible for Loading and Unloading a DLL File and providing basic methods
+// and events
+// =============================================================================
+Type    PDLLObject            =      ^TDLLObject;
+        TDLLObject            =       class
+        private
+        // The data fields of the DLL class
+          FFileName           : TFileName;
+          FFilePath           : String;
+          FHandle             : THandle;
+          FOnBeforeLoadEvent  : TNotifyEvent;
+          FOnAfterLoadEvent   : TNotifyEvent;
+          FOnBeforeUnloadEvent: TNotifyEvent;
+          FOnAfterUnloadEvent : TNotifyEvent;
+          FOnErrorEvent       : TNotifyEvent;
+        public
+          procedure Load(); virtual;
+          procedure Unload(); virtual;
+          function IsLoaded() : boolean;
+          function HasExportedFunction(aFunctionOrProcedureName : String) : boolean;
+          // Properties to read these data values
+          property FileName : TFileName   read FFileName;
+          property Path     : string      read FFilePath;
+          property Handle   : THandle     read FHandle;
+        // ---------------------------------------------------------------------
+          // Constructor
+          constructor Create(const aFileName   : String;
+                             const aFilePath   : String;
+                             const aHandle     : THandle); overload; virtual;
+          destructor Destroy(); override;
+          PROPERTY OnBeforeLoadEvent : TNotifyEvent read FOnBeforeLoadEvent write FOnBeforeLoadEvent;
+          PROPERTY OnAfterLoadEvent : TNotifyEvent read FOnAfterLoadEvent write FOnAfterLoadEvent;
+          PROPERTY OnBeforeUnloadEvent : TNotifyEvent read FOnBeforeUnloadEvent write FOnBeforeUnloadEvent;
+          PROPERTY OnAfterUnloadEvent : TNotifyEvent read FOnAfterUnloadEvent write FOnAfterUnloadEvent;
+          PROPERTY OnErrorEvent : TNotifyEvent read FOnErrorEvent write FOnErrorEvent;
+        end;
+// =============================================================================
+
+Type    TDLLObjectList      =       class(TStringList)
+        Private
+        Public
+        CONSTRUCTOR Create(); overload; virtual;
+        DESTRUCTOR Destroy(); override;
+        FUNCTION Add(const s : string) : integer; override;
+        end;
+
+Type    TPluginManager      =       class(TFileManager)
+        Protected
+        Private
+        Public
+        Published
+end;
+
+
+implementation
+
+
+CONSTRUCTOR TDLLObjectList.Create;
+begin
+  Inherited Create;
+end;
+
+DESTRUCTOR TDLLObjectList.Destroy;
+begin
+SELF.Clear;
+  Inherited Destroy;
+end;
+
+
+FUNCTION TDLLObjectList.Add(const s : string) : integer;
+Var
+  DLLObject : TDLLObject;
+Begin
+Result := Inherited Add(s);
+InsertObject(Result,s,TDLLObject.Create(ExtractFileName(s), ExtractFilePath(s),0));
+End;
+
+
+// =============================================================================
+// TDLLObject constructor
+// =============================================================================
+constructor TDLLObject.Create(const aFileName   : String;
+                              const aFilePath   : String;
+                              const aHandle     : THandle);
+begin
+  // Save the passed parameters
+  Inherited Create;
+  Self.FFileName  := aFileName;
+  Self.FFilePath  := aFilePath;
+  Self.FHandle    := aHandle;
+end;
+
+destructor TDLLObject.Destroy;
+begin
+  if Self.FHandle > 0 then FreeLibrary(Self.FHandle);
+
+  Inherited Destroy();
+end;
+// -----------------------------------------------------------------------------
+procedure TDLLObject.Load();
+Begin
+if FileExists(FFilePath + FFileName) then
+   Begin
+   Try
+     Begin
+     if assigned(FOnBeforeLoadEvent) then OnBeforeLoadEvent(Self);
+     FHandle := LoadLibrary(PChar(FFilePath + FFileName));
+     if assigned(FOnAfterLoadEvent) then OnAfterLoadEvent(Self);
+     End;
+   except
+     Begin
+     if Assigned(Self.FOnErrorEvent) then OnErrorEvent(Self);
+     End;
+   End; // end except
+
+   End;
+End;
+// -----------------------------------------------------------------------------
+procedure TDLLObject.Unload();
+Begin
+if FHandle > 0 then
+   Begin
+   Try
+      Begin
+       if assigned(FOnBeforeUnLoadEvent) then OnBeforeUnloadEvent(Self);
+      Try
+         FreeLibrary(FHandle);
+         Except
+         if Assigned(Self.FOnErrorEvent) then OnErrorEvent(Self);
+         End; // end except
+      End;
+   Finally
+      Begin
+       FHandle := 0;
+       if assigned(FOnAfterUnLoadEvent) then OnAfterUnloadEvent(Self);
+      End;
+   End;
+   End;
+End;
+// -----------------------------------------------------------------------------
+function TDLLObject.IsLoaded() : boolean;
+Begin
+if FHandle > 0 then Result := True else Result := False;
+End;
+// -----------------------------------------------------------------------------
+FUNCTION TDLLObject.HasExportedFunction(aFunctionOrProcedureName : String) : boolean;
+Begin
+if IsLoaded then
+   Begin
+   if GetProcAddress(FHandle,PChar(aFunctionOrProcedureName)) <> nil then
+      Begin
+        Result := True
+      End
+   ELSE
+     Begin
+       Result := False;
+     End;
+   End
+else
+   begin
+     result := false;
+   end;
+End;
+
+
+
+
+// =============================================================================
+
+
+
+end.
+

@@ -1,0 +1,52 @@
+package FrameTemplates;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  vcl,
+  rtl,
+  vclimg,
+  Jcl,
+  JclVcl,
+  JvCore,
+  JvSystem,
+  JvStdCtrls,
+  JvCustom,
+  JvDlgs,
+  DFICommon;
+
+contains
+  ufraListView in 'ufraListView.pas' {fraListView: TFrame},
+  udlgListView_AddGroup in 'udlgListView_AddGroup.pas' {dlgAddGroup},
+  udlgListView_AddItem in 'udlgListView_AddItem.pas' {dlgAddItem},
+  ufraListView_Groups in 'ufraListView_Groups.pas' {fraListView_Groups: TFrame},
+  ufraPluginListView in 'ufraPluginListView.pas' {fraPluginListView: TFrame},
+  ufraVisualPluginLoader in 'ufraVisualPluginLoader.pas' {Frame1: TFrame},
+  uFraFileListView in 'uFraFileListView.pas' {Frame2: TFrame};
+
+end.

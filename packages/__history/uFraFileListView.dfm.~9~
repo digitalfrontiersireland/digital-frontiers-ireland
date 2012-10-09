@@ -1,0 +1,60 @@
+object Frame2: TFrame2
+  Left = 0
+  Top = 0
+  Width = 730
+  Height = 425
+  TabOrder = 0
+  inline fraListView: TfraListView
+    Left = 0
+    Top = 0
+    Width = 730
+    Height = 425
+    Align = alClient
+    TabOrder = 0
+    ExplicitWidth = 730
+    ExplicitHeight = 425
+    inherited ListView: TJvListView
+      Width = 730
+      Height = 406
+      ExplicitWidth = 730
+      ExplicitHeight = 406
+    end
+    inherited StatusBar: TJvStatusBar
+      Top = 406
+      Width = 730
+      Panels = <
+        item
+          Width = 50
+        end
+        item
+          Width = 50
+        end
+        item
+          Alignment = taRightJustify
+          Style = psOwnerDraw
+          Width = 100
+        end>
+      ExplicitTop = 406
+      ExplicitWidth = 730
+    end
+  end
+  object FileManager: TFileManager
+    Left = 336
+    Top = 152
+  end
+  object ActionList_Files: TActionList
+    Left = 72
+    Top = 232
+    object actAddFile: TAction
+      Category = 'Files'
+      Caption = '&Add File'
+    end
+  end
+  object OpenDialog: TOpenDialog
+    DefaultExt = '*.*'
+    Filter = 'All Files|*.*'
+    Options = [ofHideReadOnly, ofAllowMultiSelect, ofPathMustExist, ofFileMustExist, ofNoTestFileCreate, ofNoDereferenceLinks, ofEnableSizing, ofDontAddToRecent]
+    Left = 336
+    Top = 216
+  end
+end

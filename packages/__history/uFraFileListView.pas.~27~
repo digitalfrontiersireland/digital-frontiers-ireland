@@ -1,0 +1,49 @@
+unit uFraFileListView;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ufraListView,
+  Vcl.ActnList, uCustomLists;
+
+type
+  TFrame2 = class(TFrame)
+    fraListView: TfraListView;
+    FileManager: TFileManager;
+    ActionList_Files: TActionList;
+    actAddFile: TAction;
+    OpenDialog: TOpenDialog;
+    procedure actAddFileExecute(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TFrame2.actAddFileExecute(Sender: TObject);
+Var
+  FileInfo  : TFileInfoRec;
+  i         : integer;
+  ListItem  : TListItemInfoRec;
+begin
+if OpenDialog.Execute then
+   Begin
+     FileManager.AddFiles(OpenDialog.Files);
+
+     for i := 0 to FileManager.Count -1 do
+        Begin
+          FileManager.GetFileInfo(i,FileInfo);
+          ListItem.Caption := FileInfo.Filename;
+          self.fraListView.AddItem(ListItem,false);
+        End;
+
+   End;
+end;
+
+end.

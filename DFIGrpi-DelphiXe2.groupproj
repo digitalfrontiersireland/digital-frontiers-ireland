@@ -12,21 +12,6 @@
 			<Projects Include="packages\3rdparty\FastMM\FastMM.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="..\..\RAD Studio\Projects\DFICrypto.dproj">
-				<Dependencies/>
-			</Projects>
-			<Projects Include="packages\DFICommon.dproj">
-				<Dependencies/>
-			</Projects>
-			<Projects Include="packages\FrameTemplates.dproj">
-				<Dependencies/>
-			</Projects>
-			<Projects Include="source\test\dll\testdll.dproj">
-				<Dependencies/>
-			</Projects>
-			<Projects Include="source\PluginExplorer\PluginExplorer.dproj">
-				<Dependencies/>
-			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -62,59 +47,14 @@
 		<Target Name="FastMM:Make">
 			<MSBuild Projects="packages\3rdparty\FastMM\FastMM.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="DFICrypto">
-			<MSBuild Projects="..\..\RAD Studio\Projects\DFICrypto.dproj"/>
-		</Target>
-		<Target Name="DFICrypto:Clean">
-			<MSBuild Projects="..\..\RAD Studio\Projects\DFICrypto.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="DFICrypto:Make">
-			<MSBuild Projects="..\..\RAD Studio\Projects\DFICrypto.dproj" Targets="Make"/>
-		</Target>
-		<Target Name="DFICommon">
-			<MSBuild Projects="packages\DFICommon.dproj"/>
-		</Target>
-		<Target Name="DFICommon:Clean">
-			<MSBuild Projects="packages\DFICommon.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="DFICommon:Make">
-			<MSBuild Projects="packages\DFICommon.dproj" Targets="Make"/>
-		</Target>
-		<Target Name="FrameTemplates">
-			<MSBuild Projects="packages\FrameTemplates.dproj"/>
-		</Target>
-		<Target Name="FrameTemplates:Clean">
-			<MSBuild Projects="packages\FrameTemplates.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="FrameTemplates:Make">
-			<MSBuild Projects="packages\FrameTemplates.dproj" Targets="Make"/>
-		</Target>
-		<Target Name="testdll">
-			<MSBuild Projects="source\test\dll\testdll.dproj"/>
-		</Target>
-		<Target Name="testdll:Clean">
-			<MSBuild Projects="source\test\dll\testdll.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="testdll:Make">
-			<MSBuild Projects="source\test\dll\testdll.dproj" Targets="Make"/>
-		</Target>
-		<Target Name="PluginExplorer">
-			<MSBuild Projects="source\PluginExplorer\PluginExplorer.dproj"/>
-		</Target>
-		<Target Name="PluginExplorer:Clean">
-			<MSBuild Projects="source\PluginExplorer\PluginExplorer.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="PluginExplorer:Make">
-			<MSBuild Projects="source\PluginExplorer\PluginExplorer.dproj" Targets="Make"/>
-		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="Cromis;OmniXML_xe2;FastMM;DFICrypto;DFICommon;FrameTemplates;testdll;PluginExplorer"/>
+			<CallTarget Targets="Cromis;OmniXML_xe2;FastMM"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="Cromis:Clean;OmniXML_xe2:Clean;FastMM:Clean;DFICrypto:Clean;DFICommon:Clean;FrameTemplates:Clean;testdll:Clean;PluginExplorer:Clean"/>
+			<CallTarget Targets="Cromis:Clean;OmniXML_xe2:Clean;FastMM:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="Cromis:Make;OmniXML_xe2:Make;FastMM:Make;DFICrypto:Make;DFICommon:Make;FrameTemplates:Make;testdll:Make;PluginExplorer:Make"/>
+			<CallTarget Targets="Cromis:Make;OmniXML_xe2:Make;FastMM:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

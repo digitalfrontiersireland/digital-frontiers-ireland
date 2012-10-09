@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>2012/09/15 00:25:23.000.175,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\omnixml\dpk\OmniXML_d7.dproj=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\OmniXML_xe2.dproj</Transaction>
+    <Transaction>2012/09/15 00:25:23.000.175,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\OmniXML_xe2.dproj=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\3rdparty\omnixml\dpk\OmniXML_d7.dproj</Transaction>
   </Transactions>
 </BorlandProject>

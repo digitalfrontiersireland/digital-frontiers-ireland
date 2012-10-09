@@ -1,0 +1,258 @@
+unit uCustomLists;
+
+interface
+Uses Sysutils, Classes, Windows;
+
+Const
+          ERROR_FILELIST_CAPACITY_REACHED     = 'A File lists Maximum Capacity has been reached!';
+          ERROR_FILELIST_CAPACITY_RESIZE      = 'Failure while trying to change the capcity of a filelist';
+
+
+Type      TFileAttributesRec      =       packed record
+          Compressed              :       boolean;
+          Hidden                  :       boolean;
+          Normal                  :       boolean;
+          Readonly                :       boolean;
+          System                  :       boolean;
+          Temporary               :       boolean;
+          Archive                 :       boolean;
+          end;
+
+Type      TDay      = (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday);
+Type      TMonth    = (January, Febuary, March, April, May, June, July, August, September,
+                       October, November, December);
+
+Type      TTimeInfoRec            =       packed record
+          Day                     :       integer;
+          Month                   :       integer;
+          Year                    :       integer;
+          DayOfWeek               :       integer;
+          Hour                    :       integer;
+          Minute                  :       integer;
+          Second                  :       integer;
+          Milisecond              :       integer;
+          end;
+
+
+Type      TFileInfoEx             =       packed record
+          FullPath                :       string;
+          FileAttributes          :       TFileAttributesRec;
+          CreationInfo            :       TTimeInfoRec;
+          LastAccessInfo          :       TTimeInfoRec;
+          Size                    :       integer;
+          end;
+
+Type      PFileInfoRec            =       ^TFileInfoRec;
+          TFileInfoRec            =       record
+          Filename                :       TFileName;
+          Path                    :       string;
+          FileInfoEx              :       TFileInfoEx;
+          end;
+
+Type      TFileManager            =       class(TComponent)
+          Protected
+          FFileList               :       TStringList;
+          FFilesMustExist         :       boolean;
+          FAllowDuplicateFiles    :       boolean;
+          FUNCTION FGetFileCount() : integer;
+          FUNCTION FGetFileCapacity() : integer;
+          PROCEDURE FSetFileCapacity(aInt : integer);
+          Private
+          Public
+          PROCEDURE AddFile(aFileNameAndPath : String); virtual;
+          PROCEDURE AddFiles(aListOfFileNamesAndPaths : TStrings); virtual;
+          PROCEDURE RemoveFile(atindex : Integer);  virtual;
+          PROCEDURE RemoveAllFiles(); virtual;
+          PROCEDURE GetFileInfo(atIndex : Integer; Var aFileInfo : TFileInfoRec);  virtual;
+          FUNCTION FindFileIndex(aString : String) : integer;  virtual;
+          CONSTRUCTOR Create(AOwner : TComponent); override;
+          DESTRUCTOR Destroy(); override;
+          Published
+          PROPERTY FilesMustExist : boolean read FFilesMustExist write FFilesMustExist default true;
+          PROPERTY AllowDuplicateFiles : boolean read FAllowDuplicateFiles write FAllowDuplicateFiles default true;
+          PROPERTY Count : integer read FGetFileCount;
+          PROPERTY Capacity : integer read FGetFileCapacity write FSetFileCapacity;
+end;
+
+Type      TDLLManager           =       class(TFileManager)
+          Protected
+          Private
+          Public
+          Published
+          End;
+
+
+
+implementation
+
+CONSTRUCTOR TFileManager.Create(AOwner: TComponent);
+begin
+  Inherited Create(AOwner);
+  FFileList := TStringList.Create;
+end;
+
+DESTRUCTOR TFileManager.Destroy;
+begin
+FFileList.Free;
+Inherited Destroy;
+end;
+
+PROCEDURE TFileManager.AddFile(aFileNameAndPath: string);
+Var
+  DupeIndex : integer;
+begin
+// Init var's
+DupeIndex := -1;
+
+// check if file needs to exist
+if FilesMustExist then
+   Begin
+   // file does need to exist, so exit if the file doesn't exist on the filesystem
+     if NOT FileExists(aFileNameAndPath) then Exit;
+   End;
+
+// Check if FileList capacity has been reached
+if FFileList.Count = FFileList.Capacity then
+   Begin
+   // We need some more room to store strings, so try create more storage
+   // if possible, if not, raise an exception
+    try
+      Begin
+      if FFileList.Capacity < High(Integer) then
+          Begin
+            FFileList.Capacity := High(Integer);
+            raise Exception.Create(ERROR_FILELIST_CAPACITY_REACHED);
+          End;
+      End;
+    except
+      Begin
+        raise Exception.Create(ERROR_FILELIST_CAPACITY_RESIZE);
+      End;
+    end;
+   End;
+
+// If dupes are not allowed
+if NOT AllowDuplicateFiles then
+   Begin
+   // check if this is a duplicate entry
+   FFileList.Find(aFileNameAndPath,DupeIndex);
+
+   // if value is more than minus 1
+   if DupeIndex > -1 then
+      Begin
+      // then this entry already exists, so exit
+      exit;
+      End;
+   End;
+
+// if we are here, then we are ready to add the entry
+FFileList.Add(aFileNameAndPath);
+end;
+
+PROCEDURE TFileManager.AddFiles(aListOfFileNamesAndPaths : TStrings);
+Begin
+if assigned(aListOfFileNamesAndPaths) then
+   Begin
+     FFileList.BeginUpdate;
+     FFileList.AddStrings(aListOfFileNamesAndPaths);
+     FFileList.EndUpdate;
+   End;
+End;
+
+PROCEDURE TFileManager.GetFileInfo(atIndex: Integer; var aFileInfo: TFileInfoRec);
+Var
+  FindData  : TWin32FindData;
+  TimeData  : TFileTime;
+  SysTime   : TSystemTime;
+begin
+// Get seperate filename and path from StringList
+aFileInfo.Filename := ExtractFileName(FFileList.Strings[atIndex]);
+aFileInfo.Path := IncludetrailingPathDelimiter(ExtractFileName(FFileList.Strings[atIndex]));
+
+// save full path also
+aFileInfo.FileInfoEx.FullPath := ExtractFileName(FFileList.Strings[atIndex]);
+
+// set some defaults
+aFileInfo.FileInfoEx.FileAttributes.Compressed := false;
+aFileInfo.FileInfoEx.FileAttributes.Hidden := false;
+aFileInfo.FileInfoEx.FileAttributes.Normal := false;
+aFileInfo.FileInfoEx.FileAttributes.Readonly := false;
+aFileInfo.FileInfoEx.FileAttributes.System := false;
+aFileInfo.FileInfoEx.FileAttributes.Temporary := false;
+aFileInfo.FileInfoEx.FileAttributes.Archive := false;
+
+// Get Some additonal file data
+FindFirstFile(PChar(FFileList.Strings[atIndex]), FindData);
+
+// Save File Attributes
+case FindData.dwFileAttributes of
+    FILE_ATTRIBUTE_COMPRESSED   : aFileInfo.FileInfoEx.FileAttributes.Compressed := True;
+    FILE_ATTRIBUTE_HIDDEN       : aFileInfo.FileInfoEx.FileAttributes.Hidden     := True;
+    FILE_ATTRIBUTE_NORMAL       : aFileInfo.FileInfoEx.FileAttributes.Normal     := True;
+    FILE_ATTRIBUTE_READONLY     : aFileInfo.FileInfoEx.FileAttributes.Readonly   := True;
+    FILE_ATTRIBUTE_SYSTEM       : aFileInfo.FileInfoEx.FileAttributes.System     := True;
+    FILE_ATTRIBUTE_TEMPORARY    : aFileInfo.FileInfoEx.FileAttributes.Temporary  := True;
+    FILE_ATTRIBUTE_ARCHIVE      : aFileInfo.FileInfoEx.FileAttributes.Archive    := True;
+end;
+
+// Save File Creation Data
+TimeData := FindData.ftCreationTime;
+FileTimeToSystemTime(TimeData,SysTime);
+
+aFileInfo.FileInfoEx.CreationInfo.Day         := SysTime.wDay;
+aFileInfo.FileInfoEx.CreationInfo.Month       := SysTime.wMonth;
+aFileInfo.FileInfoEx.CreationInfo.Year        := SysTime.wYear;
+aFileInfo.FileInfoEx.CreationInfo.DayOfWeek   := SysTime.wDayOfWeek;
+aFileInfo.FileInfoEx.CreationInfo.Hour        := SysTime.wHour;
+aFileInfo.FileInfoEx.CreationInfo.Minute      := SysTime.wMinute;
+aFileInfo.FileInfoEx.CreationInfo.Second      := SyStIME.wSecond;
+aFileInfo.FileInfoEx.CreationInfo.Milisecond  := SysTime.wMilliseconds;
+
+// Save File Modified data
+TimeData := FindData.ftLastAccessTime;
+FileTimeToSystemTime(TimeData,SysTime);
+
+aFileInfo.FileInfoEx.LastAccessInfo.Day         := SysTime.wDay;
+aFileInfo.FileInfoEx.LastAccessInfo.Month       := SysTime.wMonth;
+aFileInfo.FileInfoEx.LastAccessInfo.Year        := SysTime.wYear;
+aFileInfo.FileInfoEx.LastAccessInfo.DayOfWeek   := SysTime.wDayOfWeek;
+aFileInfo.FileInfoEx.LastAccessInfo.Hour        := SysTime.wHour;
+aFileInfo.FileInfoEx.LastAccessInfo.Minute      := SysTime.wMinute;
+aFileInfo.FileInfoEx.LastAccessInfo.Second      := SyStIME.wSecond;
+aFileInfo.FileInfoEx.LastAccessInfo.Milisecond  := SysTime.wMilliseconds;
+
+// Save File Size
+aFileInfo.FileInfoEx.Size := FindData.nFileSizeLow;
+end;
+
+FUNCTION TFileManager.FindFileIndex(aString : String) : integer;
+Begin
+FFileList.Find(aString,Result);
+end;
+
+PROCEDURE TFileManager.RemoveFile(atindex : Integer);
+Begin
+FFileList.Delete(atIndex);
+End;
+
+PROCEDURE TFileManager.RemoveAllFiles();
+Begin
+FFileList.Clear;
+End;
+
+FUNCTION TFileManager.FGetFileCount() : integer;
+begin
+  result := FFileList.Count;
+end;
+
+FUNCTION TFileManager.FGetFileCapacity() : integer;
+Begin
+Result := FFileList.Capacity;
+End;
+
+PROCEDURE TFileManager.FSetFileCapacity(aInt : integer);
+Begin
+FFileList.Capacity := aInt;
+End;
+
+end.

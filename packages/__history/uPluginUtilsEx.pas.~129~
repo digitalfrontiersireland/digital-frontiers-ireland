@@ -1,0 +1,226 @@
+unit uPluginUtilsEx;
+
+interface
+uses uDLLUtilsEx, uStubCommon, Windows, Dialogs, SysUtils, Classes, ComCtrls, JvListView;
+
+// =============================================================================
+// Responsible for implementing basic plugin functionality on top of a DLL Object
+// =============================================================================
+Type    TPluginObject         =       class(TDLLObject)
+        private
+        //FInitData             :       TStub_InitObject;
+        FGroupInfo            :       TGroupInfoRec;
+        FListItemCaption      :       String;
+        FIsValidPlugin        :       boolean;
+        RFUNC_Initialize      :       TFUNC_Initialize;
+        RFUNC_Deinitialize    :       TFUNC_Deinitalize;
+        RFUNC_SendMessage     :       TFUNC_Message;
+        RFUNC_SendMessageWithData :   TFUNC_MessageWithData;
+        RFUNC_GetExportedFunctionNames :       TGetExportedFunctionNames;
+        RFUNC_GetGroupDetails :       TFUNC_GetGroupDetails;
+        RFUNC_GetListItemCaption :    TFUNC_GetStr;
+        public
+        // ---------------------------------------------------------------------
+          procedure Load(); override;
+          procedure Unload(); override;
+{          constructor Create(const aFileName   : String;
+                             const aFilePath   : String;
+                             const aHandle     : THandle;
+                             const aInitData    : TStub_InitObject); overload;virtual;
+          destructor Destroy(); override;}
+
+        PROPERTY IsValidPlugin : boolean read FIsValidPlugin;
+        //PROPERTY OwnerInitData : TStub_InitObject read FInitData;
+        PROPERTY GroupInfo : TGroupInfoRec read FGroupInfo;
+        PROPERTY ListItemCaption : String read FListItemCaption;
+        PROPERTY Initialize : TFUNC_Initialize read RFUNC_Initialize;
+        PROPERTY Deinitalize : TFUNC_Deinitalize read RFUNC_Deinitialize;
+        PROPERTY SendMessage : TFUNC_Message read RFUNC_SendMessage;
+        PROPERTY SendMessageWithData : TFUNC_MessageWithData read RFUNC_SendMessageWithData;
+        PROPERTY GetExportedFunctionNames : TGetExportedFunctionNames read RFUNC_GetExportedFunctionNames;
+        PROPERTY GetGroupDetails : TFUNC_GetGroupDetails read RFUNC_GetGroupDetails;
+        PROPERTY GetListItemCaption : TFUNC_GetStr read RFUNC_GetListItemCaption;
+        end;
+
+// =============================================================================
+Type    PPluginObject           =     ^TPluginObject;
+// =============================================================================
+Type    TPluginManager      =       class(TDLLManager)
+        Private
+ //       FInitData           :       TStub_InitObject;
+//        FOnUpdateListItemEvent :    TOnUpdateListItemEvent;
+        Public
+        PROCEDURE AddDll(aFileName : TFileName); override;
+        PROCEDURE AddDlls(var aFileNameList : TStringList); override;
+        Protected
+        Published
+//        PROPERTY InitData : TStub_InitObject read FInitData write FInitData;
+end;
+
+
+implementation
+
+{constructor TPluginObject.Create(const aFileName: string; const aFilePath: string; const aHandle: NativeUInt; const aInitData: TStub_InitObject);
+begin
+Inherited Create(aFileName, aFilePath,aHandle);
+//FInitData := aInitData;
+end;
+
+destructor TPluginObject.Destroy;
+begin
+//  FreeAndNil(FInitData);
+  Inherited Destroy;
+end;
+}
+procedure TPluginObject.Load();
+Var
+  i         : integer;
+  TempHook  : TNotifyEvent;
+  FuncList  : TStringList;
+Begin
+// Temporarly disable event here, we want to delay its afterload even happening until
+// this Updated method is finished loading the plugin
+@TempHook := @OnAfterLoadEvent;
+Self.OnAfterLoadEvent := nil;
+
+// Set by default FIsValidPlugin to false, we'll set to true later if plugin is valid
+
+// Call inherited load to actually load DLL
+Inherited Load;
+
+// put our AfterLoad event back in place so it can be triggered when needed
+Self.OnAfterLoadEvent := TempHook;
+
+// if is loaded
+if IsLoaded then
+   Begin
+   // Check plugin has required exported functions
+   if (HasExportedFunction(FUNC_PREFIX_STUB + FUNC_Init) = true) AND
+      (HasExportedFunction(FUNC_PREFIX_STUB + FUNC_DeInit) = true) AND
+      (HasExportedFunction(FUNC_PREFIX_STUB + FUNC_Message) = true) AND
+      (HasExportedFunction(FUNC_PREFIX_STUB + FUNC_MessageData) = true) AND
+      (HasExportedFunction(FUNC_PREFIX_STUB + FUNC_GetExportedFunctionNames) = true) then
+        Begin
+        // it does, safe to attach initialize
+        @RFUNC_Initialize := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_Init);
+
+         // if init is assigned
+         if @RFUNC_Initialize <> nil then
+            Begin
+              // Call it
+//              if RFUNC_Initialize(fInitData) = False then
+              if RFUNC_Initialize() = False then
+                 Begin
+                 // INIT Fail
+                 // DONE: Rewrite for an event to get triggered
+                 // returns false if there was an error, if so, show message
+                 if Assigned(OnErrorEvent) then OnErrorEvent(self);
+                 End
+              else
+                 Begin
+                   // Init sucess
+                   // attach other functions
+                   @RFUNC_SendMessage         := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_Message);
+                   @RFUNC_SendMessageWithData := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_MessageData);
+                   @RFUNC_Deinitialize        := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_deinit);
+                   @RFUNC_GetExportedFunctionNames := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_GetExportedFunctionNames);
+
+                   // DONE: Rewrite to test exported functions dynacily
+                   // This routine will check the DLL against the names of functions provided by the plugin
+                   // to make sure they are exported.
+
+                   FuncList := TStringList.Create;
+                   if (@RFUNC_GetExportedFunctionNames <> nil) then
+                      Begin
+                      // Call function to get exported names
+                      RFUNC_GetExportedFunctionNames(Self,FuncList);
+                      for i := 0 to FuncList.Count - 1 do
+                        Begin
+                        // loop through the list and see if the function is exported
+                        if HasExportedFunction(FuncList.Strings[i]) = False then
+                           Begin
+                           // Not found, so show error and unload
+                             ShowMessage(ERROR_MISSINGEXPORTEDFUNC + FuncList.Strings[i]);
+                             if Assigned(OnErrorEvent) then OnErrorEvent(self);
+                             Self.Unload;
+                           End;
+                        End;
+                      End;
+                   FreeAndNil(FuncList);
+
+                 // its assumed that all functions required below are correctly exported
+                 // and no further checking is really done except to check for non nil
+
+                 // Get Group Info for ListView
+                 @RFUNC_GetGroupDetails := GetProcAddresS(Handle, FUNC_PREFIX_STUB + FUNC_AskForGroupDetails);
+                 if @RFUNC_GetGroupDetails <> nil then
+                    begin
+                    RFUNC_getGroupDetails(Self, FGroupInfo);
+                    end;
+
+                 // Get the Caption for ListItems
+                 @RFUNC_GetListItemCaption := GetProcAddress(Handle, FUNC_PREFIX_STUB + FUNC_AskForListItemCaption);
+                 if @RFUNC_GetListItemCaption <> nil then
+                    begin
+                    self.FListItemCaption := RFUNC_GetListItemCaption(Self);
+                    end
+                 else
+                    begin
+                      Self.FListItemCaption := 'No Caption';
+                    end;
+                 End;
+            FIsValidPlugin := True;
+            End;
+        End;
+   End;
+TempHook := nil;
+
+End;
+
+
+
+procedure TPluginObject.Unload();
+Begin
+if IsLoaded then
+   Begin
+     // Call deinit if possible
+   if @RFUNC_deinitialize <> nil then
+      Begin
+      RFUNC_Deinitialize;
+      End;
+   End;
+
+Inherited Unload;
+FIsValidPlugin := False;
+// make sure functions are deattached
+End;
+
+
+
+
+PROCEDURE TPluginManager.AddDll(aFileName : TFileName);
+Begin
+Inherited AddDll(aFileName);
+End;
+
+PROCEDURE TPluginManager.AddDlls(var aFileNameList : TStringList);
+Var
+  i           :     integer;
+Begin
+if Assigned(aFileNameList) then
+   Begin
+    for i := 0 to aFileNameList.Count - 1 do
+      Begin
+      AddDll(aFileNameList.Strings[i]);
+      if Assigned(FOnDllProgressEvent) then OnDllProgressEvent(Self, 0, FDLLList.Count - 1, i, 'Adding DLLs...');
+      End;
+   End;
+End;
+
+
+
+
+
+
+
+end.
