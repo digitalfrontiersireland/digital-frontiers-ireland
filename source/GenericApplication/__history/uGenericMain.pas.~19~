@@ -1,0 +1,25 @@
+unit uGenericMain;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Ribbon, Vcl.RibbonLunaStyleActnCtrls;
+
+type
+  TfrmGeneric = class(TForm)
+    Ribbon: TRibbon;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmGeneric: TfrmGeneric;
+
+implementation
+
+{$R *.dfm}
+
+end.

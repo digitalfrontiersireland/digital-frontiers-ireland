@@ -1,0 +1,89 @@
+unit uGenericApplicationBrander;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, JvWizard, JvWizardRouteMapSteps,
+  JvExControls, ufraCompanyInfo, Vcl.Menus, Vcl.StdCtrls, ufraCompanyContactInfo,
+  ufraCompanyLiveData, ufraCompanySaveData, ufraCopyFiles;
+
+type
+  TfrmRebrand = class(TForm)
+    JvWizard: TJvWizard;
+    JvWizardRouteMapSteps1: TJvWizardRouteMapSteps;
+    JvWizardInteriorPage1: TJvWizardInteriorPage;
+    fraCompanyInfo: TfraCompanyInfo;
+    JvWizardInteriorPage2: TJvWizardInteriorPage;
+    fraCompanyContactInfo: TfraCompanyContactInfo;
+    JvWizardInteriorPage3: TJvWizardInteriorPage;
+    fraCompanyLiveData: TfraCompanyLiveData;
+    JvWizardInteriorPage4: TJvWizardInteriorPage;
+    fraCompanySaveData: TfraCompanySaveData;
+    JvWizardInteriorPage5: TJvWizardInteriorPage;
+    fraCopyFiles: TfraCopyFiles;
+    procedure fraCompanyInfo1btnClearClick(Sender: TObject);
+    procedure fraCompanyInfo1actAddFileExecute(Sender: TObject);
+    procedure fraCompanySaveData1btnFindClick(Sender: TObject);
+    procedure fraCopyFilesbtnBeginClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmRebrand: TfrmRebrand;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmRebrand.fraCompanyInfo1actAddFileExecute(Sender: TObject);
+begin
+  fraCompanyInfo.actAddFileExecute(Sender);
+
+end;
+
+procedure TfrmRebrand.fraCompanyInfo1btnClearClick(Sender: TObject);
+begin
+  fraCompanyInfo.actClearPicturesExecute(Sender);
+
+end;
+
+procedure TfrmRebrand.fraCompanySaveData1btnFindClick(Sender: TObject);
+begin
+  fraCompanySaveData.btnFindClick(Sender);
+  self.fraCopyFiles.ebSource.Text := fraCompanySaveData.ebFolder.Text;
+  fraCopyFiles.SimpleFileCopy.Source := fraCompanySaveData.ebFolder.Text;
+
+end;
+
+procedure TfrmRebrand.fraCopyFilesbtnBeginClick(Sender: TObject);
+Var
+  i     :     integer;
+begin
+// Disable wizard controls when started
+for i := 0 to jvWizard.ComponentCount - 1 do
+     Begin
+       if jvWizard.Components[i] is TjvWizardNavigateButton then
+          Begin
+          with jvWizard.Components[i] as TjvWizardNavigateButton do
+             Begin
+               Enabled := False;
+             End;
+          end;
+     End;
+
+  fraCopyFiles.actStartExecute(Sender);
+
+
+end;
+
+end. procedure TfrmRebrand.fraCopyFilesbtnStopClick(Sender: TObject);
+begin
+
+end;
+
+

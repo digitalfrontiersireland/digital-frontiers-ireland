@@ -1,0 +1,79 @@
+unit ufraCompanyInfo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
+  Vcl.ExtCtrls, JvExExtCtrls, JvImage, JvExForms, JvCustomItemViewer,Vcl.ExtDlgs, Vcl.ActnList,
+  Vcl.Menus, JvBaseThumbnail, JvThumbViews;
+
+type
+  TfraCompanyInfo = class(TFrame)
+    GroupBox1: TGroupBox;
+    ebCompanyName: TLabeledEdit;
+    ebSlogan: TLabeledEdit;
+    GroupBox2: TGroupBox;
+    Panel1: TPanel;
+    btnAdd: TButton;
+    btnRemove: TButton;
+    btnClear: TButton;
+    OpenPictureDialog: TOpenPictureDialog;
+    ActionList: TActionList;
+    actAddFile: TAction;
+    mnuAdd: TPopupMenu;
+    actAddPicture1: TMenuItem;
+    actClearPictures: TAction;
+    actRemove: TAction;
+    JvThumbView: TJvThumbView;
+    mnuRemove: TPopupMenu;
+    Remove1: TMenuItem;
+    procedure actAddFileExecute(Sender: TObject);
+    procedure actClearPicturesExecute(Sender: TObject);
+    procedure actRemoveExecute(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+implementation
+USES FileCtrl;
+{$R *.dfm}
+
+procedure TfraCompanyInfo.actAddFileExecute(Sender: TObject);
+Var
+  i      : integer;
+begin
+if OpenPictureDialog.Execute(Self.Handle) then
+   Begin
+   for i := 0 to OpenPictureDialog.Files.Count - 1 do
+       begin
+        JvThumbView.AddFromFile(OpenPictureDialog.Files.Strings[i])
+       End;
+   actRemove.Enabled := True;
+   actClearPictures.Enabled := True;
+   End;
+end;
+
+procedure TfraCompanyInfo.actClearPicturesExecute(Sender: TObject);
+begin
+jvThumbView.EmptyList;
+actRemove.Enabled := false;
+end;
+
+procedure TfraCompanyInfo.actRemoveExecute(Sender: TObject);
+begin
+if jvThumbView.Selected > -1 then
+   Begin
+   JvThumbView.Delete(jvThumbView.Selected);
+   End;
+if jvThumbView.Count > 0 then
+   Begin
+     btnAdd.Enabled := True;
+     btnClear.Enabled := True;
+     btnRemove.Enabled := True;
+   End;
+end;
+
+end.

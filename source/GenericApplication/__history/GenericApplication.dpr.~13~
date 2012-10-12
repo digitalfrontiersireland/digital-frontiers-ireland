@@ -1,0 +1,19 @@
+program GenericApplication;
+
+uses
+  FastMM4,
+  Vcl.Forms,
+  uGenericMain in 'uGenericMain.pas' {frmGeneric},
+  uGenericApplicationConfiguration in '..\..\packages\GenericApplicationPackages\uGenericApplicationConfiguration.pas' {frmGenericConfig},
+  udmGenericComponents in '..\..\packages\GenericApplicationPackages\udmGenericComponents.pas' {dmGenericComponents: TDataModule},
+  ufraGenericProgramInfo in '..\..\packages\GenericApplicationPackages\ufraGenericProgramInfo.pas' {fraGenericProgramInfo: TFrame};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TdmGenericComponents, dmGenericComponents);
+  Application.CreateForm(TfrmGeneric, frmGeneric);
+  Application.Run;
+end.

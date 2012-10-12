@@ -1,0 +1,74 @@
+unit uGenericMain;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Ribbon, Vcl.RibbonLunaStyleActnCtrls;
+
+type
+  TfrmGeneric = class(TForm)
+    Ribbon: TRibbon;
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+    PROCEDURE ProcessCommandLineSwitches();
+  public
+    { Public declarations }
+  end;
+
+var
+  frmGeneric: TfrmGeneric;
+
+implementation
+uses uGenericApplicationConfiguration;
+
+Const
+    PARAM_DEBUG           =       '/debug';
+    PARAM_CONFIG          =       '/configure';
+
+{$R *.dfm}
+
+procedure TfrmGeneric.FormCreate(Sender: TObject);
+begin
+// Check Command Line Switches
+ProcessCommandLineSwitches();
+end;
+
+PROCEDURE TfrmGeneric.ProcessCommandLineSwitches;
+Var
+  i     :     integer;
+begin
+// Loop through CommandLine Switches (if any)
+// Begin at 1 because 0 contains info we don't need and don't -1 from ParamCount
+// because we won't see the last element of the array if we do
+if ParamCount >= 1 then
+for i := 1 to ParamCount do
+     Begin
+     if LowerCase(ParamStr(i)) = PARAM_DEBUG then
+        Begin
+        Next;
+        End;
+     if LowerCase(ParamStr(i)) = PARAM_CONFIG then
+        Begin
+        Try
+           Begin
+           frmGenericConfig := TfrmGenericConfig.Create(Self);
+           if frmGenericConfig.ShowModal = mrOk then
+              Begin
+              // any additional processing?
+              End;
+           End;
+        Finally
+           Begin
+           frmGenericConfig.Free;
+           End;
+        End;
+
+
+
+        End;
+     End;
+end;
+
+end.

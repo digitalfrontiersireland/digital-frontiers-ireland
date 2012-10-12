@@ -1,0 +1,24 @@
+program GenericApplicationBrander;
+// TODO: Note that search paths may need to be checked when building 32bit, 64bit
+// debug or release targets.
+//
+// GenericApplicationBrander had to have .\32bit\debug added to its search path
+// to compile with runetime packages. This will likely have to be changed in final
+// builds. Figure out better way to handle these cases? maybe using environment variables
+// or adding paths to the environment etc.
+uses
+  FastMM4,
+  VCL.Forms,
+  uGenericApplicationBrander in 'uGenericApplicationBrander.pas' {frmRebrand},
+  ufraCompanyInfo in '..\..\packages\GenericApplicationBranderPackages\ufraCompanyInfo.pas' {fraCompanyInfo: TFrame},
+  ufraCompanyContactInfo in '..\..\packages\GenericApplicationBranderPackages\ufraCompanyContactInfo.pas' {fraCompanyContactInfo: TFrame};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmRebrand, frmRebrand);
+  application.Run;
+
+end.

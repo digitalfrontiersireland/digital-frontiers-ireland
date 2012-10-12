@@ -1,0 +1,66 @@
+unit udmGenericComponents;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, uGenericUnitsAndTypes, Vcl.Controls;
+
+type
+  TdmGenericComponents = class(TDataModule)
+    CommandLineProcessor: TCommandLineProcessor;
+    procedure CommandLineProcessorCommandLineSwitch(Sender: TObject;
+      aSwitch: string; var Handled: Boolean);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    CONSTRUCTOR Create(AOwner : TComponent); override;
+    DESTRUCTOR Destroy(); override;
+  end;
+
+var
+  dmGenericComponents: TdmGenericComponents;
+
+implementation
+uses uGenericApplicationConfiguration;
+{%CLASSGROUP 'System.Classes.TPersistent'}
+
+{$R *.dfm}
+
+
+CONSTRUCTOR TdmGenericComponents.Create(AOwner: TComponent);
+begin
+  Inherited Create(AOwner);
+  frmGenericConfig := TfrmGenericConfig.Create(Self);
+end;
+
+DESTRUCTOR TdmGenericComponents.Destroy;
+begin
+  frmGenericConfig.Free;
+  Inherited Destroy();
+end;
+
+procedure TdmGenericComponents.CommandLineProcessorCommandLineSwitch(Sender: TObject;
+  aSwitch: string; var Handled: Boolean);
+begin
+if aSwitch = PARAM_DEBUG then
+   Begin
+     // Allow Show Debug Page
+     if Assigned(frmGenericConfig) then
+        Begin
+          frmGenericConfig.jvDebugInfoPage.Enabled := True;
+          Handled := True;
+        End;
+   End;
+
+if aSwitch = PARAM_CONFIG then
+   Begin
+   Handled := True;
+   if frmGenericConfig.ShowModal = mrOk then
+     Begin
+     // any additional processing?
+     End;
+   End;
+end;
+
+end.

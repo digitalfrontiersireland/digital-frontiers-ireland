@@ -1,0 +1,360 @@
+object fraCompanyContactInfo: TfraCompanyContactInfo
+  Left = 0
+  Top = 0
+  Width = 450
+  Height = 241
+  Color = clWhite
+  ParentBackground = False
+  ParentColor = False
+  TabOrder = 0
+  object PageControl: TPageControl
+    Left = 0
+    Top = 0
+    Width = 450
+    Height = 241
+    ActivePage = TabSheet1
+    Align = alClient
+    TabOrder = 0
+    ExplicitHeight = 200
+    object TabSheet1: TTabSheet
+      Caption = 'Address'
+      ExplicitHeight = 169
+      object memoAddress: TMemo
+        Left = 0
+        Top = 0
+        Width = 442
+        Height = 91
+        Align = alTop
+        TabOrder = 0
+      end
+      object Panel4: TPanel
+        Left = 0
+        Top = 91
+        Width = 442
+        Height = 119
+        Align = alClient
+        Anchors = [akLeft, akRight, akBottom]
+        TabOrder = 1
+        ExplicitHeight = 78
+        object ebCity: TLabeledEdit
+          Left = 69
+          Top = 6
+          Width = 97
+          Height = 24
+          EditLabel.Width = 26
+          EditLabel.Height = 16
+          EditLabel.Caption = 'City:'
+          LabelPosition = lpLeft
+          TabOrder = 0
+        end
+        object ebCountyState: TLabeledEdit
+          Left = 263
+          Top = 6
+          Width = 170
+          Height = 24
+          EditLabel.Width = 79
+          EditLabel.Height = 16
+          EditLabel.Caption = 'County/State:'
+          LabelPosition = lpLeft
+          TabOrder = 1
+        end
+        object ebCountry: TLabeledEdit
+          Left = 69
+          Top = 39
+          Width = 97
+          Height = 24
+          EditLabel.Width = 49
+          EditLabel.Height = 16
+          EditLabel.Caption = 'Country:'
+          LabelPosition = lpLeft
+          TabOrder = 2
+        end
+        object ebPostCode: TLabeledEdit
+          Left = 263
+          Top = 39
+          Width = 170
+          Height = 24
+          EditLabel.Width = 62
+          EditLabel.Height = 16
+          EditLabel.Caption = 'Post Code:'
+          LabelPosition = lpLeft
+          TabOrder = 3
+        end
+        object Panel5: TPanel
+          Left = 1
+          Top = 77
+          Width = 440
+          Height = 41
+          Align = alBottom
+          TabOrder = 4
+          ExplicitLeft = 0
+          ExplicitTop = 200
+          ExplicitWidth = 450
+          DesignSize = (
+            440
+            41)
+          object LabeledEdit1: TLabeledEdit
+            Left = 69
+            Top = 6
+            Width = 65
+            Height = 24
+            EditLabel.Width = 54
+            EditLabel.Height = 16
+            EditLabel.Caption = 'Lattitude:'
+            LabelPosition = lpLeft
+            TabOrder = 0
+          end
+          object LabeledEdit2: TLabeledEdit
+            Left = 205
+            Top = 6
+            Width = 65
+            Height = 24
+            EditLabel.Width = 60
+            EditLabel.Height = 16
+            EditLabel.Caption = 'Longitude:'
+            LabelPosition = lpLeft
+            TabOrder = 1
+          end
+          object Button1: TButton
+            Left = 271
+            Top = 5
+            Width = 76
+            Height = 25
+            Anchors = [akLeft, akBottom]
+            Caption = 'Find'
+            DropDownMenu = PopupMenu
+            Style = bsSplitButton
+            TabOrder = 2
+          end
+        end
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Telephone or Voice'
+      ImageIndex = 1
+      ExplicitHeight = 169
+      object lvTelephone: TListView
+        Left = 0
+        Top = 0
+        Width = 442
+        Height = 185
+        Align = alClient
+        Columns = <
+          item
+            AutoSize = True
+            Caption = 'Details'
+          end
+          item
+            AutoSize = True
+            Caption = 'Number'
+          end
+          item
+            AutoSize = True
+            Caption = 'Availability'
+          end>
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 0
+        ViewStyle = vsReport
+        ExplicitHeight = 144
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 185
+        Width = 442
+        Height = 25
+        Align = alBottom
+        TabOrder = 1
+        ExplicitTop = 144
+        object btnAdd: TButton
+          Left = 366
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alRight
+          Caption = '&Add'
+          TabOrder = 0
+          OnClick = btnAddClick
+        end
+        object btnRemove: TButton
+          Left = 291
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alRight
+          Caption = '&Remove'
+          TabOrder = 1
+        end
+        object btnClear: TButton
+          Left = 1
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alLeft
+          Caption = '&Clear'
+          TabOrder = 2
+        end
+      end
+    end
+    object Emails: TTabSheet
+      Caption = 'Emails'
+      ImageIndex = 2
+      ExplicitHeight = 169
+      object ListView1: TListView
+        Left = 0
+        Top = 0
+        Width = 442
+        Height = 185
+        Align = alClient
+        Columns = <
+          item
+            AutoSize = True
+            Caption = 'Details'
+          end
+          item
+            AutoSize = True
+            Caption = 'Email'
+          end>
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 0
+        ViewStyle = vsReport
+        ExplicitHeight = 144
+      end
+      object Panel2: TPanel
+        Left = 0
+        Top = 185
+        Width = 442
+        Height = 25
+        Align = alBottom
+        TabOrder = 1
+        ExplicitTop = 144
+        object Button2: TButton
+          Left = 366
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alRight
+          Caption = '&Add'
+          TabOrder = 0
+          OnClick = btnAddClick
+        end
+        object Button3: TButton
+          Left = 291
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alRight
+          Caption = '&Remove'
+          TabOrder = 1
+        end
+        object Button4: TButton
+          Left = 1
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alLeft
+          Caption = '&Clear'
+          TabOrder = 2
+        end
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'Website && Social'
+      ImageIndex = 3
+      ExplicitHeight = 169
+      object Panel3: TPanel
+        Left = 0
+        Top = 185
+        Width = 442
+        Height = 25
+        Align = alBottom
+        TabOrder = 0
+        ExplicitTop = 144
+        object Button5: TButton
+          Left = 366
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alRight
+          Caption = '&Add'
+          TabOrder = 0
+          OnClick = btnAddClick
+        end
+        object Button6: TButton
+          Left = 291
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alRight
+          Caption = '&Remove'
+          TabOrder = 1
+        end
+        object Button7: TButton
+          Left = 1
+          Top = 1
+          Width = 75
+          Height = 23
+          Align = alLeft
+          Caption = '&Clear'
+          TabOrder = 2
+        end
+      end
+      object ListView2: TListView
+        Left = 0
+        Top = 0
+        Width = 442
+        Height = 185
+        Align = alClient
+        Columns = <
+          item
+            AutoSize = True
+            Caption = 'Type'
+          end
+          item
+            AutoSize = True
+            Caption = 'Address'
+          end>
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 1
+        ViewStyle = vsReport
+        ExplicitHeight = 144
+      end
+    end
+    object Support: TTabSheet
+      Caption = 'Other'
+      ImageIndex = 4
+      ExplicitHeight = 169
+    end
+  end
+  object PopupMenu: TPopupMenu
+    Left = 128
+    Top = 56
+    object viaGoogleMaps1: TMenuItem
+      Action = actGoogleMaps
+    end
+    object viaBing1: TMenuItem
+      Action = actBingMaps
+    end
+    object viaOpenStreetMaps1: TMenuItem
+      Action = actOpenStreetMaps
+    end
+  end
+  object ActionList: TActionList
+    Left = 32
+    Top = 40
+    object actGoogleMaps: TAction
+      Category = 'Find Address'
+      Caption = 'via &Google Maps'
+    end
+    object actBingMaps: TAction
+      Category = 'Find Address'
+      Caption = 'via &Bing'
+    end
+    object actOpenStreetMaps: TAction
+      Category = 'Find Address'
+      Caption = 'via &Open Street Maps'
+    end
+  end
+end

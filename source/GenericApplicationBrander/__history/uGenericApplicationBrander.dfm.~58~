@@ -1,0 +1,482 @@
+object frmRebrand: TfrmRebrand
+  Left = 0
+  Top = 0
+  ActiveControl = fraCompanyInfo.ebCompanyName
+  Caption = 'frmRebrand'
+  ClientHeight = 453
+  ClientWidth = 688
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 120
+  TextHeight = 16
+  object JvWizard: TJvWizard
+    Left = 0
+    Top = 0
+    Width = 688
+    Height = 453
+    ActivePage = JvWizardInteriorPage1
+    ButtonBarHeight = 42
+    ButtonStart.Caption = 'To &Start Page'
+    ButtonStart.NumGlyphs = 1
+    ButtonStart.Width = 85
+    ButtonLast.Caption = 'To &Last Page'
+    ButtonLast.NumGlyphs = 1
+    ButtonLast.Width = 85
+    ButtonBack.Caption = '< &Back'
+    ButtonBack.NumGlyphs = 1
+    ButtonBack.Width = 75
+    ButtonNext.Caption = '&Next >'
+    ButtonNext.NumGlyphs = 1
+    ButtonNext.Width = 75
+    ButtonFinish.Caption = '&Finish'
+    ButtonFinish.NumGlyphs = 1
+    ButtonFinish.ModalResult = 1
+    ButtonFinish.Width = 75
+    ButtonCancel.Caption = 'Cancel'
+    ButtonCancel.NumGlyphs = 1
+    ButtonCancel.ModalResult = 2
+    ButtonCancel.Width = 75
+    ButtonHelp.Caption = '&Help'
+    ButtonHelp.NumGlyphs = 1
+    ButtonHelp.Width = 75
+    ShowRouteMap = True
+    DesignSize = (
+      688
+      453)
+    object JvWizardInteriorPage1: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Company or Institution Details'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -20
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 
+        'This wizard will guide you through rebranding the Pixi for Windo' +
+        'ws toolset for use within your Company or Organization'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -13
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Rebrand Pixi Toolset'
+      inline fraCompanyInfo: TfraCompanyInfo
+        Left = 0
+        Top = 70
+        Width = 543
+        Height = 341
+        Align = alClient
+        TabOrder = 0
+        ExplicitTop = 70
+        ExplicitWidth = 543
+        ExplicitHeight = 341
+        inherited GroupBox1: TGroupBox
+          Width = 543
+          Height = 341
+          ExplicitWidth = 543
+          ExplicitHeight = 341
+          DesignSize = (
+            543
+            341)
+          inherited ebCompanyName: TLabeledEdit
+            Width = 376
+            ExplicitWidth = 376
+          end
+          inherited ebSlogan: TLabeledEdit
+            Width = 376
+            ExplicitWidth = 376
+          end
+          inherited GroupBox2: TGroupBox
+            Width = 376
+            Height = 242
+            ExplicitWidth = 376
+            ExplicitHeight = 242
+            inherited Panel1: TPanel
+              Top = 199
+              Width = 372
+              ExplicitTop = 199
+              ExplicitWidth = 372
+              DesignSize = (
+                372
+                41)
+              inherited btnAdd: TButton
+                Left = 287
+                ExplicitLeft = 287
+              end
+              inherited btnRemove: TButton
+                Left = 206
+                ExplicitLeft = 206
+              end
+            end
+            inherited JvThumbView: TJvThumbView
+              Width = 347
+              Height = 156
+              ExplicitWidth = 347
+              ExplicitHeight = 156
+            end
+            inherited TrackBarH: TTrackBar
+              Height = 156
+              ExplicitHeight = 156
+            end
+            inherited TrackBarW: TTrackBar
+              Width = 372
+              ExplicitWidth = 372
+            end
+          end
+        end
+        inherited ActionList: TActionList
+          inherited actAddFile: TAction
+            OnExecute = fraCompanyInfo1actAddFileExecute
+          end
+        end
+      end
+    end
+    object JvWizardInteriorPage2: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Provide Additional Details'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -20
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 
+        'This page gives you the opportunity to provide additional detail' +
+        's to the end user that is shown in various parts of different pr' +
+        'oducts aimed at making it easy for end users to get in touch'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -13
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Additional Details'
+      inline fraCompanyContactInfo: TfraCompanyContactInfo
+        Left = 0
+        Top = 70
+        Width = 543
+        Height = 341
+        Align = alClient
+        TabOrder = 0
+        ExplicitTop = 70
+        ExplicitWidth = 543
+        ExplicitHeight = 341
+        inherited PageControl: TPageControl
+          Width = 543
+          Height = 341
+          ActivePage = fraCompanyContactInfo.TabSheet1
+          ExplicitWidth = 543
+          ExplicitHeight = 341
+          inherited TabSheet1: TTabSheet
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 535
+            ExplicitHeight = 310
+            inherited Bevel1: TBevel
+              Top = 409
+              Width = 685
+              ExplicitTop = 317
+              ExplicitWidth = 529
+            end
+            inherited memoAddress: TMemo
+              Width = 611
+              Height = 340
+              ExplicitWidth = 611
+              ExplicitHeight = 340
+            end
+            inherited ebCity: TLabeledEdit
+              Top = 349
+              EditLabel.ExplicitLeft = 35
+              EditLabel.ExplicitTop = 353
+              EditLabel.ExplicitWidth = 26
+              ExplicitTop = 349
+            end
+            inherited ebCountyState: TLabeledEdit
+              Top = 349
+              Width = 425
+              EditLabel.ExplicitLeft = 168
+              EditLabel.ExplicitTop = 353
+              EditLabel.ExplicitWidth = 79
+              ExplicitTop = 349
+              ExplicitWidth = 425
+            end
+            inherited ebCountry: TLabeledEdit
+              Top = 379
+              EditLabel.ExplicitLeft = 12
+              EditLabel.ExplicitTop = 383
+              EditLabel.ExplicitWidth = 49
+              ExplicitTop = 379
+            end
+            inherited ebPostCode: TLabeledEdit
+              Top = 379
+              Width = 425
+              EditLabel.ExplicitLeft = 185
+              EditLabel.ExplicitTop = 383
+              EditLabel.ExplicitWidth = 62
+              ExplicitTop = 379
+              ExplicitWidth = 425
+            end
+            inherited LabeledEdit1: TLabeledEdit
+              Top = 422
+              EditLabel.ExplicitLeft = 7
+              EditLabel.ExplicitTop = 426
+              EditLabel.ExplicitWidth = 54
+              ExplicitTop = 422
+            end
+            inherited Button1: TButton
+              Top = 422
+              ExplicitTop = 422
+            end
+            inherited LabeledEdit2: TLabeledEdit
+              Top = 422
+              EditLabel.ExplicitLeft = 137
+              EditLabel.ExplicitTop = 426
+              EditLabel.ExplicitWidth = 60
+              ExplicitTop = 422
+            end
+          end
+          inherited TabSheet2: TTabSheet
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
+          end
+          inherited Emails: TTabSheet
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
+          end
+          inherited TabSheet3: TTabSheet
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
+          end
+          inherited Support: TTabSheet
+            ExplicitLeft = 4
+            ExplicitTop = 27
+            ExplicitWidth = 457
+            ExplicitHeight = 229
+          end
+        end
+      end
+    end
+    object JvWizardInteriorPage3: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Live Data'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -20
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 
+        'Live data is downloaded from the internet, this can come in the ' +
+        'form of Program Updates, Patches, Additional Software, Advertisi' +
+        'ng and so on'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -13
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Color = clWhite
+      Caption = 'Live Data'
+      ExplicitLeft = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
+      inline fraCompanyLiveData: TfraCompanyLiveData
+        Left = 0
+        Top = 70
+        Width = 543
+        Height = 341
+        Align = alClient
+        TabOrder = 0
+        ExplicitTop = 70
+        ExplicitWidth = 543
+        ExplicitHeight = 341
+        inherited ListView: TListView
+          Width = 543
+          Height = 300
+          ExplicitWidth = 543
+          ExplicitHeight = 300
+        end
+        inherited Panel1: TPanel
+          Top = 300
+          Width = 543
+          ExplicitTop = 300
+          ExplicitWidth = 543
+          inherited btnAdd: TButton
+            Left = 462
+            ExplicitLeft = 462
+          end
+          inherited btnRemove: TButton
+            Left = 381
+            ExplicitLeft = 381
+          end
+        end
+      end
+    end
+    object JvWizardInteriorPage4: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Save your Choices'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -20
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 
+        'Choose a location to place your rebranded application. This prog' +
+        'ram will copy all needed files to that location and any choices ' +
+        'you'#39've made'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -13
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Save your Choices'
+      inline fraCompanySaveData: TfraCompanySaveData
+        Left = 0
+        Top = 70
+        Width = 543
+        Height = 341
+        Align = alClient
+        Color = clWhite
+        ParentBackground = False
+        ParentColor = False
+        TabOrder = 0
+        ExplicitTop = 70
+        ExplicitWidth = 543
+        ExplicitHeight = 341
+        inherited GroupBox1: TGroupBox
+          Width = 543
+          Height = 341
+          ExplicitWidth = 543
+          ExplicitHeight = 341
+          inherited ebFolder: TLabeledEdit
+            Width = 424
+            ExplicitWidth = 424
+          end
+          inherited btnFind: TButton
+            Left = 454
+            OnClick = fraCompanySaveData1btnFindClick
+            ExplicitLeft = 454
+          end
+        end
+      end
+    end
+    object JvWizardInteriorPage5: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Copy Files'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -20
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 
+        'We need to copy the original files to a new location to perform ' +
+        'the rebranding. Choose a Source and Destination folder and add a' +
+        'ny additional files that you need'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -13
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Required Files'
+      inline fraCopyFiles: TfraCopyFiles
+        Left = 0
+        Top = 70
+        Width = 543
+        Height = 341
+        Align = alClient
+        Color = clWhite
+        ParentBackground = False
+        ParentColor = False
+        TabOrder = 0
+        ExplicitTop = 70
+        ExplicitWidth = 543
+        ExplicitHeight = 341
+        inherited GroupBox1: TGroupBox
+          Width = 543
+          ExplicitWidth = 543
+        end
+        inherited GroupBox2: TGroupBox
+          Width = 543
+          Height = 171
+          ExplicitWidth = 543
+          ExplicitHeight = 171
+          inherited PageControl: TPageControl
+            Width = 539
+            Height = 151
+            ExplicitWidth = 539
+            ExplicitHeight = 151
+            inherited tsCopyFiles: TTabSheet
+              ExplicitLeft = 4
+              ExplicitTop = 27
+              ExplicitWidth = 531
+              ExplicitHeight = 120
+              inherited lvFiles: TListView
+                Width = 531
+                Height = 120
+                ExplicitWidth = 531
+                ExplicitHeight = 120
+              end
+            end
+            inherited tsLog: TTabSheet
+              ExplicitLeft = 4
+              ExplicitTop = 27
+              ExplicitWidth = 496
+              ExplicitHeight = 127
+            end
+          end
+        end
+        inherited Panel1: TPanel
+          Top = 300
+          Width = 543
+          ExplicitTop = 300
+          ExplicitWidth = 543
+          inherited btnBegin: TButton
+            Left = 454
+            ExplicitLeft = 454
+          end
+          inherited btnStop: TButton
+            Left = 373
+            ExplicitLeft = 373
+          end
+          inherited ProgressBar: TProgressBar
+            Width = 199
+            ExplicitWidth = 199
+          end
+        end
+      end
+    end
+    object JvWizardRouteMapSteps1: TJvWizardRouteMapSteps
+      Left = 0
+      Top = 0
+      Width = 145
+      Height = 411
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+  end
+end

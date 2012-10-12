@@ -1,0 +1,396 @@
+unit ufraCopyFiles;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.ComCtrls, Vcl.ActnList, JvBaseDlg, JvSelectDirectory, uFileCopy,
+  JvComponentBase, JvSearchFiles, JvProgressDialog,uDlgBusy;
+
+type
+  TfraCopyFiles = class(TFrame)
+    GroupBox1: TGroupBox;
+    ebSource: TLabeledEdit;
+    btnFindSource: TButton;
+    GroupBox2: TGroupBox;
+    Panel1: TPanel;
+    btnBegin: TButton;
+    btnStop: TButton;
+    ProgressBar: TProgressBar;
+    btnFindDestination: TButton;
+    ebDestination: TLabeledEdit;
+    PageControl: TPageControl;
+    tsCopyFiles: TTabSheet;
+    lvFiles: TListView;
+    tsLog: TTabSheet;
+    lvLog: TListView;
+    ActionList: TActionList;
+    SelectDirectory: TJvSelectDirectory;
+    actFindSource: TAction;
+    actFindDestination: TAction;
+    SimpleFileCopy: TSimpleFileCopy;
+    actStart: TAction;
+    actStop: TAction;
+    cbShowProgress: TCheckBox;
+    actShowProgress: TAction;
+    JvSearchFiles: TJvSearchFiles;
+    actCheckMD5: TAction;
+    cbMD5: TCheckBox;
+    cbOverwrite: TCheckBox;
+    actOverwrite: TAction;
+    Panel2: TPanel;
+    btnClear: TButton;
+    actClear: TAction;
+    Panel3: TPanel;
+    Button1: TButton;
+    actClearLog: TAction;
+    btnSaveLog: TButton;
+    actSaveLog: TAction;
+    SaveDialog: TSaveDialog;
+    procedure actFindSourceExecute(Sender: TObject);
+    procedure actFindDestinationExecute(Sender: TObject);
+    procedure actStartExecute(Sender: TObject);
+    procedure actStopExecute(Sender: TObject);
+    procedure SimpleFileCopyStartEvent(Sender: TObject);
+    procedure SimpleFileCopyEndEvent(Sender: TObject);
+    procedure SimpleFileCopyErrorEvent(Sender: TObject);
+    procedure SimpleFileCopyFileOrFolderNotFound(Sender: TObject;
+      aFileNameOrFolder: string);
+    procedure SimpleFileCopyProgress(Sender: TObject; Min, Max,
+      Position: Integer; FileName: TFileName);
+    procedure actShowProgressExecute(Sender: TObject);
+    procedure JvSearchFilesAbort(Sender: TObject);
+    procedure JvSearchFilesBeginScanDir(Sender: TObject; const AName: string);
+    procedure JvSearchFilesError(Sender: TObject; var Handled: Boolean);
+    procedure JvSearchFilesFindDirectory(Sender: TObject; const AName: string);
+    procedure JvSearchFilesFindFile(Sender: TObject; const AName: string);
+    procedure JvSearchFilesProgress(Sender: TObject);
+    procedure SimpleFileCopyMD5CheckFail(Sender: TObject; Origin, Destination,
+      OriginMD5, DestinationMD5: string);
+    procedure SimpleFileCopyMD5CheckSuccess(Sender: TObject; Origin,
+      Destination, MD5: string);
+    procedure actCheckMD5Execute(Sender: TObject);
+    procedure SimpleFileCopyFileOverwrite(Sender: TObject;
+      aFileNameOrFolder: string);
+    procedure actOverwriteExecute(Sender: TObject);
+    procedure actClearExecute(Sender: TObject);
+    procedure actClearLogExecute(Sender: TObject);
+    procedure actSaveLogExecute(Sender: TObject);
+  protected
+    FdlgBusy : TdlgBusy;
+    FIsFreeing : boolean;
+  private
+    { Private declarations }
+    PROCEDURE LogEvent(aEvent : String);
+    PROCEDURE UpdateFileList();
+  public
+    { Public declarations }
+    CONSTRUCTOR Create(AOwner : TComponent); override;
+    DESTRUCTOR Destroy(); override;
+  end;
+
+implementation
+
+{$R *.dfm}
+
+
+CONSTRUCTOR TfraCopyFiles.Create(AOwner: TComponent);
+begin
+  Inherited Create(AOwner);
+  fisfreeing := false;
+  cbShowProgress.Checked := self.actShowProgress.Checked;
+  SimpleFileCopy.AllowAppToProcessMessagesDuringCopy := cbShowProgress.Checked;
+  cbMD5.Checked := actCheckMD5.Checked;
+  self.SimpleFileCopy.MD5Checking := cbMD5.Checked;
+end;
+
+DESTRUCTOR TFraCopyFiles.Destroy;
+begin
+  fisfreeing := true;
+  if SimpleFileCopy.InProgress then SimpleFileCopy.Stop;
+  FreeAndNil(dlgBusy);
+  Inherited Destroy();
+end;
+
+PROCEDURE TfraCopyFiles.UpdateFileList;
+Var
+  Item : TListItem;
+  i: Integer;
+begin
+LogEvent('Updating list of files found');
+
+lvFiles.Items.BeginUpdate;
+lvFiles.Clear;
+for i := 0 to SimpleFileCopy.FileList.Count - 1 do
+   Begin
+   Item := lvFiles.Items.Add;
+   Item.Caption := ExtractFileName(SimpleFileCopy.FileList.Strings[i]);
+   Item.SubItems.Add(ExtractFilePath(SimpleFileCopy.FileList.Strings[i]));
+   End;
+lvFiles.Items.EndUpdate;
+end;
+
+procedure TfraCopyFiles.JvSearchFilesAbort(Sender: TObject);
+begin
+LogEvent('Aborted Searching for Files');
+if assigned(dlgBusy) then dlgBusy.Free;
+
+end;
+
+procedure TfraCopyFiles.JvSearchFilesBeginScanDir(Sender: TObject;
+  const AName: string);
+begin
+LogEvent('Scanning: ' + AName);
+if not Assigned(dlgBusy) then
+   Begin
+     dlgBusy := TdlgBusy.Create(self);
+     dlgBusy.Show;
+   End
+else
+   begin
+     if self.cbShowProgress.Checked then Application.ProcessMessages;
+   end;
+end;
+
+procedure TfraCopyFiles.JvSearchFilesError(Sender: TObject;
+  var Handled: Boolean);
+begin
+LogEvent('Error while searching for files');
+actStop.Execute;
+Handled := True;
+end;
+
+procedure TfraCopyFiles.JvSearchFilesFindDirectory(Sender: TObject;
+  const AName: string);
+begin
+if (AName <> '.') and (ANAME <> '..') then
+   Begin
+   LogEvent('Found Directory: ' + AName);
+   End;
+end;
+
+procedure TfraCopyFiles.JvSearchFilesFindFile(Sender: TObject;
+  const AName: string);
+begin
+if (AName <> '.') and (ANAME <> '..') then
+   Begin
+   LogEvent('Found File: ' + AName);
+   SimpleFileCopy.FileList.Add(AName);
+   End;
+end;
+
+procedure TfraCopyFiles.JvSearchFilesProgress(Sender: TObject);
+begin
+ProgressBar.Min := 0;
+ProgressBar.Max := 1000;
+ProgressBar.Position := ProgressBar.Position + 1;
+if ProgressBar.Position = ProgressBar.Max then ProgressBar.Position := ProgressBar.Min;
+
+end;
+
+PROCEDURE TfraCopyFiles.LogEvent(aEvent : String);
+Var
+  Item : TListItem;
+Begin
+// DONE: Something is triggering the SimpleFileCopy.Start event on Destroy of the
+// parent form or frame itself, I've added FIsFreeing here to check if the frame
+// is being destroyed and prevent attempting to update the listview with a LogEvent
+// during this case, which is causing an exception as the object doesn't exist anymore
+//
+// This has been fixed, but I saw no harm in leaving FIsFreeing in there for now.
+if not FIsFreeing then
+   Begin
+   Item := lvLog.Items.Add;
+   Item.Caption := TimeToStr(GetTime);
+   Item.SubItems.Add(aEvent);
+   End;
+End;
+
+procedure TfraCopyFiles.SimpleFileCopyEndEvent(Sender: TObject);
+begin
+LogEvent('Finished Copying');
+self.actStop.Enabled := FALSE;
+actStart.Enabled := true;
+end;
+
+procedure TfraCopyFiles.SimpleFileCopyErrorEvent(Sender: TObject);
+begin
+LogEvent('Something unexpected happened');
+end;
+
+procedure TfraCopyFiles.SimpleFileCopyFileOrFolderNotFound(Sender: TObject;
+  aFileNameOrFolder: string);
+begin
+LogEvent('File Check Failed: Missing - ' + aFileNameOrFolder);
+end;
+
+procedure TfraCopyFiles.SimpleFileCopyFileOverwrite(Sender: TObject;
+  aFileNameOrFolder: string);
+begin
+LogEvent('Overwriting File: ' + ExtractFileName(aFileNameOrFolder));
+end;
+
+procedure TfraCopyFiles.SimpleFileCopyMD5CheckFail(Sender: TObject; Origin,
+  Destination, OriginMD5, DestinationMD5: string);
+begin
+LogEvent('MD5 Check Failed - File1: ' + Origin + '(' + OriginMD5 + ') and File2: ' + Destination + '(' + DestinationMD5 + ')');
+end;
+
+procedure TfraCopyFiles.SimpleFileCopyMD5CheckSuccess(Sender: TObject; Origin,
+  Destination, MD5: string);
+begin
+LogEvent('MD5 Check Ok: (' + MD5 + ') - ' + Origin + ' and ' + Destination);
+end;
+
+procedure TfraCopyFiles.SimpleFileCopyProgress(Sender: TObject; Min, Max,
+  Position: Integer; FileName: TFileName);
+begin
+LogEvent('Copied: ' + FileName);
+ProgressBar.Min := Min;
+ProgressBar.Max := Max;
+ProgressBar.Position := Position;
+end;
+
+procedure TfraCopyFiles.SimpleFileCopyStartEvent(Sender: TObject);
+begin
+if not Assigned(dlgBusy) then
+   Begin
+     dlgBusy := TdlgBusy.Create(self);
+     dlgBusy.Show;
+   End
+else
+   begin
+     if self.cbShowProgress.Checked then Application.ProcessMessages;
+     dlgBusy.Show;
+   end;
+
+LogEvent('Started Copying');
+self.actStop.Enabled := true;
+actStart.Enabled := false;
+end;
+
+procedure TfraCopyFiles.actCheckMD5Execute(Sender: TObject);
+begin
+actCheckMD5.Checked := NOT actCheckMD5.Checked;
+cbMD5.Checked := actCheckMD5.Checked;
+SimpleFileCopy.MD5Checking := True;
+end;
+
+procedure TfraCopyFiles.actClearExecute(Sender: TObject);
+begin
+if SimpleFileCopy.InProgress THEN SimpleFileCopy.Stop;
+SimpleFileCopy.FileList.Clear;
+lvFiles.Clear;
+lvLog.Clear;
+end;
+
+procedure TfraCopyFiles.actClearLogExecute(Sender: TObject);
+begin
+lvLog.Clear;
+end;
+
+procedure TfraCopyFiles.actFindDestinationExecute(Sender: TObject);
+begin
+SelectDirectory.Title := 'Choose Destination Folder';
+if SelectDirectory.Execute then
+   Begin
+   ebDestination.Text := SelectDirectory.Directory;
+   SimpleFileCopy.Destination := ebDestination.Text;
+   End;
+
+end;
+
+procedure TfraCopyFiles.actFindSourceExecute(Sender: TObject);
+begin
+self.actStop.Execute;
+JvSearchFiles.Abort;
+self.actClear.Execute;
+self.actClearLog.Execute;
+SelectDirectory.Title := 'Choose Source Location';
+PageControl.ActivePageIndex := tsLog.TabIndex;
+if SelectDirectory.Execute then
+   Begin
+   ebSource.Text := SelectDirectory.Directory;
+   SimpleFileCopy.Source := ebSource.Text;
+   JvSearchFiles.RootDirectory := SimpleFileCopy.Source;
+   jvSearchFiles.Search;
+   while jvSearchFiles.Searching do
+      Begin
+      // do nothing
+      End;
+   Self.UpdateFileList;
+   End;
+
+end;
+
+procedure TfraCopyFiles.actOverwriteExecute(Sender: TObject);
+begin
+actOverwrite.Checked := NOT actOverwrite.Checked;
+SimpleFileCopy.AllowOverwrite := actOverwrite.Checked;
+self.cbOverwrite.Checked := SimpleFileCopy.AllowOverwrite;
+end;
+
+procedure TfraCopyFiles.actSaveLogExecute(Sender: TObject);
+Var
+  Data : TStringList;
+  i     : integer;
+
+begin
+if SaveDialog.Execute(Self.Handle) then
+   Begin
+    Try
+      Data := TStringList.Create;
+
+      Data.BeginUpdate;
+      Data.Add('==============================');
+      Data.Add('Time: ' + TimeToStr(Time));
+      Data.Add('Date: ' + DateToStr(Date));
+      Data.Add('==============================');
+      for i := 0 to lvLog.Items.Count - 1 do
+           Begin
+             Data.Add(lvLog.Items.Item[i].Caption + ': ' + lvLog.Items.Item[i].SubItems.Text);
+           End;
+      Data.EndUpdate;
+      Data.SaveToFile(SaveDialog.FileName);
+    Finally
+      Data.Free;
+      LogEvent('Saved Log to ' + SaveDialog.FileName);
+    End;
+   End;
+
+end;
+
+procedure TfraCopyFiles.actShowProgressExecute(Sender: TObject);
+begin
+actShowProgress.Checked := NOT actShowProgress.Checked;
+cbShowProgress.Checked := actShowProgress.Checked;
+SimpleFileCopy.AllowAppToProcessMessagesDuringCopy := cbShowProgress.Checked;
+end;
+
+procedure TfraCopyFiles.actStartExecute(Sender: TObject);
+begin
+PageControl.ActivePageIndex := tsLog.TabIndex;
+actStart.Enabled := false;
+actStop.Enabled := true;
+SimpleFileCopy.Start;
+end;
+
+procedure TfraCopyFiles.actStopExecute(Sender: TObject);
+begin
+SimpleFileCopy.Stop;
+// Check did we stop ok
+if NOT SimpleFileCopy.InProgress then
+   Begin
+     actStart.Enabled := true;
+     actStop.Enabled := false;
+   End
+else
+   begin
+     actStart.Enabled := false;
+     actStop.Enabled := false;
+     ShowMessage('Something went wrong while attempting to stop!');
+   end;
+end;
+
+end.

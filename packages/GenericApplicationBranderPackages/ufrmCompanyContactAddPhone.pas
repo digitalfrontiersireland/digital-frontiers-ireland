@@ -1,0 +1,49 @@
+unit ufrmCompanyContactAddPhone;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, JvWizard,
+  JvWizardRouteMapList, JvExControls, JvExStdCtrls, JvRadioButton;
+
+type
+  TfrmCustomerContactAddPhone = class(TForm)
+    JvWizard1: TJvWizard;
+    JvWizardRouteMapList1: TJvWizardRouteMapList;
+    JvWizardInteriorPage1: TJvWizardInteriorPage;
+    JvWizardInteriorPage2: TJvWizardInteriorPage;
+    JvWizardInteriorPage3: TJvWizardInteriorPage;
+    Label1: TLabel;
+    JvRadioButton1: TJvRadioButton;
+    JvRadioButton2: TJvRadioButton;
+    JvRadioButton3: TJvRadioButton;
+    JvRadioButton4: TJvRadioButton;
+    Label2: TLabel;
+    LabeledEdit1: TLabeledEdit;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCustomerContactAddPhone: TfrmCustomerContactAddPhone;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmCustomerContactAddPhone.Button1Click(Sender: TObject);
+begin
+ModalResult := mrOk;
+end;
+
+procedure TfrmCustomerContactAddPhone.Button2Click(Sender: TObject);
+begin
+ModalResult := mrCancel;
+end;
+
+end.

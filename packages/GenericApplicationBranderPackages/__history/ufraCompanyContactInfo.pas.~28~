@@ -1,0 +1,66 @@
+unit ufraCompanyContactInfo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.ComCtrls, Vcl.Menus, Vcl.ActnList;
+
+type
+  TfraCompanyContactInfo = class(TFrame)
+    PageControl: TPageControl;
+    TabSheet1: TTabSheet;
+    memoAddress: TMemo;
+    ebCity: TLabeledEdit;
+    ebCountyState: TLabeledEdit;
+    ebCountry: TLabeledEdit;
+    ebPostCode: TLabeledEdit;
+    LabeledEdit1: TLabeledEdit;
+    Button1: TButton;
+    LabeledEdit2: TLabeledEdit;
+    Bevel1: TBevel;
+    PopupMenu: TPopupMenu;
+    ActionList: TActionList;
+    actGoogleMaps: TAction;
+    actBingMaps: TAction;
+    actOpenStreetMaps: TAction;
+    viaOpenStreetMaps1: TMenuItem;
+    viaGoogleMaps1: TMenuItem;
+    viaBing1: TMenuItem;
+    TabSheet2: TTabSheet;
+    lvTelephone: TListView;
+    Panel1: TPanel;
+    btnAdd: TButton;
+    btnRemove: TButton;
+    btnClear: TButton;
+    Emails: TTabSheet;
+    ListView1: TListView;
+    Panel2: TPanel;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    procedure btnAddClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+implementation
+Uses ufrmCompanyContactAddPhone;
+{$R *.dfm}
+
+procedure TfraCompanyContactInfo.btnAddClick(Sender: TObject);
+Var
+  AddPhone : TfrmCustomerContactAddPhone;
+begin
+AddPhone := TfrmCustomerContactAddPhone.Create(Self);
+if AddPhone.ShowModal = mrOk then
+   Begin
+
+   End;
+AddPhone.Free;
+end;
+
+end.

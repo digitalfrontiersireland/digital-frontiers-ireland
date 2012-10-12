@@ -1,0 +1,341 @@
+unit uGenericUnitsAndTypes;
+
+
+interface
+uses Classes;
+
+
+Type     TProgramVersionInfo            =         class(TComponent)
+          Protected
+          Const FDefaultSupportURL      =         'http://www.digitalfrontiersireland.com/site/index.php/forum/genericapplication';
+           FUNCTION FGetVersionInfo(AIdent: String): String;
+           FUNCTION FFileMD5ToString(const fileName : string) : string;
+           FUNCTION FBrowseURL(const URL: string) : boolean;
+          Private
+           FUNCTION FGetFileDescription : String;
+           FUNCTION FGetLegalCopyright  : String;
+           FUNCTION FGetDateOfRelease   : String;
+           FUNCTION FGetProductVersion  : String;
+           FUNCTION FGetFileVersion     : String;
+           FUNCTION FGetCompanyName     : string;
+           FUNCTION FGetInternalName    : string;
+           FUNCTION FGetLegalTrademarks : string;
+           FUNCTION FGetProductName     : string;
+           FUNCTION FGetOrigFilename    : string;
+           FUNCTION FGetComments        : string;
+           FUNCTION FGetMD5Hash         : String;
+          Public
+          PROCEDURE OpenSupportSite();
+          Published
+           PROPERTY FileDescription : string read FGetFileDescription;
+           PROPERTY LegalCopyright  : string read FGetLegalCopyright;
+           PROPERTY ProductVersion  : string read FGetProductVersion;
+           PROPERTY FileVersion     : string read FGetFileVersion;
+           PROPERTY MD5Hash         : string read FGetMD5Hash;
+           PROPERTY DateOfRelease   : string read FGetDateOfRelease;
+           PROPERTY CompanyName     : string read FGetCompanyName;
+           PROPERTY InternalName    : string read FGetInternalName;
+           PROPERTY Trademarks      : string read FGetLegalTrademarks;
+           PROPERTY ProductName     : string read FGetProductName;
+           PROPERTY Comments        : string read FGetComments;
+           PROPERTY OriginalFilename: string read FGetOrigFilename;
+         end;
+
+
+
+Type    TOnCommandLineSwitchEvent   =         PROCEDURE(Sender : TObject; aSwitch : String; Var Handled : Boolean) of object;
+Type    TCommandLineProcessor       =         class(TComponent)
+          Protected
+          Private
+          FOnCommandLineSwitchEvent :         TOnCommandLineSwitchEvent;
+          FParamList                :         TStringList;
+          Public
+          CONSTRUCTOR Create(AOwner : TComponent); override;
+          DESTRUCTOR Destroy(); override;
+          PROCEDURE Process(); virtual;
+          Published
+          PROPERTY OnCommandLineSwitch : TOnCommandLineSwitchEvent read FOnCommandLineSwitchEvent write FOnCommandLineSwitchEvent;
+          PROPERTY Params              : TStringList read FParamList;
+        end;
+
+
+
+procedure Register();
+
+implementation
+
+uses
+  Winapi.Windows, System.SysUtils, Math, IdHashMessageDigest,Registry, ShellAPI, Dialogs,
+  uGenericApplicationConfiguration, Vcl.Controls;
+
+Const
+    PARAM_DEBUG           =       '/debug';
+    PARAM_CONFIG          =       '/configure';
+
+
+Const
+  TAG_FILE_DESC         =       'FileDescription';
+  TAG_LEGAL_COPYR       =       'LegalCopyright';
+  TAG_DATE_OF_RELEASE   =       'DateOfRelease';
+  TAG_PRODUCT_VERSION   =       'ProductVersion';
+  TAG_FILE_VERSION      =       'FileVersion';
+  TAG_COMPANY_NAME      =       'CompanyName';
+  TAG_INT_NAME          =       'InternalName';
+  TAG_LEGAL_TRADE       =       'LegalTrademarks';
+  TAG_PRODUCT_NAME      =       'ProductName';
+  TAG_COMMENTS          =       'Comments';
+  TAG_ORIG_FILENAME     =       'OriginalFilename';
+
+  TAG_TRANSLATIONLIST   =       '\\VarFileInfo\\Translation';
+  TAG_STR_FILE_INFO     =       '\\StringFileInfo';
+  TAG_HTML_OPENKEY      =       '\htmlfile\shell\open\command';
+
+
+procedure Register();
+Begin
+  RegisterComponents('DFI - Generic', [TProgramVersionInfo,TCommandLineProcessor]);
+End;
+
+
+PROCEDURE TProgramVersionInfo.OpenSupportSite;
+begin
+if NOT FBrowseURL(FDefaultSupportURL) then
+   Begin
+   ShowMessage('Failed to start your default browser!, if you want to continue - manually open your browser and navigate to ' + FDefaultSupportURL);
+   End;
+end;
+
+
+FUNCTION TProgramVersionInfo.FGetOrigFilename() : string;
+begin
+Result := FGetVersionInfo(TAG_ORIG_FILENAME);
+end;
+
+FUNCTION TProgramVersionInfo.FGetCompanyName() : string;
+Begin
+  Result := FGetVersionInfo(TAG_COMPANY_NAME);
+End;
+
+FUNCTION TProgramVersionInfo.FGetInternalName() : string;
+Begin
+  Result := FGetVersionInfo(TAG_INT_NAME);
+End;
+
+FUNCTION TProgramVersionInfo.FGetLegalTrademarks() : string;
+Begin
+  Result := FGetVersionInfo(TAG_LEGAL_TRADE);
+End;
+
+FUNCTION TProgramVersionInfo.FGetProductName() : string;
+Begin
+  Result := FGetVersionInfo(TAG_PRODUCT_NAME);
+End;
+
+FUNCTION TProgramVersionInfo.FGetComments(): string;
+Begin
+  Result := FGetVersionInfo(TAG_COMMENTS);
+End;
+
+
+
+function TProgramVersionInfo.FFileMD5ToString(const fileName : string) : string;
+ var
+   idmd5 : TIdHashMessageDigest5;
+   fs : TFileStream;
+ begin
+
+   idmd5 := TIdHashMessageDigest5.Create;
+   fs := TFileStream.Create(fileName, fmOpenRead OR fmShareDenyWrite) ;
+   try
+     result := IDMD5.HashStreamAsHex(fs);
+   finally
+     fs.Free;
+     idmd5.Free;
+   end;
+ end;
+
+FUNCTION TProgramVersionInfo.FGetMD5Hash() : string;
+begin
+Result := Self.FFileMD5ToString(ParamStr(0))
+end;
+
+
+function TProgramVersionInfo.FGetVersionInfo(AIdent: String): String;
+type TLang = packed record
+     Lng    : WORD;
+     Page   : WORD;
+end;
+TLangs = array [0 .. 10000] of TLang;
+PLangs = ^TLangs;
+var
+  BLngs   : PLangs;
+  BLngsCnt: Cardinal;
+  BLangId : String;
+  RM      : TMemoryStream;
+  RS      : TResourceStream;
+  BP      : PChar;
+  BL      : Cardinal;
+  BId     : String;
+
+begin
+  // Assume error
+  Result := '';
+
+  RM := TMemoryStream.Create;
+  try
+    // Load the version resource into memory
+    RS := TResourceStream.CreateFromID(HInstance, 1, RT_VERSION);
+    try
+      RM.CopyFrom(RS, RS.Size);
+    finally
+      FreeAndNil(RS);
+    end;
+
+    // Extract the translations list
+    if not VerQueryValue(RM.Memory, TAG_TRANSLATIONLIST, Pointer(BLngs), BL) then
+      Exit; // Failed to parse the translations table
+    BLngsCnt := BL div sizeof(TLang);
+    if BLngsCnt <= 0 then
+      Exit; // No translations available
+
+    // Use the first translation from the table (in most cases will be OK)
+    with BLngs[0] do
+      BLangId := IntToHex(Lng, 4) + IntToHex(Page, 4);
+
+    // Extract field by parameter
+    BId := TAG_STR_FILE_INFO + '\\' + BLangId + '\\' + AIdent;
+    if not VerQueryValue(RM.Memory, PChar(BId), Pointer(BP), BL) then
+      Exit; // No such field
+
+    // Prepare result
+    Result := BP;
+  finally
+    FreeAndNil(RM);
+  end;
+end;
+
+function TProgramVersionInfo.FGetFileDescription: String;
+begin
+  Result := FGetVersionInfo(TAG_FILE_DESC);
+end;
+
+function TProgramVersionInfo.FGetLegalCopyright: String;
+begin
+  Result := FGetVersionInfo(TAG_LEGAL_COPYR);
+end;
+
+function TProgramVersionInfo.FGetDateOfRelease: String;
+begin
+  Result := FGetVersionInfo(TAG_DATE_OF_RELEASE);
+end;
+
+function TProgramVersionInfo.FGetProductVersion: String;
+begin
+  Result := FGetVersionInfo(TAG_PRODUCT_VERSION);
+end;
+
+function TProgramVersionInfo.FGetFileVersion: String;
+begin
+  Result := FGetVersionInfo(TAG_FILE_VERSION);
+end;
+
+
+function TProgramVersionInfo.FBrowseURL(const URL: string) : boolean;
+var
+   Browser: string;
+begin
+   Result := True;
+   Browser := '';
+   with TRegistry.Create do
+   try
+     RootKey  := HKEY_CLASSES_ROOT;
+     Access   := KEY_QUERY_VALUE;
+     if OpenKey(TAG_HTML_OPENKEY, False) then
+       Browser := ReadString('') ;
+     CloseKey;
+   finally
+     Free;
+   end;
+   if Browser = '' then
+   begin
+     Result := False;
+     Exit;
+   end;
+   Browser := Copy(Browser, Pos('"', Browser) + 1, Length(Browser)) ;
+   Browser := Copy(Browser, 1, Pos('"', Browser) - 1) ;
+   ShellExecute(0, 'open', PChar(Browser), PChar(URL), nil, SW_SHOW) ;
+end;
+
+
+
+
+
+
+
+
+CONSTRUCTOR TCommandLineProcessor.Create(AOwner: TComponent);
+Var
+  i         : integer;
+  aResult   : integer;
+begin
+  Inherited Create(AOwner);
+  FParamList := TStringList.Create;
+
+  FParamList.BeginUpdate;
+  for i := 1 to ParamCount do
+      Begin
+      aResult := -1;
+      FParamList.Find(ParamStr(i), aResult);
+      if aResult = -1 then
+         Begin
+         FParamList.Add(ParamStr(i));
+         End;
+      End;
+  FParamList.EndUpdate;
+end;
+
+DESTRUCTOR TCommandLineProcessor.Destroy;
+begin
+  FParamList.Free;
+  Inherited Destroy();
+end;
+
+PROCEDURE TCommandLineProcessor.Process();
+Var
+  i       :       integer;
+  Handled :       boolean;
+begin
+if Self.FParamList.Count > 0 then
+   Begin
+   for i := 0 to FParamList.Count - 1 do
+        Begin
+        Handled := False;
+        if LowerCase(FParamList.Strings[i]) = PARAM_CONFIG then
+           Begin
+           Try
+              Begin
+              frmGenericConfig := TfrmGenericConfig.Create(Self);
+              Handled := True;
+              if frmGenericConfig.ShowModal = mrOk then
+                 Begin
+                 // any additional processing?
+                 End;
+              End;
+           Finally
+              Begin
+              frmGenericConfig.Free;
+              End;
+           End;
+           End;
+
+        if NOT Handled then
+           Begin
+           if Assigned(FOnCommandLineSwitchEvent) then OnCommandLineSwitch(Self,ParamStr(i), Handled);
+           End;
+        End;
+   End;
+
+end;
+
+
+end.

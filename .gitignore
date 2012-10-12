@@ -9,6 +9,11 @@ bin/
 tmp/
 *.tmp
 *.bak
+*.~?~
+*.dcu
+*.bpl
+*.dll
+*.exe
 *.swp
 *~.nib
 local.properties

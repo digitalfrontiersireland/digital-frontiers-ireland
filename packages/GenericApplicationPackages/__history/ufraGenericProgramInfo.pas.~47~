@@ -1,0 +1,166 @@
+unit ufraGenericProgramInfo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
+  Vcl.StdCtrls, Vcl.ExtCtrls, uGenericUnitsAndTypes;
+
+type
+  TfraGenericProgramInfo = class(TFrame)
+    GroupBox: TGroupBox;
+    ebFilename: TLabeledEdit;
+    ebPath: TLabeledEdit;
+    ebVersion: TLabeledEdit;
+    pnlRight: TPanel;
+    ListView: TListView;
+    btnToFile: TButton;
+    SaveDialog: TSaveDialog;
+    procedure btnToFileClick(Sender: TObject);
+  private
+    { Private declarations }
+    FProgramVersionInfo       :       TProgramVersionInfo;
+  public
+    { Public declarations }
+    CONSTRUCTOR Create(AOwner : TComponent); override;
+    DESTRUCTOR Destroy(); override;
+    PROCEDURE RefreshData();
+  end;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfraGenericProgramInfo.btnToFileClick(Sender: TObject);
+Var
+    StringList  :     TStringList;
+begin
+SaveDialog.FileName := ebFileName.Text + '_';
+if SaveDialog.Execute(Self.Handle) then
+   Begin
+   Try
+      Begin
+      StringList := TStringList.Create;
+
+      StringList.Add('# ===================');
+      StringList.Add('# Program Information');
+      StringList.Add('# ===================');
+      StringList.Add('Filename=' + ebFileName.Text);
+      StringList.Add('Path=' + ebPath.Text);
+      StringList.Add('# -------------------');
+      StringList.Add('ProductName=' + FProgramVersionInfo.ProductName);
+      StringList.Add('DateOfRelease=' + FProgramVersionInfo.DateOfRelease);
+      StringList.Add('CompanyName=' + FProgramVersionInfo.CompanyName);
+      StringList.Add('InternalName=' + FProgramVersionInfo.InternalName);
+      StringList.Add('Comments=' + FProgramVersionInfo.Comments);
+      StringList.Add('OriginalFilename='+FProgramVersionInfo.OriginalFilename);
+      StringList.Add('ProductVersion=' + FProgramVersionInfo.ProductVersion);
+      StringList.Add('FileDescription=' + FProgramVersionInfo.FileDescription);
+      StringList.Add('FileVersion=' + FProgramVersionInfo.FileVersion);
+      StringList.Add('LegalCopyright=' + FProgramVersionInfo.LegalCopyright);
+      StringList.Add('LegalTrademarks=' +FProgramVersionInfo.Trademarks);
+      StringList.Add('# ===================');
+      StringList.Add('# Timestamp');
+      StringList.Add('# ===================');
+      StringList.Add('Time=' + TimeToStr(Time));
+      StringList.Add('Date=' + DateToStr(Date));
+      StringList.Add('# ===================');
+      StringList.Add('# MD5 Hash');
+      StringList.Add('# -- BEGIN HASH -----');
+      StringList.Add(FProgramVersionInfo.MD5Hash);
+      StringList.Add('# -- END HASH -------');
+      StringList.Add('# ===================');
+
+      StringList.SaveToFile(SaveDialog.FileName);
+      End;
+   Finally
+      Begin
+      FreeAndNil(StringList);
+      End;
+
+   End;
+
+   End;
+end;
+
+CONSTRUCTOR TfraGenericProgramInfo.Create(AOwner: TComponent);
+begin
+  Inherited Create(AOwner);
+  FProgramVersionInfo := TProgramVersionInfo.Create(self);
+  RefreshData;
+end;
+
+DESTRUCTOR TfraGenericProgramInfo.Destroy;
+begin
+  FProgramVersionInfo.Free;
+  Inherited Destroy();
+end;
+
+PROCEDURE TfraGenericProgramInfo.RefreshData;
+Var
+  ListItem : TListItem;
+begin
+  ebFilename.Text := ExtractFileName(Application.ExeName);
+  ebPath.Text := ExtractFilePath(Application.ExeName);
+  ebVersion.Text := FProgramVersionInfo.ProductVersion;
+
+  ListView.Items.BeginUpdate;
+  ListView.Clear;
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Product Name';
+  ListItem.SubItems.Add(FProgramVersionInfo.ProductName);
+
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Product Version';
+  ListItem.SubItems.Add( FProgramVersionInfo.ProductVersion);
+
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'File Version';
+  ListItem.SubItems.Add(FProgramVersionInfo.FileVersion);
+
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'File Description';
+  ListItem.SubItems.Add(FProgramVersionInfo.FileDescription);
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Company Name';
+  ListItem.SubItems.Add(FProgramVersionInfo.CompanyName);
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Copyright';
+  ListItem.SubItems.Add(FProgramVersionInfo.LegalCopyright);
+
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Internal Name';
+  ListItem.SubItems.Add(FProgramVersionInfo.InternalName);
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Trademarks';
+  ListItem.SubItems.Add(FProgramVersionInfo.Trademarks);
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Original Filename';
+  ListItem.SubItems.Add(FProgramVersionInfo.OriginalFilename);
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Release Date';
+  ListItem.SubItems.Add(FProgramVersionInfo.DateOfRelease);
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'Comments';
+  ListItem.SubItems.Add(FProgramVersionInfo.Comments);
+
+  ListItem := ListView.Items.Add;
+  ListItem.Caption := 'MD5 Hash';
+  ListItem.SubItems.Add(FProgramVersionInfo.MD5Hash);
+
+  ListView.Items.EndUpdate;
+end;
+
+end.

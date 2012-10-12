@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2012/10/09 02:24:02.000.632,=rtl.dcp</Transaction>
+    <Transaction>2012/10/09 04:05:08.000.954,=rtl.dcp</Transaction>
+    <Transaction>2012/10/09 07:36:23.000.038,=rtl.dcp</Transaction>
+    <Transaction>2012/10/09 07:36:51.000.479,C:\Users\Ivan Malone\Documents\RAD Studio\Projects\Package1.dproj=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\GenericApplicationBranderPackages.dproj</Transaction>
+    <Transaction>2012/10/09 07:37:18.000.292,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit1.pas</Transaction>
+    <Transaction>2012/10/09 07:37:53.000.508,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit1.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyInfo.dfm</Transaction>
+    <Transaction>2012/10/09 07:37:53.000.508,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit1.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyInfo.pas</Transaction>
+    <Transaction>2012/10/09 07:48:03.000.632,=vcl.dcp</Transaction>
+    <Transaction>2012/10/09 07:48:03.000.648,=Jcl.dcp</Transaction>
+    <Transaction>2012/10/09 07:48:03.000.658,=JvCore.dcp</Transaction>
+    <Transaction>2012/10/09 07:48:03.000.664,=JvStdCtrls.dcp</Transaction>
+    <Transaction>2012/10/09 07:48:03.000.642,=vclimg.dcp</Transaction>
+    <Transaction>2012/10/09 08:03:45.000.554,=JvCustom.dcp</Transaction>
+    <Transaction>2012/10/09 09:05:27.000.009,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\ImagePackages\uImageResize.pas</Transaction>
+    <Transaction>2012/10/09 09:09:17.000.515,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationPackages\udmGenericComponents.pas</Transaction>
+    <Transaction>2012/10/09 09:11:29.000.621,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationPackages\uGenericUnitsAndTypes.pas</Transaction>
+    <Transaction>2012/10/09 09:12:25.000.513,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationPackages\udmGenericComponents.pas=</Transaction>
+    <Transaction>2012/10/09 09:12:29.000.569,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationPackages\uGenericUnitsAndTypes.pas=</Transaction>
+    <Transaction>2012/10/09 22:13:51.000.778,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationPackages\uGenericUnitsAndTypes.pas</Transaction>
+    <Transaction>2012/10/09 22:14:25.000.996,=IndyProtocols.dcp</Transaction>
+    <Transaction>2012/10/09 22:14:25.000.981,=IndySystem.dcp</Transaction>
+    <Transaction>2012/10/09 22:14:25.000.966,=IndyCore.dcp</Transaction>
+    <Transaction>2012/10/09 22:46:31.000.004,=JvWizards.dcp</Transaction>
+    <Transaction>2012/10/09 22:57:06.000.687,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas</Transaction>
+    <Transaction>2012/10/09 22:57:26.000.564,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyContactInfo.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas</Transaction>
+    <Transaction>2012/10/09 22:57:26.000.564,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyContactInfo.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.dfm</Transaction>
+    <Transaction>2012/10/09 23:14:09.000.945,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationPackages\uGenericUnitsAndTypes.pas=</Transaction>
+    <Transaction>2012/10/09 23:14:10.000.012,=GenericApplicationPackage.dcp</Transaction>
+    <Transaction>2012/10/09 23:19:23.000.271,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\ImagePackages\uImageResize.pas=</Transaction>
+    <Transaction>2012/10/11 15:35:50.000.605,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas</Transaction>
+    <Transaction>2012/10/11 15:36:15.000.544,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddAddress.pas</Transaction>
+    <Transaction>2012/10/11 15:36:15.000.544,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddAddress.dfm</Transaction>
+    <Transaction>2012/10/11 15:38:01.000.181,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddAddress.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddContact.pas</Transaction>
+    <Transaction>2012/10/11 15:38:01.000.181,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddAddress.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddContact.dfm</Transaction>
+    <Transaction>2012/10/11 15:38:26.000.758,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddContact.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddPhone.pas</Transaction>
+    <Transaction>2012/10/11 15:38:26.000.758,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddContact.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufrmCompanyContactAddPhone.dfm</Transaction>
+    <Transaction>2012/10/11 20:08:41.000.172,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas</Transaction>
+    <Transaction>2012/10/11 20:08:48.000.477,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyLiveData.pas</Transaction>
+    <Transaction>2012/10/11 20:08:48.000.477,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyLiveData.dfm</Transaction>
+    <Transaction>2012/10/11 20:21:39.000.219,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas</Transaction>
+    <Transaction>2012/10/11 20:21:54.000.047,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyRebrand.dfm</Transaction>
+    <Transaction>2012/10/11 20:21:54.000.047,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyRebrand.pas</Transaction>
+    <Transaction>2012/10/11 20:22:05.000.247,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyRebrand.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanySaveData.dfm</Transaction>
+    <Transaction>2012/10/11 20:22:05.000.247,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanyRebrand.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCompanySaveData.pas</Transaction>
+    <Transaction>2012/10/11 20:29:23.000.459,=JvDlgs.dcp</Transaction>
+    <Transaction>2012/10/11 20:31:02.000.400,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas</Transaction>
+    <Transaction>2012/10/11 20:31:26.000.663,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCopyFiles.dfm</Transaction>
+    <Transaction>2012/10/11 20:31:26.000.663,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraCopyFiles.pas</Transaction>
+    <Transaction>2012/10/11 21:38:41.000.078,=FileUtilsPackages.dcp</Transaction>
+    <Transaction>2012/10/12 03:02:34.025,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas</Transaction>
+    <Transaction>2012/10/12 03:02:39.575,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraBusy.dfm=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.dfm</Transaction>
+    <Transaction>2012/10/12 03:02:39.575,C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\ufraBusy.pas=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\Unit2.pas</Transaction>
+    <Transaction>2012/10/12 03:09:57.334,=C:\Users\Ivan Malone\Documents\GitHub\digital-frontiers-ireland\packages\GenericApplicationBranderPackages\udlgBusy.pas</Transaction>
+    <Transaction>2012/10/12 03:18:05.321,=JvMM.dcp</Transaction>
+  </Transactions>
+</BorlandProject>

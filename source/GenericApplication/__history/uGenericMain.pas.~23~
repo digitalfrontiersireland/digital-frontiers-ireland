@@ -1,0 +1,49 @@
+unit uGenericMain;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Ribbon, Vcl.RibbonLunaStyleActnCtrls,
+  Vcl.StdCtrls, JvTranslateString, JvFormPlacementSelectList, JvFormPlacement,
+  JvAppStorageSelectList, JvComponentBase, JvAppStorage, JvAppXMLStorage;
+
+type
+  TfrmGeneric = class(TForm)
+    Ribbon: TRibbon;
+    Button1: TButton;
+    JvAppXMLFileStorage1: TJvAppXMLFileStorage;
+    JvAppStorage1: TJvAppStorage;
+    procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmGeneric: TfrmGeneric;
+
+implementation
+uses udmGenericComponents;
+{$R *.dfm}
+
+procedure TfrmGeneric.Button1Click(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmGeneric.FormCreate(Sender: TObject);
+begin
+if Assigned(dmGenericComponents) then
+   Begin
+   with dmGenericComponents do
+      Begin
+      CommandLineProcessor.Process;
+      End;
+   End;
+
+end;
+
+end.

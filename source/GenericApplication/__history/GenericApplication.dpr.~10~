@@ -1,0 +1,17 @@
+program GenericApplication;
+
+uses
+  Vcl.Forms,
+  uGenericMain in 'uGenericMain.pas' {frmGeneric},
+  uGenericApplicationConfiguration in '..\..\packages\GenericApplicationPackages\uGenericApplicationConfiguration.pas' {frmGenericConfig},
+  udmGenericComponents in '..\..\packages\GenericApplicationPackages\udmGenericComponents.pas' {dmGenericComponents: TDataModule};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TdmGenericComponents, dmGenericComponents);
+  Application.CreateForm(TfrmGeneric, frmGeneric);
+  Application.Run;
+end.

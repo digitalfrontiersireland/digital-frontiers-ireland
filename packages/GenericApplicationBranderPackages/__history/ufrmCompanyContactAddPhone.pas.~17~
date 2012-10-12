@@ -1,0 +1,52 @@
+unit ufrmCompanyContactAddPhone;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
+
+type
+  TfrmCustomerContactAddPhone = class(TForm)
+    GroupBox1: TGroupBox;
+    rbDetailGeneral: TRadioButton;
+    rbDetailResidential: TRadioButton;
+    rbDetailBusiness: TRadioButton;
+    rbOtherGeneral: TRadioButton;
+    GroupBox2: TGroupBox;
+    ebNumberAccount: TLabeledEdit;
+    GroupBox3: TGroupBox;
+    rbSkype: TRadioButton;
+    rbMSN: TRadioButton;
+    rbTelephone: TRadioButton;
+    rbTypeOther: TRadioButton;
+    GroupBox4: TGroupBox;
+    rbAvailability24: TRadioButton;
+    rpSpecific: TRadioButton;
+    GroupBox5: TGroupBox;
+    cbMonday: TCheckBox;
+    cbTuesday: TCheckBox;
+    cbWendsday: TCheckBox;
+    cbThursday: TCheckBox;
+    cbFriday: TCheckBox;
+    cbSaturday: TCheckBox;
+    cbSunday: TCheckBox;
+    GroupBox6: TGroupBox;
+    ebFrom: TLabeledEdit;
+    ebTo: TLabeledEdit;
+    Button1: TButton;
+    Button2: TButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCustomerContactAddPhone: TfrmCustomerContactAddPhone;
+
+implementation
+
+{$R *.dfm}
+
+end.

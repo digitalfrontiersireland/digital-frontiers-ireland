@@ -1,0 +1,246 @@
+unit uFileCopy;
+
+interface
+uses Classes, SysUtils, Windows, VCL.Forms;
+
+Type      TOnFileOrFolderError  =       PROCEDURE(Sender : TObject; aFileNameOrFolder : string) of object;
+Type      TOnProgressEvent      =       PROCEDURE(Sender : TObject; Min, Max, Position : integer; FileName : TFileName) of object;
+Type      TOnMD5CheckSuccess    =       PROCEDURE(Sender : TObject; Origin : String; Destination : String; MD5 : String) of object;
+Type      TOnMD5CheckFail       =       PROCEDURE(Sender : TObject; Origin : String; Destination : String; OriginMD5 : String; DestinationMD5 : String) of object;
+
+Type      TSimpleFileCopy       =       class(TComponent)
+          Protected
+          FToCopy               :       TStringList;
+          FSource               :       string;
+          FInProgress           :       Boolean;
+          FDestination          :       string;
+          FUNCTION FFileMD5ToString(const fileName : string) : string;
+          Private
+          FAllowOverwrite       :       boolean;
+          FAppProcessMessages   :       boolean;
+          FMD5                  :       Boolean;
+          FOnBeginCopy          :       TNotifyEvent;
+          FOnEndCopy            :       TNotifyEvent;
+          FOnErrorEvent         :       TNotifyEvent;
+          FFileOverwrited       :       TOnFileOrFolderError;
+          FOnProgress           :       TOnProgressEvent;
+          FOnFileNotFound       :       TOnFileOrFolderError;
+          FOnMD5CheckSuccess    :       TOnMD5CheckSuccess;
+          FOnMD5CheckFail       :       TOnMD5CheckFail;
+          FOnFileSkip           :       TOnFileOrFolderError;
+          Public
+          CONSTRUCTOR Create(AOwner : TComponent); override;
+          DESTRUCTOR Destroy(); override;
+          PROCEDURE Start();
+          PROCEDURE Stop();
+          Published
+          PROPERTY AllowAppToProcessMessagesDuringCopy : boolean read FAppProcessMessages write FAppProcessMessages default false;
+          PROPERTY AllowOverwrite : boolean read FAllowOverwrite write FAllowOverwrite default false;
+          PROPERTY InProgress : boolean read FInProgress;
+          PROPERTY FileList : TStringList read FToCopy write FToCopy;
+          PROPERTY Source : string read FSource write FSource;
+          PROPERTY Destination : string read FDestination write FDestination;
+          PROPERTY MD5Checking : boolean read FMD5 write FMD5 default true;
+          PROPERTY OnFileOrFolderNotFound : TOnFileOrFolderError read FOnFileNotFound write FOnFileNotFound;
+          PROPERTY OnErrorEvent : TNotifyEvent read FOnErrorEvent write FOnErrorEvent;
+          PROPERTY OnProgress : TOnProgressEvent read FOnProgress write FOnProgress;
+          PROPERTY OnStartEvent : TNotifyEvent read FOnBeginCopy write FOnBeginCopy;
+          PROPERTY OnEndEvent : TNotifyEvent read FOnEndCopy write FOnEndCopy;
+          PROPERTY MD5CheckFail : TOnMD5CheckFail read FOnMD5CheckFail write FOnMD5CheckFail;
+          PROPERTY MD5CheckSuccess :  TOnMD5CheckSuccess read FOnMD5CheckSuccess write FOnMD5CheckSuccess;
+          PROPERTY OnFileOverwrite : TOnFileOrFolderError read FFileOverwrited write FFileOverwrited;
+          PROPERTY SkippedFile : TOnFileOrFolderError read FOnFileSkip write FOnFileSkip;
+
+end;
+
+
+procedure Register();
+
+implementation
+uses IdHashMessageDigest;
+
+procedure Register();
+Begin
+  RegisterComponents('FileUtils',[TSimpleFileCopy]);
+End;
+
+function TSimpleFileCopy.FFileMD5ToString(const fileName : string) : string;
+ var
+   idmd5 : TIdHashMessageDigest5;
+   fs : TFileStream;
+ begin
+
+   idmd5 := TIdHashMessageDigest5.Create;
+   fs := TFileStream.Create(fileName, fmOpenRead OR fmShareDenyWrite) ;
+   try
+     result := IDMD5.HashStreamAsHex(fs);
+   finally
+     fs.Free;
+     idmd5.Free;
+   end;
+ end;
+
+
+CONSTRUCTOR TSimpleFileCopy.Create(AOwner: TComponent);
+begin
+  Inherited Create(AOwner);
+  FToCopy := TStringList.Create;
+  FInProgress := false;
+end;
+
+DESTRUCTOR TSimpleFileCopy.Destroy;
+begin
+  Stop;
+  FToCopy.Free;
+  Inherited Destroy();
+end;
+
+PROCEDURE TSimpleFileCopy.Start;
+Var
+  i     :     integer;
+  j     :     integer;
+  MD5_A :     String;
+  MD5_B :     String;
+  File_A:     String;
+  File_B:     String;
+begin
+if FToCopy.Count > 0 then
+   Begin
+     // Check all files exist first
+   for i := 0 to FToCopy.Count - 1 do
+        Begin
+        if NOT FileExists(FToCopy.Strings[i]) then
+           Begin
+           if Assigned(FOnFileNotFound) then self.OnFileOrFolderNotFound(self,FToCopy.Strings[i]);
+            Stop;
+            Exit;
+           End;
+        End;
+   End;
+
+// Should be grand now, all files exist, so check source and destination
+// and trigger events if they don't exist
+if NOT DirectoryExists(FSource) then
+      Begin
+       if Assigned(OnFileOrFolderNotFound) then OnFileOrFolderNotFound(Self,FSource);
+      End;
+
+if NOT DirectoryExists(FDestination) then
+      Begin
+      if Assigned(OnFileOrFolderNotFound) then OnFileOrFolderNotFound(Self,FDestination);
+      End;
+
+if NOT DirectoryExists(FSource) or
+   NOT DirectoryExists(FDestination) then
+   Begin
+     // exist if either don't exist
+     if Assigned(FOnErrorEvent) then OnErrorEvent(Self);
+
+     Stop;
+     Exit;
+   End;
+
+// Everything should be hunky dorey, cept if we don't have write permissions
+// but we won't bother checking that atm (famous last words!)
+
+// Begin copying files
+FInProgress := True;
+if assigned(FOnBeginCopy) then OnStartEvent(Self);
+for i := 0 to FToCopy.Count -1 do
+     Begin
+     try
+        Begin
+          Try
+          if FInProgress then
+             Begin
+             if FAppProcessMessages then Application.ProcessMessages;
+
+             File_A := FToCopy.Strings[i];
+             File_B := IncludeTrailingPathDelimiter(FDestination) + ExtractFileName(FToCopy.Strings[i]);
+
+             // IF File_A doesn't exist
+             if NOT FileExists(File_A) then
+                Begin
+                 IF Assigned(OnFileOrFolderNotFound) then OnFileOrFolderNotFound(Self,FILE_A);
+                 Break;
+                End;
+
+             // If File B Does exist, should we overwrite?
+             if FileExists(File_B) then
+                Begin
+                if FAllowOverwrite then
+                   begin
+                   try
+                      Begin
+                      Try
+                      //  yeah
+                      DeleteFile(PChar(File_B));
+                      CopyFile(PChar(File_A), PChar(File_B), true);
+                      Except
+                      if Assigned(FOnErrorEvent) then OnErrorEvent(Self);
+                      break;
+                      End;
+                      End;
+                   finally
+                      Begin
+                      if Assigned(FFileOverwrited) then Self.OnFileOverwrite(Self, File_B);
+                      End;
+                   end
+                ELSE
+                   Begin
+                   if assigned(Self.FOnFileSkip) then self.SkippedFile(Self,FILE_B);
+                   End;
+                   end;
+                End;
+
+             if NOT FileExists(File_B) then
+                Begin
+                  IF Assigned(OnFileOrFolderNotFound) then OnFileOrFolderNotFound(sELF,File_B);
+                End
+             ELSE
+                Begin
+                if FMD5 then
+                   Begin
+                   MD5_A := FFileMD5ToString(File_A);
+                   MD5_B := FFileMD5ToString(File_B);
+                   if MD5_A = MD5_B then
+                      Begin
+                        if Assigned(FONMD5CheckSuccess) then MD5CheckSuccess(Self,File_A, File_B, MD5_A);
+                      End
+                   else
+                      Begin
+                        if Assigned(FONMD5CheckFail) then MD5CheckFail(Self,File_A, File_B, MD5_A, MD5_B);
+                      End;
+                 End;
+
+                End;
+             End
+          ELSE
+             Begin
+               Stop;
+               Exit;
+             End;
+          Except
+          if Assigned(OnErrorEvent) then OnErrorEvent(Self);
+          Stop;
+          Exit;
+          End;
+        End;
+     finally
+        Begin
+         OnProgress(Self,0, FileList.Count - 1, i, FToCopy.Strings[i]);
+        End;
+     end;
+
+     End;
+FInProgress := False;
+Stop;
+end;
+
+PROCEDURE TSimpleFileCopy.Stop;
+begin
+FInProgress := False;
+if assigned(FOnEndCopy) then OnEndEvent(Self);
+end;
+
+end.

@@ -1,0 +1,329 @@
+object fraCopyFiles: TfraCopyFiles
+  Left = 0
+  Top = 0
+  Width = 508
+  Height = 397
+  Color = clWhite
+  ParentBackground = False
+  ParentColor = False
+  TabOrder = 0
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 508
+    Height = 153
+    Align = alTop
+    Caption = 'Locations'
+    TabOrder = 0
+    DesignSize = (
+      508
+      153)
+    object ebSource: TLabeledEdit
+      Left = 24
+      Top = 40
+      Width = 389
+      Height = 24
+      Anchors = [akLeft, akTop, akRight]
+      EditLabel.Width = 45
+      EditLabel.Height = 16
+      EditLabel.Caption = 'Source:'
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object btnFindSource: TButton
+      Left = 419
+      Top = 40
+      Width = 75
+      Height = 25
+      Action = actFindSource
+      Anchors = [akTop, akRight]
+      TabOrder = 1
+    end
+    object btnFindDestination: TButton
+      Left = 419
+      Top = 88
+      Width = 75
+      Height = 25
+      Action = actFindDestination
+      Anchors = [akTop, akRight]
+      TabOrder = 2
+    end
+    object ebDestination: TLabeledEdit
+      Left = 24
+      Top = 88
+      Width = 389
+      Height = 24
+      Anchors = [akLeft, akTop, akRight]
+      EditLabel.Width = 68
+      EditLabel.Height = 16
+      EditLabel.Caption = 'Destination:'
+      ReadOnly = True
+      TabOrder = 3
+    end
+    object cbOverwrite: TCheckBox
+      Left = 24
+      Top = 118
+      Width = 289
+      Height = 17
+      Action = actShowProgress
+      Caption = 'Overwrite if file exists in destination'
+      State = cbChecked
+      TabOrder = 4
+      OnClick = actOverwriteExecute
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 0
+    Top = 153
+    Width = 508
+    Height = 191
+    Align = alClient
+    Caption = 'Files'
+    TabOrder = 1
+    object PageControl: TPageControl
+      Left = 2
+      Top = 18
+      Width = 504
+      Height = 171
+      ActivePage = tsLog
+      Align = alClient
+      TabOrder = 0
+      object tsCopyFiles: TTabSheet
+        Caption = 'Copy Files'
+        object lvFiles: TListView
+          Left = 0
+          Top = 0
+          Width = 496
+          Height = 112
+          Align = alClient
+          Columns = <
+            item
+              AutoSize = True
+              Caption = 'Filename'
+            end
+            item
+              AutoSize = True
+              Caption = 'Path'
+            end>
+          TabOrder = 0
+          ViewStyle = vsReport
+        end
+        object Panel2: TPanel
+          Left = 0
+          Top = 112
+          Width = 496
+          Height = 28
+          Align = alBottom
+          TabOrder = 1
+          object btnClear: TButton
+            Left = 420
+            Top = 1
+            Width = 75
+            Height = 26
+            Action = actClear
+            Align = alRight
+            TabOrder = 0
+          end
+        end
+      end
+      object tsLog: TTabSheet
+        Caption = 'Log'
+        ImageIndex = 1
+        object lvLog: TListView
+          Left = 0
+          Top = 0
+          Width = 496
+          Height = 112
+          Align = alClient
+          Columns = <
+            item
+              AutoSize = True
+              Caption = 'Time'
+            end
+            item
+              AutoSize = True
+              Caption = 'Description'
+            end>
+          TabOrder = 0
+          ViewStyle = vsReport
+        end
+        object Panel3: TPanel
+          Left = 0
+          Top = 112
+          Width = 496
+          Height = 28
+          Align = alBottom
+          TabOrder = 1
+          object Button1: TButton
+            Left = 420
+            Top = 1
+            Width = 75
+            Height = 26
+            Action = actClearLog
+            Align = alRight
+            TabOrder = 0
+          end
+          object btnSaveLog: TButton
+            Left = 345
+            Top = 1
+            Width = 75
+            Height = 26
+            Action = actSaveLog
+            Align = alRight
+            TabOrder = 1
+          end
+        end
+      end
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 344
+    Width = 508
+    Height = 53
+    Align = alBottom
+    TabOrder = 2
+    DesignSize = (
+      508
+      53)
+    object btnBegin: TButton
+      Left = 419
+      Top = 6
+      Width = 75
+      Height = 25
+      Action = actStart
+      Anchors = [akTop, akRight]
+      TabOrder = 0
+    end
+    object btnStop: TButton
+      Left = 338
+      Top = 6
+      Width = 75
+      Height = 25
+      Action = actStop
+      Anchors = [akTop, akRight]
+      TabOrder = 1
+    end
+    object ProgressBar: TProgressBar
+      Left = 1
+      Top = 37
+      Width = 506
+      Height = 15
+      Align = alBottom
+      TabOrder = 2
+    end
+    object cbShowProgress: TCheckBox
+      Left = 0
+      Top = 6
+      Width = 162
+      Height = 17
+      Action = actShowProgress
+      State = cbChecked
+      TabOrder = 3
+    end
+    object cbMD5: TCheckBox
+      Left = 168
+      Top = 6
+      Width = 164
+      Height = 17
+      Action = actCheckMD5
+      State = cbChecked
+      TabOrder = 4
+    end
+  end
+  object ActionList: TActionList
+    Left = 104
+    Top = 256
+    object actFindSource: TAction
+      Category = 'Locations'
+      Caption = '&Find'
+      OnExecute = actFindSourceExecute
+    end
+    object actFindDestination: TAction
+      Category = 'Locations'
+      Caption = 'F&ind'
+      OnExecute = actFindDestinationExecute
+    end
+    object actStart: TAction
+      Category = 'Copy'
+      Caption = '&Start'
+      OnExecute = actStartExecute
+    end
+    object actStop: TAction
+      Category = 'Copy'
+      Caption = 'S&top'
+      Enabled = False
+      OnExecute = actStopExecute
+    end
+    object actShowProgress: TAction
+      Category = 'Options'
+      Caption = 'Show &Progress (slower)'
+      Checked = True
+      OnExecute = actShowProgressExecute
+    end
+    object actCheckMD5: TAction
+      Category = 'Options'
+      Caption = '&MD5 Checking (slower)'
+      Checked = True
+      OnExecute = actCheckMD5Execute
+    end
+    object actOverwrite: TAction
+      Category = 'Options'
+      Caption = '&Overwrite if file exists at destination'
+      OnExecute = actOverwriteExecute
+    end
+    object actClear: TAction
+      Category = 'Options'
+      Caption = '&Clear'
+      OnExecute = actClearExecute
+    end
+    object actClearLog: TAction
+      Category = 'Options'
+      Caption = 'Clear &Log'
+      OnExecute = actClearLogExecute
+    end
+    object actSaveLog: TAction
+      Category = 'Options'
+      Caption = 'Sa&ve &Log'
+      OnExecute = actSaveLogExecute
+    end
+  end
+  object SelectDirectory: TJvSelectDirectory
+    ClassicDialog = False
+    Left = 352
+    Top = 256
+  end
+  object SimpleFileCopy: TSimpleFileCopy
+    AllowOverwrite = True
+    MD5Checking = False
+    OnFileOrFolderNotFound = SimpleFileCopyFileOrFolderNotFound
+    OnErrorEvent = SimpleFileCopyErrorEvent
+    OnProgress = SimpleFileCopyProgress
+    OnStartEvent = SimpleFileCopyStartEvent
+    OnEndEvent = SimpleFileCopyEndEvent
+    MD5CheckFail = SimpleFileCopyMD5CheckFail
+    MD5CheckSuccess = SimpleFileCopyMD5CheckSuccess
+    OnFileOverwrite = SimpleFileCopyFileOverwrite
+    Left = 264
+    Top = 256
+  end
+  object JvSearchFiles: TJvSearchFiles
+    Options = [soSearchFiles, soIncludeSystemHiddenDirs, soIncludeSystemHiddenFiles]
+    DirParams.FileMasks.Strings = (
+      '*.*')
+    OnBeginScanDir = JvSearchFilesBeginScanDir
+    OnFindFile = JvSearchFilesFindFile
+    OnFindDirectory = JvSearchFilesFindDirectory
+    OnAbort = JvSearchFilesAbort
+    OnError = JvSearchFilesError
+    OnProgress = JvSearchFilesProgress
+    Left = 176
+    Top = 256
+  end
+  object SaveDialog: TSaveDialog
+    FileName = 'RebrandFileCopyLog'
+    Filter = 'Log Files|*.log|Text Files|*.txt|All Files|*.*'
+    Left = 32
+    Top = 256
+  end
+end

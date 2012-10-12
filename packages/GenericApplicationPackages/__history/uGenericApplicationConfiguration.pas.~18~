@@ -1,0 +1,48 @@
+unit uGenericApplicationConfiguration;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, JvWizard, JvWizardRouteMapList,
+  JvWizardRouteMapNodes, JvWizardRouteMapSteps, JvExControls, Vcl.ComCtrls,
+  Vcl.StdCtrls, Vcl.ExtCtrls, ufraGenericProgramInfo;
+
+type
+  TfrmGenericConfig = class(TForm)
+    JvWizard1: TJvWizard;
+    jvDebugInfoPage: TJvWizardInteriorPage;
+    JvWizardRouteMapNodes1: TJvWizardRouteMapNodes;
+    fraGenericProgramInfo: TfraGenericProgramInfo;
+    Label1: TLabel;
+    Label2: TLabel;
+    JvWizardInteriorPage1: TJvWizardInteriorPage;
+    procedure fraGenericProgramInfobtnToFileClick(Sender: TObject);
+    procedure fraGenericProgramInfobtnMoreInfoClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmGenericConfig: TfrmGenericConfig;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmGenericConfig.fraGenericProgramInfobtnMoreInfoClick(
+  Sender: TObject);
+begin
+  fraGenericProgramInfo.btnMoreInfoClick(Sender);
+
+end;
+
+procedure TfrmGenericConfig.fraGenericProgramInfobtnToFileClick(Sender: TObject);
+begin
+  fraGenericProgramInfo.btnToFileClick(Sender);
+
+end;
+
+end.

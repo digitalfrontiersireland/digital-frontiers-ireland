@@ -1,0 +1,128 @@
+unit uImageResize;
+
+interface
+uses Classes, Vcl.Graphics, SysUtils, Types;
+
+Type        TDirtyImageResize         =         class(TComponent)
+            Protected
+            FFiles                    :         TStringList;
+            FBeforeImageList          :         TList;
+            FAfterImageList           :         TList;
+            FResizeW                  :         integer;
+            FResizeH                  :         integer;
+            Private
+            Public
+            PROCEDURE AddFiles(Var aFileList : TStrings);
+            PROCEDURE DoResize();
+            PROCEDURE Reset();
+            CONSTRUCTOR Create(AOwner : TComponent); override;
+            DESTRUCTOR Destroy(); override;
+            Published
+            PROPERTY ToWidth : integer read FResizeW write FResizeW;
+            PROPERTY ToHeight : integer read FResizeH write FResizeH;
+            PROPERTY Original : TList read FBeforeImageList;
+            PROPERTY Result : TList read FAfterImageList;
+end;
+
+implementation
+
+PROCEDURE TDirtyImageResize.Reset();
+Var
+  Image : TPicture;
+  i : integer;
+Begin
+   for i := 0 to FBeforeImageList.Count - 1 do
+        Begin
+        Image := FBeforeImageList.Items[i];
+        FreeAndNil(Image);
+        End;
+   FBeforeImageList.Clear;
+
+   for i := 0 to FAfterImageList.Count - 1 do
+        Begin
+        Image := FAfterImageList.Items[i];
+        FreeAndNil(Image);
+        End;
+   FAfterImageList.Clear;
+
+   FFiles.Clear;
+End;
+
+CONSTRUCTOR TDirtyImageResize.Create(AOwner: TComponent);
+begin
+  Inherited Create(AOwner);
+
+  FFiles := TStringList.Create;
+
+  FBeforeImageList := TList.Create;
+  FAfterImageList := TList.Create;
+
+  FResizeW := 16;
+  FResizeH := 16;
+end;
+
+DESTRUCTOR TDirtyImageResize.Destroy;
+begin
+  Reset;
+  FBeforeImageList.Free;
+  FAfterImageList.Free;
+  Inherited Destroy();
+end;
+
+PROCEDURE TDirtyImageResize.AddFiles(Var aFileList: TStrings);
+Var
+  i         :     integer;
+  Image     :     TPicture;
+begin
+if assigned(aFileList) then
+   Begin
+   // Clear lists
+   Reset;
+
+   // Load images and add to before list
+     for i := 0 to aFileList.Count - 1 do
+        Begin
+        if FileExists(aFileList.Strings[i]) then
+           Begin
+           Image := TPicture.Create;
+           Image.LoadFromFile(aFileList.Strings[i]);
+           FBeforeImageList.Add(Image);
+           End;
+        End;
+   End;
+end;
+
+PROCEDURE TDirtyImageResize.DoResize;
+Var
+  thumbRect : TRect;
+  i : integer;
+  image : TPicture;
+begin
+  thumbRect.Left := 0;
+  thumbRect.Top := 0;
+
+  for i := 0 to FBeforeImageList.Count - 1 do
+     Begin
+     Image := FBeforeImageList.Items[i];
+
+     if Image.Width > Image.Height then
+       begin
+         thumbRect.Right := ToWidth;
+         thumbRect.Bottom := (ToWidth * image.Height) div image.Width;
+       end
+     else
+       begin
+         thumbRect.Bottom := toHeight;
+         thumbRect.Right := (toHeight * image.Width) div image.Height;
+       end;
+
+     image.bitmap.Canvas.StretchDraw(thumbRect, image.bitmap) ;
+
+     image.Width := thumbRect.Right;
+     image.Height := thumbRect.Bottom;
+     end;
+
+
+end;
+
+end.
