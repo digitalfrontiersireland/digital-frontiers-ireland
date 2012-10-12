@@ -3,14 +3,20 @@
 			<ProjectGuid>{634C0C5A-68F7-42FD-9CFB-99B79C33A437}</ProjectGuid>
 		</PropertyGroup>
 		<ItemGroup>
-			<Projects Include="packages\Cromis.dproj">
+			<Projects Include="packages\FileUtilsPackages\FileUtilsPackages.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="packages\OmniXML_xe2.dproj">
+			<Projects Include="packages\GenericApplicationPackages\GenericApplicationPackage.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="packages\3rdparty\FastMM\FastMM.dproj">
-				<Dependencies/>
+			<Projects Include="packages\GenericApplicationBranderPackages\GenericApplicationBranderPackages.dproj">
+				<Dependencies>packages\GenericApplicationPackages\GenericApplicationPackage.dproj</Dependencies>
+			</Projects>
+			<Projects Include="source\GenericApplicationBrander\GenericApplicationBrander.dproj">
+				<Dependencies>packages\GenericApplicationPackages\GenericApplicationPackage.dproj;packages\GenericApplicationBranderPackages\GenericApplicationBranderPackages.dproj</Dependencies>
+			</Projects>
+			<Projects Include="source\GenericApplication\GenericApplication.dproj">
+				<Dependencies>packages\GenericApplicationPackages\GenericApplicationPackage.dproj</Dependencies>
 			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
@@ -20,41 +26,59 @@
 				<Default.Personality/>
 			</BorlandProject>
 		</ProjectExtensions>
-		<Target Name="Cromis">
-			<MSBuild Projects="packages\Cromis.dproj"/>
+		<Target Name="FileUtilsPackages">
+			<MSBuild Projects="packages\FileUtilsPackages\FileUtilsPackages.dproj"/>
 		</Target>
-		<Target Name="Cromis:Clean">
-			<MSBuild Projects="packages\Cromis.dproj" Targets="Clean"/>
+		<Target Name="FileUtilsPackages:Clean">
+			<MSBuild Projects="packages\FileUtilsPackages\FileUtilsPackages.dproj" Targets="Clean"/>
 		</Target>
-		<Target Name="Cromis:Make">
-			<MSBuild Projects="packages\Cromis.dproj" Targets="Make"/>
+		<Target Name="FileUtilsPackages:Make">
+			<MSBuild Projects="packages\FileUtilsPackages\FileUtilsPackages.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="OmniXML_xe2">
-			<MSBuild Projects="packages\OmniXML_xe2.dproj"/>
+		<Target Name="GenericApplicationPackage">
+			<MSBuild Projects="packages\GenericApplicationPackages\GenericApplicationPackage.dproj"/>
 		</Target>
-		<Target Name="OmniXML_xe2:Clean">
-			<MSBuild Projects="packages\OmniXML_xe2.dproj" Targets="Clean"/>
+		<Target Name="GenericApplicationPackage:Clean">
+			<MSBuild Projects="packages\GenericApplicationPackages\GenericApplicationPackage.dproj" Targets="Clean"/>
 		</Target>
-		<Target Name="OmniXML_xe2:Make">
-			<MSBuild Projects="packages\OmniXML_xe2.dproj" Targets="Make"/>
+		<Target Name="GenericApplicationPackage:Make">
+			<MSBuild Projects="packages\GenericApplicationPackages\GenericApplicationPackage.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="FastMM">
-			<MSBuild Projects="packages\3rdparty\FastMM\FastMM.dproj"/>
+		<Target Name="GenericApplicationBranderPackages" DependsOnTargets="GenericApplicationPackage">
+			<MSBuild Projects="packages\GenericApplicationBranderPackages\GenericApplicationBranderPackages.dproj"/>
 		</Target>
-		<Target Name="FastMM:Clean">
-			<MSBuild Projects="packages\3rdparty\FastMM\FastMM.dproj" Targets="Clean"/>
+		<Target Name="GenericApplicationBranderPackages:Clean" DependsOnTargets="GenericApplicationPackage:Clean">
+			<MSBuild Projects="packages\GenericApplicationBranderPackages\GenericApplicationBranderPackages.dproj" Targets="Clean"/>
 		</Target>
-		<Target Name="FastMM:Make">
-			<MSBuild Projects="packages\3rdparty\FastMM\FastMM.dproj" Targets="Make"/>
+		<Target Name="GenericApplicationBranderPackages:Make" DependsOnTargets="GenericApplicationPackage:Make">
+			<MSBuild Projects="packages\GenericApplicationBranderPackages\GenericApplicationBranderPackages.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="GenericApplicationBrander" DependsOnTargets="GenericApplicationPackage;GenericApplicationBranderPackages">
+			<MSBuild Projects="source\GenericApplicationBrander\GenericApplicationBrander.dproj"/>
+		</Target>
+		<Target Name="GenericApplicationBrander:Clean" DependsOnTargets="GenericApplicationPackage:Clean;GenericApplicationBranderPackages:Clean">
+			<MSBuild Projects="source\GenericApplicationBrander\GenericApplicationBrander.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="GenericApplicationBrander:Make" DependsOnTargets="GenericApplicationPackage:Make;GenericApplicationBranderPackages:Make">
+			<MSBuild Projects="source\GenericApplicationBrander\GenericApplicationBrander.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="GenericApplication" DependsOnTargets="GenericApplicationPackage">
+			<MSBuild Projects="source\GenericApplication\GenericApplication.dproj"/>
+		</Target>
+		<Target Name="GenericApplication:Clean" DependsOnTargets="GenericApplicationPackage:Clean">
+			<MSBuild Projects="source\GenericApplication\GenericApplication.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="GenericApplication:Make" DependsOnTargets="GenericApplicationPackage:Make">
+			<MSBuild Projects="source\GenericApplication\GenericApplication.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="Cromis;OmniXML_xe2;FastMM"/>
+			<CallTarget Targets="FileUtilsPackages;GenericApplicationPackage;GenericApplicationBranderPackages;GenericApplicationBrander;GenericApplication"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="Cromis:Clean;OmniXML_xe2:Clean;FastMM:Clean"/>
+			<CallTarget Targets="FileUtilsPackages:Clean;GenericApplicationPackage:Clean;GenericApplicationBranderPackages:Clean;GenericApplicationBrander:Clean;GenericApplication:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="Cromis:Make;OmniXML_xe2:Make;FastMM:Make"/>
+			<CallTarget Targets="FileUtilsPackages:Make;GenericApplicationPackage:Make;GenericApplicationBranderPackages:Make;GenericApplicationBrander:Make;GenericApplication:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>
